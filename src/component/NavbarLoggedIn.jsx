@@ -13,34 +13,35 @@ const NavbarLoggedIn = () => {
             </div>
             {/* Navigation Bar End */}
             <div className="navbar-end">
-                <div className="dropdown dropdown-end px-4">
-                    <label tabIndex={0} className="text-white">Connection</label>
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
-                        <li><a>Connection</a></li>
-                        <li><a>My Feed</a></li>
-                    </ul>
+                <div className="hidden lg:block">
+                    <div className="dropdown dropdown-hover dropdown-end px-4">
+                        <label tabIndex={0} className="text-white">Connection</label>
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
+                            <li><a>Connection</a></li>
+                            <li><a>My Feed</a></li>
+                        </ul>
+                    </div>
+                    <div className="dropdown dropdown-hover dropdown-end px-4">
+                        <label tabIndex={0} className="text-white">Training Tab</label>
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
+                            <li><a>Training Tab</a></li>
+                        </ul>
+                    </div>
+                    <div className="dropdown dropdown-hover dropdown-end px-4">
+                        <label tabIndex={0} className="text-white">My Activity</label>
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
+                            <li><a>My Activity</a></li>
+                            <li><a>Dashboard</a></li>
+                        </ul>
+                    </div>
+                    <div className="dropdown dropdown-hover dropdown-end px-4">
+                        <label tabIndex={0} className="text-white">Profile</label>
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
+                            <li><a>Setting</a></li>
+                            <li><a>Log Out</a></li>
+                        </ul>
+                    </div>
                 </div>
-                <div className="dropdown dropdown-end px-4">
-                    <label tabIndex={0} className="text-white">Training Tab</label>
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
-                        <li><a>Training Tab</a></li>
-                    </ul>
-                </div>
-                <div className="dropdown dropdown-end px-4">
-                    <label tabIndex={0} className="text-white">My Activity</label>
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
-                        <li><a>My Activity</a></li>
-                        <li><a>Dashboard</a></li>
-                    </ul>
-                </div>
-                <div className="dropdown dropdown-end px-4">
-                    <label tabIndex={0} className="text-white">Profile</label>
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
-                        <li><a>Setting</a></li>
-                        <li><a>Log Out</a></li>
-                    </ul>
-                </div>
-
                 {/* Mobile Navigation Bar */}
                 <div className="drawer-end lg:hidden">
                     <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -54,10 +55,17 @@ const NavbarLoggedIn = () => {
                         <label htmlFor="my-drawer" className="drawer-overlay"></label>
                         <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
                             {/* Sidebar content here */}
-                            <li><a>Home</a></li>
-                            <li><a>About</a></li>
-                            <li><a>Contact Us</a></li>
-                            <li><a>Register</a></li>
+                            <p className='underline'>Connection</p>
+                            <li><a>Connection</a></li>
+                            <li><a>My Feed</a></li>
+                            <p className='underline'>Training Tab</p>
+                            <li><a>Training Tab</a></li>
+                            <p className='underline'>My Activity</p>
+                            <li><a>My Activity</a></li>
+                            <li><a>Dashboard</a></li>
+                            <p className='underline'>Profile</p>
+                            <li><a>Setting</a></li>
+                            <li><a>Log Out</a></li>
                         </ul>
                     </div>
                 </div>
