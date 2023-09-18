@@ -8,6 +8,8 @@ import React from 'react';
 // import SideInformation from "./component/SideInformationBar.jsx";
 Chart.register(CategoryScale);
 
+import './App.css'
+// import Mainpage from './component/Mainpage/Mainpage'
 
 function App() {
   return (
@@ -15,6 +17,7 @@ function App() {
       {/* <NavbarLoggedIn />
       <SideInformation /> */}
       <DashBoard />
+    {/* <Mainpage /> */}
     </>
   );
 }
