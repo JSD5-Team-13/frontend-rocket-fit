@@ -4,6 +4,7 @@ import { Bar } from "react-chartjs-2";
 import { Pie } from "react-chartjs-2";
 import { BiSolidMoon } from "react-icons/bi";
 import { HiMiniFire } from "react-icons/hi2";
+import SideInformation from "./SideInformationBar";
 
 export const DashBoard = () => {
   const labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -57,6 +58,7 @@ export const DashBoard = () => {
           "rgba(153, 102, 255, 1)",
         ],
         borderWidth: 1,
+        borderAlign: "center",
       },
     ],
   };
@@ -65,16 +67,19 @@ export const DashBoard = () => {
     <>
       <NavbarLoggedIn />
       <div className="dashboard object-cover">
+        {/* SideInformation */}
         <div className="user-profile">
-          <p>User profile</p>
+          <SideInformation />
         </div>
-        <div className="data-dashboard">
+        {/* dashboard */}
+        <div className="data-dashboard  bg-gray-100">
           <h1>
             <strong> DASHBOARD</strong>
           </h1>
           <h3>
             <strong>WEEKLY OVERVIEW</strong>
           </h3>
+          {/* Card sleep & cal */}
           <div className="summarize-sleep-cal">
             <div className="data-sleep ">
               <div className="card bg-base-300 ">
@@ -100,7 +105,7 @@ export const DashBoard = () => {
               </div>
             </div>
             <div className="data-calories">
-              <div className="card bg-base-300 ">
+              <div className="card bg-base-300">
                 <div className="card-body">
                   <p>300</p>
                   <h2 className="card-title">Calories</h2>
@@ -123,9 +128,9 @@ export const DashBoard = () => {
               </div>
             </div>
           </div>
-
+          {/* chart */}
           <div className="data-chart">
-            <div className="bar-chart-activity-duration">
+            <div className="bar-chart-activity-duration ">
               <Bar
                 data={BarChartData}
                 options={{
@@ -141,7 +146,7 @@ export const DashBoard = () => {
                 }}
               />
             </div>
-            <div className="pie-chart-activity-type">
+            <div className="pie-chart-activity-type ">
               <Pie
                 data={PieChartData}
                 options={{

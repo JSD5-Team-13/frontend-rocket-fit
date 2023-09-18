@@ -1,19 +1,21 @@
 .dashboard{
     display: flex;
     flex-direction: row;
-    border: 1px solid gray;
-    background-color: #ECECEC;
+    /* border: 1px solid gray; */
+    /* background-color: #ECECEC; */
 }
 .user-profile{
     width: 25%;
-    border: 1px solid green;
+    /* border: 1px solid green; */
 }
 
 .data-dashboard{
     width: 75%;
-    border: 1px solid orange;
+    /* border: 1px solid orange; */
     padding: 30px;
     justify-content: center;
+    /* background-color: #ECECEC; */
+
 }
 
 .data-dashboard, h1, h3{
@@ -27,29 +29,30 @@
     padding-top: 30px;
     padding-bottom: 30px;
 }
+.data-sleep, .data-calories{
+    width: 45%;
+    /* border: 1px solid rgb(52, 4, 246); */
+}
+
 .data-chart{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    column-gap: 16px;
-    padding: 30px; 
-    /* width: 80%; */
-    border: 1px solid rgb(52, 4, 246);
+    /* column-gap: 16px; */
+    padding: 16px; 
+    /* width: 100%; */
+    /* border: 1px solid rgb(52, 4, 246); */
 
-}
-.data-sleep, .data-calories{
-    width: 45%;
-    border: 1px solid rgb(52, 4, 246);
 }
 
 .bar-chart-activity-duration, .pie-chart-activity-type{
     height: 300px;
+    /* border: 1px solid rgb(4, 242, 246); */
     width: 100%;
-    border: 1px solid rgb(4, 242, 246);
 
 }
 
-@media screen and (max-width:768px){
+@media screen and (max-width:1024px){
  .user-profile{
     display: none;
  }  
@@ -64,14 +67,13 @@
 
  .data-sleep, .data-calories, .bar-chart-activity-duration, .pie-chart-activity-type{
     align-items: center;
+    width: 100%;
     padding-bottom: 30px;
 
- }
+}
+
 h1, h3{
     padding-left: 0px;
-}
-.data-sleep, .data-calories{
-    width: 100%;
 }
 
 }
