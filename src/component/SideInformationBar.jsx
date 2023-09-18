@@ -14,7 +14,7 @@ const SideInformation = () => {
     const showBMI = bmiCalculate(height,weight)
     
     return (
-        <div className="w-1/4 h-[100vh] flex-col items-center hidden lg:flex overflow-y-visible">
+        <div className="w-full h-[100vh] flex-col items-center hidden lg:flex overflow-y-visible">
             <div className="avatar">
                 <div className="w-32 h-32 my-6 rounded-full">
                     <img src={MockupProfile} />
