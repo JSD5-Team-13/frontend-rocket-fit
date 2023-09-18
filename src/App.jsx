@@ -1,12 +1,10 @@
 import './App.css'
-import NavbarLoggedIn from './component/NavbarLoggedIn'
-import SideInformation from './component/SideInformationBar.jsx'
+import Mainpage from './component/Mainpage/Mainpage'
 
 function App() {
   return (
     <>
-      <NavbarLoggedIn />
-      <SideInformation />
+    <Mainpage />
     </>
   )
 }
