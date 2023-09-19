@@ -2,7 +2,7 @@ import MockupProfile from "../assets/blank-profile-picture-973460_960_720.jpg"
 
 const SideInformation = () => {
     return (
-        <div className="w-1/4 h-[100vh] border-solid border-2 flex-col items-center hidden lg:flex">
+        <div className="w-full laptop:w-full h-[100vh] border-solid border-2 flex-col items-center hidden laptop:flex lg:flex">
             <div className="avatar">
                 <div className="w-32 h-32 my-6 rounded-full">
                     <img src={MockupProfile} />
@@ -30,7 +30,7 @@ const SideInformation = () => {
                 <div className="card-body">
                     <h2 className="card-title">Card title!</h2>
                     <p>If a dog chews shoes whose shoes does he choose?</p>
-                    <div className="card-actions justify-end">
+                    <div className="justify-end card-actions">
                     </div>
                 </div>
             </div>

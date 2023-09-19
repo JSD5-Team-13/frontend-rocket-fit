@@ -1,12 +1,14 @@
 import './App.css'
-import NavbarLoggedIn from './component/NavbarLoggedIn'
-import SideInformation from './component/SideInformationBar.jsx'
+import ActivityForm from './component/Activity/CreateActivity.jsx'
+// import NavbarLoggedIn from './component/NavbarLoggedIn'
+// import SideInformation from './component/SideInformationBar.jsx'
 
 function App() {
   return (
     <>
-      <NavbarLoggedIn />
-      <SideInformation />
+      {/* <NavbarLoggedIn />
+      <SideInformation /> */}
+      <ActivityForm />
     </>
   )
 }
