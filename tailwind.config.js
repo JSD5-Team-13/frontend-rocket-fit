@@ -24,6 +24,9 @@ export default {
       // // => @media (min-width: 1280px and max-width: 1535px) { ... }
 
       // '2xl': {'min': '1536px'},
+
+      'mobile-mode': {'min': '0px', 'max': '1023px'},
+
       // => @media (min-width: 1536px) { ... }
       'phone': '425px',
      // => @media (min-width: 425px) { ... }
