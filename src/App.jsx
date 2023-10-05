@@ -1,9 +1,9 @@
 import "./App.css";
-// import { DashBoard } from "./component/DashBoard";
+import { DashBoard } from "./component/DashBoard";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 import React from "react";
-import { LogIn } from "./component/LogIn";
+// import { LogIn } from "./component/LogIn";
 // import { ResetPassword } from "./component/ResetPassword";
 // import NavbarLoggedIn from "./component/NavbarLoggedIn";
 // import SideInformation from "./component/SideInformationBar.jsx";
@@ -15,8 +15,8 @@ function App() {
     <>
       {/* <NavbarLoggedIn />
       <SideInformation /> */}
-      {/* <DashBoard /> */}
-      <LogIn />
+      <DashBoard />
+      {/* <LogIn /> */}
       {/* <ResetPassword /> */}
       {/* <Mainpage /> */}
     </>
