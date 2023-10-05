@@ -1,10 +1,26 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import MockupProfile from "../assets/blank-profile-picture-973460_960_720.jpg"
+
 
 const SideInformation = () => {
     
     const height = 165;
     const weight = 40;
 
+    const [activity,setActivity] = useState([]);
+
+    useEffect(() => {
+        const getData = async() => {
+        const response = await axios.get(
+          "https://earth-testapi-new-com.onrender.com/activities")
+          setActivity(response.data)
+        }
+        getData(); 
+    },[])
+
+    const maxItems = 2;
+    const displayedData = activity.slice(0, maxItems);
 
     const bmiCalculate = (height,weight) => {
         let bmi = (weight / ((height * height)/ 10000)).toFixed(2);
@@ -43,6 +59,7 @@ const SideInformation = () => {
             </div>
             <button className="btn btn-xs btn-accent rounded-full w-[40%] mb-6">Edit your profile</button>
             <h2 className="self-start mx-7">Lastest Activity</h2>
+<<<<<<< HEAD
             <div className="card card-compact w-[90%] bg-base-300 shadow-xl my-2">
                 <div className="card-body">
                     <h2 className="card-title">Card title!</h2>
@@ -57,6 +74,17 @@ const SideInformation = () => {
                     <p>If a dog chews shoes whose shoes does he choose?</p>
                 </div>
             </div>
+=======
+            {displayedData.map((activity, index) => (
+            <div key={index} className="card card-compact w-[90%] bg-base-300 shadow-xl my-2">
+            <div className="card-body">
+            <h2 className="card-title">{activity.activity_name}</h2>
+            <p>{activity.activity_describe}</p>
+            <div className="card-actions justify-end">{/* Add card actions here if needed */}</div>
+          </div>
+        </div>
+      ))}
+>>>>>>> Development
         </div>
     )
 }

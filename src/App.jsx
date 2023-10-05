@@ -1,3 +1,4 @@
+import Calendar from './component/Calandar/Calendar'
 import './App.css'
 import ActivityForm from './component/Activity/CreateActivity.jsx'
 // import NavbarLoggedIn from './component/NavbarLoggedIn'
