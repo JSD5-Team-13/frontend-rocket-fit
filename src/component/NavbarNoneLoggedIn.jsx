@@ -5,7 +5,7 @@ import Logo from '../assets/logo.png'
 
 const Navbar = () => {
     return (
-        <div className="navbar bg-neutral">
+        <div className="navbar bg-neutral h-[7rem]">
             <div className="navbar-start">
                 <img src={LogoFull} alt='logo' className='hidden lg:block w-auto h-10 mx-4' />
                 <img src={Logo} alt='logo' className='lg:hidden w-auto h-10 mx-4' />

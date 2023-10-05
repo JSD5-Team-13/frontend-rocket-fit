@@ -5,7 +5,7 @@ import Logo from '../assets/logo.png'
 
 const NavbarLoggedIn = () => {
     return (
-        <div className="navbar bg-neutral">
+        <div className="navbar bg-neutral h-[7rem]">
             {/* Navigation Bar Start */}
             <div className="navbar-start">
                 <img src={LogoFull} alt='logo' className='hidden lg:block w-auto h-10 mx-4' />
