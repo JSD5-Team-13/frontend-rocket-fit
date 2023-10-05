@@ -2,7 +2,7 @@ import "./DashBoard.css";
 import NavbarLoggedIn from "./NavbarLoggedIn";
 import { Bar } from "react-chartjs-2";
 import { Pie } from "react-chartjs-2";
-import { BiSolidMoon } from "react-icons/bi";
+import { BiSolidMoon } from "react-icons/Bi";
 import { HiMiniFire } from "react-icons/hi2";
 import SideInformation from "./SideInformationBar";
 
