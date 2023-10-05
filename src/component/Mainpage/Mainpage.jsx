@@ -22,7 +22,11 @@ const Mainpage = () => {
         <>
             <NavbarLoggedIn />
             <div className="flex flex-row max-w-screen-2xl my-0 mx-auto md:m-auto">
+                
+                <aside className="lg:w-1/4 hidden lg:block shadow-lg">
                 <SideInformation />
+                </aside>
+                
                 <div className="lg:w-2/4 flex flex-col bg-gray-100 items-center">
                     
                     <div className="m-6 self-start">
@@ -57,7 +61,7 @@ const Mainpage = () => {
                     {/* Sleep Time Area */}
                     <div className="card card-side card-compact bg-base-300 shadow-xl w-[80%] my-4">
                         <figure className="w-[20%] avatar">
-                        <HiOutlineMoon className="w-[45%] h-[60%] rounded-full"/>
+                        <HiOutlineMoon className="w-[55%] h-[60%] rounded-full"/>
                         </figure>
                         <div className="card-body w-[80%]">
                             <p className="font-bold">Sleep Time</p>
@@ -89,7 +93,7 @@ const Mainpage = () => {
                     </div>
                     {/* End Form Area */}
                 </div>
-                <div className="hidden lg:flex flex-col">
+                <div className="hidden lg:flex flex-col lg:w-1/4 shadow-md">
                     <div className="m-6 self-start">
                     <h1 className="text-3xl font-semibold">Connection</h1>
                     </div>
