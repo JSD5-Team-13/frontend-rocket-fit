@@ -59,32 +59,15 @@ const SideInformation = () => {
             </div>
             <button className="btn btn-xs btn-accent rounded-full w-[40%] mb-6">Edit your profile</button>
             <h2 className="self-start mx-7">Lastest Activity</h2>
-<<<<<<< HEAD
-            <div className="card card-compact w-[90%] bg-base-300 shadow-xl my-2">
-                <div className="card-body">
-                    <h2 className="card-title">Card title!</h2>
-                    <p>If a dog chews shoes whose shoes does he choose?</p>
-                    <div className="justify-end card-actions">
-                    </div>
-                </div>
-            </div>
-            <div className="card card-compact w-[90%] bg-base-300 shadow-xl my-2">
-                <div className="card-body">
-                    <h2 className="card-title">Card title!</h2>
-                    <p>If a dog chews shoes whose shoes does he choose?</p>
-                </div>
-            </div>
-=======
             {displayedData.map((activity, index) => (
             <div key={index} className="card card-compact w-[90%] bg-base-300 shadow-xl my-2">
             <div className="card-body">
             <h2 className="card-title">{activity.activity_name}</h2>
             <p>{activity.activity_describe}</p>
-            <div className="card-actions justify-end">{/* Add card actions here if needed */}</div>
+            <div className="justify-end card-actions">{/* Add card actions here if needed */}</div>
           </div>
         </div>
       ))}
->>>>>>> Development
         </div>
     )
 }
