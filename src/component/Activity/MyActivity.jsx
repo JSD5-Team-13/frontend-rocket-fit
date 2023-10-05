@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import NavbarLoggedIn from "../NavbarLoggedIn";
 import SideInformation from "../SideInformationBar";
-import CardDisplay from "../Activity/CardDisplay";
+import CardDisplay from "./ComponentActivity/CardDisplay";
 import axios from "axios";
 
 const MyActivity = () => {
