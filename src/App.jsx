@@ -1,4 +1,3 @@
-import "./App.css";
 import { DashBoard } from "./component/DashBoard";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
