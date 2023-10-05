@@ -4,7 +4,7 @@ import Boxing from "../../assets/homeImage/Boxing.png";
 import Running from "../../assets/homeImage/Running.jpeg";
 import Bgcontactus from "../../assets/homeImage/Bgcontactus.jpeg";
 import { VscGraph } from "react-icons/vsc";
-import { FaRegClock } from "react-icons/fa";
+// import { FaRegClock } from "react-icons/fa";
 import { PiTrophyBold } from "react-icons/pi";
 import { BsInstagram } from "react-icons/bs";
 import { GrLocation, GrShareOption } from "react-icons/gr";
@@ -12,7 +12,7 @@ import { HiOutlinePhone } from "react-icons/hi";
 import { RiMailSendLine } from "react-icons/ri";
 import { AiOutlineFacebook } from "react-icons/ai";
 import FooterHome from "./FooterHome";
-import Navbar from "../NavbarNoneLoggedIn";
+import Navbar from "../navbar/NavbarNoneLoggedIn.jsx";
 
 const Home = () => {
   return (
@@ -62,7 +62,7 @@ const Home = () => {
             </div>
 
             <div className="flex flex-col items-center w-[20%]">
-              <FaRegClock className="text-[3rem]" />
+              {/* <FaRegClock className="text-[3rem]" /> */}
               <p className="text-neutral text-[1.2rem] font-semibold text-center leading-[30px] mt-[10px]">
                 Manage your time more easily
               </p>

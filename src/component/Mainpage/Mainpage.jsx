@@ -1,5 +1,5 @@
-import NavbarLoggedIn from "../NavbarLoggedIn"
-import SideInformation from "../SideInformationBar"
+import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx"
+import SideInformation from "../navbar/SideInformationBar.jsx"
 import { useState } from "react";
 import {HiOutlinePlusSm,HiOutlinePresentationChartLine,HiOutlineMoon} from 'react-icons/hi'
 import MockupProfile from "../../assets/blank-profile-picture-973460_960_720.jpg"

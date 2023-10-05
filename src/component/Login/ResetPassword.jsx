@@ -2,7 +2,7 @@ export const ResetPassword = () => {
   return (
     <div>
       <div className="forgot-passd">
-        <div class="hero min-h-screen">
+        <div className="hero min-h-screen">
           <div className="hero-content flex-col">
             {/* title-Reset-your-password */}
             <div className="text-center lg:text-top">

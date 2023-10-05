@@ -1,10 +1,10 @@
 import "./DashBoard.css";
-import NavbarLoggedIn from "./NavbarLoggedIn";
+import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
 import { Bar } from "react-chartjs-2";
 import { Pie } from "react-chartjs-2";
 import { BiSolidMoon } from "react-icons/Bi";
 import { HiMiniFire } from "react-icons/hi2";
-import SideInformation from "./SideInformationBar";
+import SideInformation from "../navbar/SideInformationBar.jsx";
 
 export const DashBoard = () => {
   const labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

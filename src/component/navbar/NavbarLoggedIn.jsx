@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
-import LogoFull from '../assets/logo-full.png'
+import LogoFull from '../../assets/logo-full.png'
 import { GiHamburgerMenu } from 'react-icons/gi'
-import Logo from '../assets/logo.png'
+import Logo from '../../assets/logo.png'
 
 const NavbarLoggedIn = () => {
     return (

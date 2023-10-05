@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-import NavbarLoggedIn from "../NavbarLoggedIn";
-import SideInformation from "../SideInformationBar";
+import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
+import SideInformation from "../navbar/SideInformationBar.jsx";
 import CardDisplay from "./ComponentActivity/CardDisplay";
 import axios from "axios";
 

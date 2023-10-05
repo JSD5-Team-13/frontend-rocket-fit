@@ -1,4 +1,4 @@
-import NavbarLoggedIn from "../NavbarLoggedIn";
+import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
 import { useState } from "react";
 import UserIcon from "../../assets/user-icon.svg";
 import { FiShare2 } from "react-icons/fi";

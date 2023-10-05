@@ -1,4 +1,4 @@
-import Navbar from "./NavbarNoneLoggedIn";
+import Navbar from "../navbar/NavbarNoneLoggedIn.jsx";
 import { FaUser } from "react-icons/Fa";
 import { RxAvatar } from "react-icons/Rx";
 import { FaLock } from "react-icons/Fa";
@@ -10,7 +10,7 @@ export const LogIn = () => {
 
       <div className="input-login-form">
         <div
-          class="hero min-h-screen hidden lg:flex lg:flex-col lg:justify-center"
+          className="hero min-h-screen hidden lg:flex lg:flex-col lg:justify-center"
           style={{
             backgroundImage:
               "url(https://images.unsplash.com/photo-1546749876-2088f8b19e09?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80)",
