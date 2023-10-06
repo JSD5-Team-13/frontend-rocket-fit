@@ -108,7 +108,7 @@ const Mainpage = () => {
                     <img src={MockupProfile} className="w-[72px] rounded-full"/>
                     <img src={MockupProfile} className="w-[72px] rounded-full"/>
                     </div>
-                    <a className="self-end">More</a>
+                    <a className="self-end mx-4">More</a>
                 </div>
             </div>
         </>

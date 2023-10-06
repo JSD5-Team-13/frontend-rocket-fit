@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from "react"
@@ -141,7 +142,7 @@ const ActivityForm = () => {
         
         <div className="flex flex-col items-center justify-center w-screen p-4 mx-auto tablet:w-4/6 laptop:w-auto laptop:max-w-4/6] gap-[1.5rem]">
             <h1 className="w-full text-2xl font-bold text-left">Create Activity</h1>
-            <div className="w-full flex flex-col tablet:min-w-[425px] tablet:w-full tablet:max-w-[1024px] p-4 m-4 bg-white rounded-lg shadow-lg phone:w-[425px]">
+            <div className="w-full flex flex-col md:min-w-[425px] md:w-full md:max-w-[1024px] p-4 m-4 bg-white rounded-lg shadow-lg ">
 
                 {showAlert && (
                      <Alert message={alertMessage} onClose={closeAlert} />

@@ -5,7 +5,7 @@ import Logo from '../../assets/logo.png'
 
 const NavbarLoggedIn = () => {
     return (
-        <div className="navbar bg-neutral h-[7rem]">
+        <div className="navbar bg-neutral h-[5rem]">
             {/* Navigation Bar Start */}
             <div className="navbar-start">
                 <img src={LogoFull} alt='logo' className='hidden w-auto h-10 mx-4 lg:block' />
@@ -43,7 +43,7 @@ const NavbarLoggedIn = () => {
                     </div>
                 </div>
                 {/* Mobile Navigation Bar */}
-                <div className="drawer-end">
+                <div className="drawer-end lg:hidden z-10">
                     <input id="my-drawer" type="checkbox" className="drawer-toggle" />
                     <div className="drawer-content">
                         {/* Page content here */}

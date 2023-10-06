@@ -22,12 +22,6 @@ const SideInformation = () => {
     const maxItems = 2;
     const displayedData = activity.slice(0, maxItems);
 
-    const bmiCalculate = (height,weight) => {
-        let bmi = (weight / ((height * height)/ 10000)).toFixed(2);
-        return bmi
-    }
-    
-    const showBMI = bmiCalculate(height,weight)
     
     return (
         <div className="w-full laptop:w-full h-[100vh] border-solid border-2 flex-col items-center hidden laptop:flex lg:flex">
@@ -51,10 +45,6 @@ const SideInformation = () => {
                 <div className="flex flex-col">
                     <label htmlFor="age" className="self-center">Age</label>
                     <p id="age" className="badge badge-accent">Age</p>
-                </div>
-                <div className="flex flex-col">
-                    <label htmlFor="bmi" className="self-center">BMI</label>
-                    <p id="bmi" className="badge badge-accent">{showBMI}</p>
                 </div>
             </div>
             <button className="btn btn-xs btn-accent rounded-full w-[40%] mb-6">Edit your profile</button>
