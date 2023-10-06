@@ -70,7 +70,7 @@ export const DashBoard = () => {
   return (
     <>
       <NavbarLoggedIn />
-      <div className="dashboard object-cover">
+      <div className="dashboard object-cover max-w-screen-2xl mx-auto my-0">
         {/* SideInformation */}
         <div className="user-profile z-0">
           <SideInformation />
