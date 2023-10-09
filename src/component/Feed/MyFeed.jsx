@@ -1,5 +1,5 @@
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UserIcon from "../../assets/user-icon.svg";
 import { FiShare2 } from "react-icons/fi";
 import {
@@ -10,29 +10,53 @@ import {
 } from "react-icons/fa6";
 
 const MyFeed = () => {
+  const [activities, setActivities] = useState([]);
+  const [reload, setReload] = useState(false);
+
+  // Get data
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await axios.get(
+          "https://earth-testapi-new-com.onrender.com/activities"
+        );
+
+        // Filter the activities to include only those with status "share"
+        const sharedActivities = response.data.filter(
+          (activity) => activity.share === true
+        );
+
+        setActivities(sharedActivities);
+        console.log("Got data Successfully!", response);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+
+      getData();
+    };
+  }, [reload]);
+
   return (
-    <div className="max-w-screen-2xl mx-auto min-h-screen lg:bg-gray-300">
-      <nav className="fixed top-0 z-[100] w-full max-w-screen-2xl">
+    <div className="min-h-screen">
+      <nav className="fixed top-0 z-[100] w-full">
         <NavbarLoggedIn />
       </nav>
 
-      <main className="flex">
+      <main className="flex max-w-screen-2xl mx-auto mt-[5rem]">
         {/* Side Profile */}
-        <aside className="fixed mt-16 top-0 z-50 w-full flex flex-col pb-3  lg:h-screen lg:max-w-[25%] lg:block bg-white 2xl:max-w-[400px]">
+        <aside className="fixed mt-[5rem] top-0 z-50 w-full flex flex-col pb-3 lg:h-screen lg:max-w-[25%] lg:block bg-white 2xl:max-w-[400px] lg:border-l-2">
           <FeedProfile />
         </aside>
 
-        {/* Section Feed Display*/}
-        <section className="w-full mt-[17rem] md:mt-60 lg:mt-16 lg:ml-[25%] lg:max-w-[75%] lg:bg-gray-300">
+        {/* Section Post Display */}
+        <section className="w-full mt-[13rem] md:mt-[10rem] lg:mt-0 lg:ml-[25%] lg:max-w-[75%] lg:bg-gray-300 min-h-screen">
           <h1 className="hidden lg:block text-[2rem] mt-5 ml-16 font-bold uppercase">
             My Feed
           </h1>
 
-          {/* Feed Display */}
+          {/* Post Display */}
           <div className="lg:w-[70%] lg:mx-auto flex flex-col-reverse ">
-            <PostDisplay />
-            <PostDisplay />
-            <PostDisplay />
+            <PostDisplay activities={activities} />
           </div>
         </section>
       </main>
@@ -86,7 +110,7 @@ const FeedProfile = () => {
   );
 };
 
-const PostDisplay = () => {
+const PostDisplay = ({ activities }) => {
   const [isHeart, setIsHeart] = useState(false);
   const [showComment, setShowComment] = useState(false);
 
@@ -185,7 +209,6 @@ const CommentDisplay = () => {
   return (
     <div className="bg-[#8DE2DF] p-2 lg:rounded-xl lg:shadow-xl border-b-2">
       <section className="flex items-center">
-
         {/* Avatar */}
         <figure className="avatar m-3">
           <div className="w-12 rounded-full bg-gray-100">
@@ -216,7 +239,6 @@ const CommentForm = () => {
   return (
     <div className="bg-[#8DE2DF] p-2 lg:rounded-xl lg:mb-3 lg:shadow-xl">
       <section className="flex items-center">
-
         {/* Avatar */}
         <figure className="avatar m-3">
           <div className="w-12 rounded-full bg-gray-100">
