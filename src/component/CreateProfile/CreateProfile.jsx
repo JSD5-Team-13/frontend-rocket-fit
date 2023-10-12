@@ -1,4 +1,4 @@
-// import { FaUser } from "react-icons/fa";
+import { MdPeopleAlt } from "react-icons/md";
 
 const CreateProfile = () => {
   return (
@@ -6,7 +6,7 @@ const CreateProfile = () => {
       <div className="flex flex-col items-center lg:bg-[#D9D9D9] lg:w-[70%]  lg:pb-[3rem] lg:rounded-[1.5rem]">
         {/* profile picture */}
         <div className="lg:bg-white bg-[#D9D9D9] h-[12rem] w-[12rem] mt-[3rem] rounded-full flex flex-col justify-center items-center">
-          {/* <FaUser className="text-[5rem] text-black" /> */}
+          <MdPeopleAlt className="text-[5rem] text-black" />
           <div>
             <input type="file" id="files" className="hidden" />
             <label htmlFor="files" className="font-bold">
@@ -23,7 +23,9 @@ const CreateProfile = () => {
         <div>
           {/*input Height Weight */}
           <div className="grid gap-4 grid-cols-2 p-5">
-            <div className="form-control w-full max-w-xs">  {/* Height */}
+            <div className="form-control w-full max-w-xs">
+              {" "}
+              {/* Height */}
               <label className="label">
                 <span className="label-text">Height</span>
               </label>
@@ -34,7 +36,9 @@ const CreateProfile = () => {
               />
             </div>
 
-            <div className="form-control w-full max-w-xs">  {/* Weight */}
+            <div className="form-control w-full max-w-xs">
+              {" "}
+              {/* Weight */}
               <label className="label">
                 <span className="label-text">Weight</span>
               </label>
@@ -45,23 +49,24 @@ const CreateProfile = () => {
               />
             </div>
 
-            <div>   {/* Bmi & Status */}
-              <div className="form-control w-full max-w-xs">    {/* BMI */}
+            {/* <div>
+               Bmi & Status 
+              <div className="form-control w-full max-w-xs">
+                 BMI 
                 <label className="label">
                   <span className="label-text">BMI</span>
                 </label>
                 <div className="input bg-[#D9D9D9] lg:bg-white w-full max-w-xs"></div>
               </div>
-
-              <div> {/* Status */}
-
-              </div>
-            </div>
+              <div>  Status </div>
+            </div> */}
           </div>
 
           {/*Gender & DoB */}
           <div className="w-[100%] px-5 ">
-            <div className="form-control w-full ">  {/* Gender */}
+            <div className="form-control w-full ">
+              {" "}
+              {/* Gender */}
               <label className="label">
                 <span className="label-text">Gender</span>
               </label>
@@ -76,7 +81,9 @@ const CreateProfile = () => {
               </select>
             </div>
 
-            <div className="form-control w-full ">  {/* DoB */}
+            <div className="form-control w-full ">
+              {" "}
+              {/* DoB */}
               <label className="label">
                 <span className="label-text">Date of Birth</span>
               </label>
