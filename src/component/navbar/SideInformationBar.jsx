@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
-<<<<<<< HEAD:src/component/SideInformationBar.jsx
 // import axios from "axios";
 import MockupProfile from "../assets/blank-profile-picture-973460_960_720.jpg"
-=======
-import axios from "axios";
-import MockupProfile from "../../assets/blank-profile-picture-973460_960_720.jpg"
->>>>>>> Development:src/component/navbar/SideInformationBar.jsx
 
 
 const SideInformation = () => {
