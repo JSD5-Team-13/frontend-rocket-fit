@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react"
 import Calendar from "react-calendar"
-import NavbarLoggedIn from "../NavbarLoggedIn";
+import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
 import './calendar.css'
 
 const CalendarMain = () => {

@@ -1,5 +1,5 @@
-import NavbarLoggedIn from "../NavbarLoggedIn"
-import SideInformation from "../SideInformationBar"
+import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx"
+import SideInformation from "../navbar/SideInformationBar.jsx"
 import { useState } from "react";
 import {HiOutlinePlusSm,HiOutlinePresentationChartLine,HiOutlineMoon} from 'react-icons/hi'
 import MockupProfile from "../../assets/blank-profile-picture-973460_960_720.jpg"
@@ -108,7 +108,7 @@ const Mainpage = () => {
                     <img src={MockupProfile} className="w-[72px] rounded-full"/>
                     <img src={MockupProfile} className="w-[72px] rounded-full"/>
                     </div>
-                    <a className="self-end">More</a>
+                    <a className="self-end mx-4">More</a>
                 </div>
             </div>
         </>

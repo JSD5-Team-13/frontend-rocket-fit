@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-import NavbarLoggedIn from "../NavbarLoggedIn";
-import SideInformation from "../SideInformationBar";
+import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
+import SideInformation from "../navbar/SideInformationBar.jsx";
 import CardDisplay from "./ComponentActivity/CardDisplay";
 import axios from "axios";
 
@@ -64,39 +64,39 @@ const MyActivity = () => {
   };
 
   return (
-    <div className="max-w-screen-2xl mx-auto min-h-screen lg:bg-gray-300">
-      <nav className="fixed top-0 z-[100] w-full max-w-screen-2xl">
+    <div className="min-h-screen lg:bg-gray-300">
+      <nav className="fixed top-0 z-[100] w-full">
         <NavbarLoggedIn />
       </nav>
 
-      <main className="flex lg:bg-gray-300">
-        {/* Side Profile */}
-        <aside className="hidden lg:fixed mt-16 lg:max-w-[25%] bg-white px-2 lg:block ">
-          <SideInformation />
-        </aside>
+        <main className="flex lg:bg-gray-300 max-w-screen-2xl mx-auto">
+          {/* Side Profile */}
+          <aside className="hidden fixed mt-16 lg:w-1/4 bg-white lg:block z-10">
+            <SideInformation />
+          </aside>
 
-        {/* Activity Cards Display*/}
-        <section className="mt-16 lg:ml-[25%] lg:pl-4 lg:w-[75%] lg:bg-gray-300 lg:relative">
-          <h1 className="text-[2rem] my-5 text-center font-bold lg:text-left lg:ml-10">
-            My Activity
-          </h1>
+          {/* Activity Cards Display*/}
+          <section className="mt-16 lg:pl-4 lg:w-3/4 lg:bg-gray-300 lg:relative overflow-y-auto z-1">
+            <h1 className="text-[2rem] my-5 text-center font-bold lg:text-left lg:ml-10">
+              My Activity
+            </h1>
 
-          {/* Create Button */}
+            {/* Create Button */}
 
-          <button className="hidden lg:block btn btn-circle bg-[#1CD6CE] hover:bg-[#1CD6CE] border-none text-white text-[1.5rem] lg:absolute lg:top-6 lg:right-6 z-50">
-            <AiOutlinePlus className="ml-3" />
-          </button>
+            <button className="hidden lg:block btn btn-circle bg-[#1CD6CE] hover:bg-[#1CD6CE] border-none text-white text-[1.5rem] lg:absolute lg:top-6 lg:right-6 z-50">
+              <AiOutlinePlus className="ml-3" />
+            </button>
 
-          {/* Card Display */}
-          <article className="w-screen lg:w-full">
-            <CardDisplay
-              activities={activities}
-              deleteData={deleteData}
-              updateData={updateData}
-            />
-          </article>
-        </section>
-      </main>
+            {/* Card Display */}
+            <article className="w-screen lg:w-full">
+              <CardDisplay
+                activities={activities}
+                deleteData={deleteData}
+                updateData={updateData}
+              />
+            </article>
+          </section>
+        </main>
     </div>
   );
 };
