@@ -1,16 +1,14 @@
 import "./DashBoard.css";
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
-import { Bar , Pie } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 import { BiSolidMoon } from "react-icons/Bi";
 import { HiMiniFire } from "react-icons/hi2";
 import SideInformation from "../navbar/SideInformationBar.jsx";
-import { CategoryScale, Chart ,  registerables } from "chart.js";
-
-
+import { CategoryScale, Chart, registerables } from "chart.js";
 
 export const DashBoard = () => {
   Chart.register(CategoryScale);
-  Chart.register(... registerables);
+  Chart.register(...registerables);
   const labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const BarChartData = {
     labels: labels,
@@ -91,18 +89,6 @@ export const DashBoard = () => {
                   <p>4.25</p>
                   <h2 className="card-title">Hours</h2>
                   <div className="card-actions justify-end">
-                    {/* <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"
-                        clipRule="evenodd"
-                      />
-                    </svg> */}
                     <BiSolidMoon />
                   </div>
                 </div>
@@ -114,18 +100,6 @@ export const DashBoard = () => {
                   <p>300</p>
                   <h2 className="card-title">Calories</h2>
                   <div className="card-actions justify-end">
-                    {/* <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M12.963 2.286a.75.75 0 00-1.071-.136 9.742 9.742 0 00-3.539 6.177A7.547 7.547 0 016.648 6.61a.75.75 0 00-1.152-.082A9 9 0 1015.68 4.534a7.46 7.46 0 01-2.717-2.248zM15.75 14.25a3.75 3.75 0 11-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 011.925-3.545 3.75 3.75 0 013.255 3.717z"
-                        clipRule="evenodd"
-                      />
-                    </svg> */}
                     <HiMiniFire />
                   </div>
                 </div>
