@@ -9,12 +9,12 @@ const MyActivity = () => {
   const [activities, setActivities] = useState([]);
   const [reload, setReload] = useState(false);
 
-  // Get data
+  // Get all activity cards
   useEffect(() => {
     const getData = async () => {
       try {
         const response = await axios.get(
-          "https://earth-testapi-new-com.onrender.com/activities"
+          "http://127.0.0.1:8000/activity/"
         );
         setActivities(response.data);
         console.log("Got data Successfully!", response);
@@ -25,7 +25,7 @@ const MyActivity = () => {
     getData();
   }, [reload]);
 
-  // Update Data
+  // Update a activity card
   const updateData = async (
     _id,
     date,
@@ -34,7 +34,6 @@ const MyActivity = () => {
     activity_name,
     activity_describe,
     image,
-    status
   ) => {
     try {
       const requestData = {
@@ -45,10 +44,9 @@ const MyActivity = () => {
         activity_name: activity_name,
         activity_describe: activity_describe,
         image: image,
-        status: status
       };
       const response = await axios.put(
-        `https://earth-testapi-new-com.onrender.com/activities/${_id}`,
+        `http://127.0.0.1:8000/activity/${_id}`,
         requestData
       );
 
@@ -61,11 +59,11 @@ const MyActivity = () => {
     }
   };
 
-  // Delete Data
+  // Delete a activity card
   const deleteData = async (_id) => {
     try {
       const response = await axios.delete(
-        `https://earth-testapi-new-com.onrender.com/activities/${_id}`
+        `http://127.0.0.1:8000/activity/${_id}`
       );
 
       if (response.status === 200) {

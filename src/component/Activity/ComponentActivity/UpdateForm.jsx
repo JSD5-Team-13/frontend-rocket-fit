@@ -138,7 +138,7 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
 
               {/* Image URL */}
               <input
-                className="hidden input input-bordered w-full mb-2"
+                className="input input-bordered w-full mb-2"
                 type="url"
                 placeholder="Image URL"
                 value={image}
