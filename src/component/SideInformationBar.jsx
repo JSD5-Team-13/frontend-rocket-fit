@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import MockupProfile from "../assets/blank-profile-picture-973460_960_720.jpg"
 
 
