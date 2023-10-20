@@ -38,17 +38,17 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
 
   return (
     <section className="fixed top-0 left-0 w-[100%] h-[100%] bg-black/50 flex justify-center items-center z-[100]">
-      <div className="modal-box flex flex-col justify-center items-center">
-       
+      <div className="bg-white px-4 py-8 rounded-2xl mx-7 flex flex-col justify-center items-center max-h-[80%] min-[425px]:w-[36rem]">
         <h3 className="font-bold text-lg mb-4">Edit Your Activity!</h3>
 
         {/* card */}
         <div className="card card-compact w-[90%] max-h-fit overflow-y-auto bg-gray-300 shadow-xl mx-auto">
           <main className="card-body">
             {/* Card Header */}
-            <div className="card-title uppercase bg-base-100 rounded-lg p-3 justify-center">
+            <div className="card-title bg-base-100 rounded-lg p-3 justify-center">
+              {/* Activity Name */}
               <input
-                className="input input-sm w-full uppercase text-center"
+                className="input w-full text-center"
                 type="text"
                 placeholder="Activity Name"
                 value={activity_name}
@@ -60,8 +60,12 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
             <section className="bg-base-100 rounded-lg p-2 md:p-4">
               {/* Card Data */}
               <section>
+                {/* Activity type */}
+                <label className="label">
+                  <span className="label-tex">Activity Type:</span>
+                </label>
                 <select
-                  className="select select-sm w-full uppercase mb-1"
+                  className="select select-bordered w-full"
                   name="activity_type"
                   id="activity_type"
                   value={activity_type}
@@ -85,29 +89,37 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
                   <option value="volleyball">Volleyball</option>
                 </select>
 
+                {/* Date */}
+                <label className="label">
+                  <span className="label-tex">Date:</span>
+                </label>
                 <input
-                  className="input input-sm w-full uppercase mb-1"
+                  className="input input-bordered w-full"
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                 />
 
-                <label className="input-sm flex mb-2">
-                  DURATION:
-                  <input
-                    className="input input-sm mx-2 w-[50%] min-[450px]:w-[60%] uppercase"
-                    type="number"
-                    // placeholder="DURATION"
-                    value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
-                  />
-                  <span className="max-[350px]:hidden block">MINS</span>
+                {/* Duration */}
+                <label className="label">
+                  <span className="label-tex">Duration (Mins):</span>
                 </label>
-
                 <input
-                  className="input input-bordered input-sm w-full mb-2 focus:outline-none"
+                  className="input input-bordered w-full"
+                  type="number"
+                  placeholder="00"
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                />
+
+                {/* Activity Describe */}
+                <label className="label">
+                  <span className="label-tex">Activity Describe:</span>
+                </label>
+                <input
+                  className="input input-bordered w-full mb-4"
                   type="text"
-                  placeholder="ACTIVITY DESCRIBE"
+                  placeholder="Activity Describe"
                   value={activity_describe}
                   onChange={(e) => setActivity_describe(e.target.value)}
                 />
@@ -119,19 +131,21 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
                   <img
                     src={image}
                     alt="Image Activity"
-                    className="rounded-xl w-[100%] h-[100%] object-cover"
+                    className="rounded-lg w-[100%] h-[100%] object-cover"
                   />
                 </figure>
               )}
 
+              {/* Image URL */}
               <input
-                className="input input-bordered input-sm w-full mb-2 focus:outline-none"
+                className="input input-bordered w-full mb-2"
                 type="url"
-                placeholder="IMAGE URL"
+                placeholder="Image URL"
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               />
 
+              {/* Image Upload from local */}
               <input
                 className="hidden"
                 id="file-input"
@@ -145,26 +159,24 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
                   }
                 }}
               />
+
+              {/* Handle Image */}
               <div className="flex">
                 <label
                   className="flex justify-center items-center w-1/2 input input-bordered input-sm cursor-pointer hover:text-[#1CD6CE] mr-2"
                   id="file-input-label"
                   htmlFor="file-input"
                 >
-                  <BsImages size={22} />{" "}
-                  <span className="hidden min-[465px]:block min-[425px]:ml-2">
-                    Add Image
-                  </span>
+                  <BsImages size={22} />
+                  <span className="hidden lg:block lg:ml-2">Add Image</span>
                 </label>
-                <button
+                <label
                   className="flex justify-center items-center input input-bordered input-sm w-1/2 hover:text-red-500 focus:outline-none"
                   onClick={() => setImage(null)}
                 >
-                  <AiOutlineDelete size={22} />{" "}
-                  <span className="hidden min-[465px]:block min-[425px]:ml-2">
-                    Delete Image
-                  </span>
-                </button>
+                  <AiOutlineDelete size={22} />
+                  <span className="hidden lg:block lg:ml-2">Reset Image</span>
+                </label>
               </div>
             </section>
           </main>
@@ -183,7 +195,6 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
           </button>
         </footer>
       </div>
-   
     </section>
   );
 };
