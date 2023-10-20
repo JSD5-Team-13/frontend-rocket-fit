@@ -46,7 +46,7 @@ export const DashBoard = () => {
     datasets: [
       {
         label: "# of Votes",
-        data: [4, 0, 1, 0, 1],
+        data: [10, 0, 1, 0, 1],
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",

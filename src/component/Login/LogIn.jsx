@@ -1,8 +1,45 @@
 import Navbar from "../navbar/NavbarNoneLoggedIn.jsx";
 import { FaUser } from "react-icons/Fa";
 import { FaLock } from "react-icons/Fa";
+import { useState } from "react";
+import axios from "axios";
 
 export const LogIn = () => {
+  const [value , setValue] = useState({
+    username : "",
+    password : ""
+})
+
+  const login = async (userData) => {
+    const response = await axios.post("http://127.0.0.1:8000/login" , userData)
+    if (response.status === 200) {
+      localStorage.setItem('rockettoken',response.data.token)
+      alert("login successfully")
+    } else if (response.status === 401) {
+      alert("username already exist")
+    } else {
+      console.log("error")
+    }
+  }
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setValue((prevValue) => ({
+      ...prevValue,
+      [name]: value,
+    }));
+  };
+  
+  const handleLogin = () => {
+    console.log(value)
+    const userData = {
+      username: value.username,
+      password: value.password
+    }
+    console.log(userData)
+    login(userData)
+  }
+  
   return (
     <div>
       <Navbar />
@@ -38,7 +75,10 @@ export const LogIn = () => {
                         <FaUser />
                       </span>
                       <input
+                        name="username"
                         type="text"
+                        value={value.username}
+                        onChange={handleInputChange}
                         placeholder="Username"
                         className="input input-bordered"
                       />
@@ -54,7 +94,10 @@ export const LogIn = () => {
                         <FaLock />
                       </span>
                       <input
-                        type="text"
+                        name="password"
+                        type="password"
+                        value={value.password}
+                        onChange={handleInputChange}
                         placeholder="Password"
                         className="input input-bordered"
                       />
@@ -72,7 +115,10 @@ export const LogIn = () => {
 
                 {/* login-button */}
                 <div className="form-control mt-6">
-                  <button className="btn bg-[#1CD6CE]">Login</button>
+                  <button 
+                  className="btn bg-[#80bcb9]"
+                  onClick={handleLogin}
+                  >Login</button>
                 </div>
               </div>
             </div>

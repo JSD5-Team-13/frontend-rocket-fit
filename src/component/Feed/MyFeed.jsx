@@ -78,7 +78,7 @@ const FeedProfile = () => {
           About Me
         </p>
         <p className="mx-5 font-semibold lg:bg-gray-300 lg:rounded-lg lg:px-3 lg:p-3">
-          Let's exercise together! Lorem ipsum, dolor sit amet consectetur
+          Let`s exercise together! Lorem ipsum, dolor sit amet consectetur
           adipisicing elit.
         </p>
       </section>
