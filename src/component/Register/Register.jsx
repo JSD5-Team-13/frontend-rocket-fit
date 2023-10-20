@@ -15,19 +15,6 @@ export const Register = () => {
     confirmPassword: "",
   });
 
-  // const createUser = async (value) => {
-  //   const res = await axios.post(api + "register/", value);
-  //   if (res.data.status === 200) {
-  //     alert(res.data);
-  //     console.log("register sc", res);
-  //   } else if (res === 401) {
-  //     alert(res.data);
-  //     console.log("401", res);
-  //   } else {
-  //     console.log(Error, "Server Error ");
-  //   }
-  // };
-
   const handleChange = (e) => {
     setValue({ ...value, [e.target.name]: e.target.value });
   };
