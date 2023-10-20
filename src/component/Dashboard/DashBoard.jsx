@@ -1,12 +1,16 @@
 import "./DashBoard.css";
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
-import { Bar } from "react-chartjs-2";
-import { Pie } from "react-chartjs-2";
+import { Bar , Pie } from "react-chartjs-2";
 import { BiSolidMoon } from "react-icons/Bi";
 import { HiMiniFire } from "react-icons/hi2";
 import SideInformation from "../navbar/SideInformationBar.jsx";
+import { CategoryScale, Chart ,  registerables } from "chart.js";
+
+
 
 export const DashBoard = () => {
+  Chart.register(CategoryScale);
+  Chart.register(... registerables);
   const labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const BarChartData = {
     labels: labels,
@@ -66,9 +70,9 @@ export const DashBoard = () => {
   return (
     <>
       <NavbarLoggedIn />
-      <div className="dashboard object-cover">
+      <div className="dashboard object-cover max-w-screen-2xl mx-auto my-0">
         {/* SideInformation */}
-        <div className="user-profile">
+        <div className="user-profile z-0">
           <SideInformation />
         </div>
         {/* dashboard */}
@@ -80,9 +84,9 @@ export const DashBoard = () => {
             <strong>WEEKLY OVERVIEW</strong>
           </h3>
           {/* Card sleep & cal */}
-          <div className="summarize-sleep-cal">
+          <div className="summarize-sleep-cal -z-1">
             <div className="data-sleep ">
-              <div className="card bg-base-300 ">
+              <div className="card bg-base-300">
                 <div className="card-body">
                   <p>4.25</p>
                   <h2 className="card-title">Hours</h2>

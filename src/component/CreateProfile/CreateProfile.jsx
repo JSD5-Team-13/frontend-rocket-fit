@@ -1,4 +1,4 @@
-import { FaUser } from "react-icons/fa";
+// import { FaUser } from "react-icons/fa";
 
 const CreateProfile = () => {
   return (
@@ -6,7 +6,7 @@ const CreateProfile = () => {
       <div className="flex flex-col items-center lg:bg-[#D9D9D9] lg:w-[70%]  lg:pb-[3rem] lg:rounded-[1.5rem]">
         {/* profile picture */}
         <div className="lg:bg-white bg-[#D9D9D9] h-[12rem] w-[12rem] mt-[3rem] rounded-full flex flex-col justify-center items-center">
-          <FaUser className="text-[5rem] text-black" />
+          {/* <FaUser className="text-[5rem] text-black" /> */}
           <div>
             <input type="file" id="files" className="hidden" />
             <label htmlFor="files" className="font-bold">

@@ -15,6 +15,8 @@ import MyFeed from './component/Feed/MyFeed.jsx';
 import { DashBoard } from './component/Dashboard/DashBoard.jsx';
 import CalendarMain from './component/Calandar/Calendar.jsx';
 import AccountSetting from './component/Account/AccountSetting.jsx';
+import { ResetPassword } from './component/Login/ResetPassword';
+import CreateProfile from './component/CreateProfile/CreateProfile';
 
 const router = createBrowserRouter ([
   {
@@ -27,7 +29,15 @@ const router = createBrowserRouter ([
   },
   {
     path : "/login",
-    element : <LogIn />
+    element : <LogIn />,
+  },
+  {
+    path : "/forget_password",
+    element : <ResetPassword />
+  },
+  {
+    path : "/create_profile",
+    element : <CreateProfile />
   },
   {
     path : "/main",
