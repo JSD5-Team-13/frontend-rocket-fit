@@ -69,7 +69,7 @@ export const DashBoard = () => {
     const getDashboardData = async () => {
       const url = "http://localhost:8000";
       return await axios
-      //get all
+        //get all
         .get(url + `/dashboard`)
         //get buy user id
         // .get(url + `/dashboard/${id}`)
@@ -140,22 +140,25 @@ export const DashBoard = () => {
       <NavbarLoggedIn />
       <div
         id="dashboard"
-        className="object-cover max-w-screen-2xl mx-auto my-0 flex flex-row"
+        className="max-w-screen-2xl mx-auto flex flex-row relative z-0"
       >
         {/* SideInformation */}
-        <div id="user-profile" className=" z-0 w-1/4 lg:block hidden">
+        <div
+          id="user-profile"
+          className=" z-0 w-1/4 lg:block hidden mt-[80px] "
+        >
           <SideInformation />
         </div>
 
         {/* dashboard */}
         <div
           id="data-dashboard"
-          className=" lg:w-3/4 lg:p-[30px] justify-center text-start bg-gray-100 w-full "
+          className=" lg:w-3/4 lg:p-[30px] justify-center text-start bg-gray-100 w-full mt-[80px]"
         >
-          <h1 className="pl-0 m-4">
+          <h1 className="pl-0 m-4 text-[2rem]">
             <strong> DASHBOARD</strong>
           </h1>
-          <h3 className="pl-0 m-4">
+          <h3 className="pl-0 m-4 text-[2rem]">
             <strong>WEEKLY OVERVIEW</strong>
           </h3>
 

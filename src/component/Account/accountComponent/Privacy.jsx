@@ -1,5 +1,7 @@
 import React from "react";
 
+
+
 const Privacy = () => {
   return (
     <div className="w-full">
@@ -12,7 +14,7 @@ const Privacy = () => {
             <input
               type="text"
               id="deleteAccount"
-              className="text-center text-red-700 rounded-md input input-bordered input-sm"
+              className="w-3/4 text-center text-red-700 rounded-md input input-bordered input-sm"
               placeholder="delete account"
             />
           </div>
