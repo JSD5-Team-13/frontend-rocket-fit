@@ -45,7 +45,7 @@ const Mainpage = () => {
                     {/* Form Area */}
                     {/* Crete Activity Area */}
                     <div className="card card-side card-compact bg-base-300 shadow-xl w-[80%] my-4">
-                        <figure className="w-[20%] avatar">
+                    <figure className="w-[20%] avatar">
                         <HiOutlinePlusSm className="w-[70%] h-[60%] rounded-full"/>
                         </figure>
                         <div className="card-body">
