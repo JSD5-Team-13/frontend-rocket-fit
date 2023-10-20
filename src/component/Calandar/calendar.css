@@ -224,7 +224,7 @@ body {
   }
   
   .memo-list {
-    width: calc(100% - 24px); /* Adjust the width to take up the full width */
+    width: 100%; /* Adjust the width to take up the full width */
     margin-left: 0;
     margin-top: 24px;
   }

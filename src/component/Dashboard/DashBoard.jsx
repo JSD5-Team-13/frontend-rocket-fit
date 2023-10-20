@@ -158,7 +158,7 @@ export const DashBoard = () => {
           <h1 className="pl-0 m-4 text-[2rem]">
             <strong> DASHBOARD</strong>
           </h1>
-          <h3 className="pl-0 m-4 text-[2rem]">
+          <h3 className="pl-0 m-4 text-[1.5rem]">
             <strong>WEEKLY OVERVIEW</strong>
           </h3>
 

@@ -19,21 +19,21 @@ const Navbar = () => {
         <ul className="menu menu-horizontal px-1 text-white hidden lg:flex">
           <Link to={"/"}>
             <li>
-              <a href="#home">Home</a>
+              <a href="#home" className="text-base">Home</a>
             </li>
           </Link>
 
           <li>
-            <a href="#about">About</a>
+            <a href="#about" className="text-base">About</a>
           </li>
 
           <li>
-            <a href="#contact">Contact Us</a>
+            <a href="#contact" className="text-base">Contact Us</a>
           </li>
 
           <li>
             <Link to={"/register"}>
-              <a>Register</a>
+              <a className="text-base">Register</a>
             </Link>
           </li>
         </ul>

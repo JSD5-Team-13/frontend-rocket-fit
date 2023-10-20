@@ -186,7 +186,7 @@ const CalendarMain = () => {
     <>
       <NavbarLoggedIn />
       <div className="app-container">
-        <header className="flex lg:justify-start justify-center mt-[100px] mb-4 lg:mb-[2rem] gap-4 lg:ml-[149px]">
+        <header className="flex lg:justify-start justify-center mt-[100px] mb-4 lg:mb-[2rem] gap-4">
           <h1 className="text-[2rem] lg:text-4xl  uppercase font-bold">
             Calendar
           </h1>

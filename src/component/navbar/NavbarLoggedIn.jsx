@@ -8,8 +8,8 @@ const NavbarLoggedIn = () => {
         <div className="navbar bg-neutral h-[5rem] fixed z-10">
             {/* Navigation Bar Start */}
             <div className="navbar-start">
-                <img src={LogoFull} alt='logo' className='hidden w-auto h-10 mx-4 lg:block' />
-                <img src={Logo} alt='logo' className='w-auto h-10 mx-4 lg:hidden' />
+                <a href="/main"><img src={LogoFull} alt='logo' className='hidden w-auto h-10 mx-4 lg:block' /></a>
+                <a href="/main"><img src={Logo} alt='logo' className='w-auto h-10 mx-4 lg:hidden' /></a>
             </div>
             {/* Navigation Bar End */}
             <div className="navbar-end">
