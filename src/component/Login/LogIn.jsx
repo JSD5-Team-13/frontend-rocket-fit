@@ -31,7 +31,7 @@ export const LogIn = () => {
                   {/* input-username */}
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text">Username</span>
+                      <span className="label-text">Email</span>
                     </label>
                     <label className="input-group">
                       <span>
@@ -39,7 +39,7 @@ export const LogIn = () => {
                       </span>
                       <input
                         type="text"
-                        placeholder="Username"
+                        placeholder="Email"
                         className="input input-bordered"
                       />
                     </label>
@@ -73,8 +73,10 @@ export const LogIn = () => {
                 </div>
 
                 {/* login-button */}
-                <div className="form-control mt-6">
-                  <button className="btn bg-[#1CD6CE]">Login</button>
+                <div className="flex justify-center mt-[0.5rem]">
+                  <button className="btn btn-accent rounded-[1.5rem] w-[15rem]">
+                    Login
+                  </button>
                 </div>
               </div>
             </div>
