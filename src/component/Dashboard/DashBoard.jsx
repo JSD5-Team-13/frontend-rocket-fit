@@ -69,7 +69,11 @@ export const DashBoard = () => {
     const getDashboardData = async () => {
       const url = "http://localhost:8000";
       return await axios
-        .get(url + "/dashboard")
+      //get all
+        .get(url + `/dashboard`)
+        //get buy user id
+        // .get(url + `/dashboard/${id}`)
+
         .then((res) => setDashboardData(res.data));
     };
 
