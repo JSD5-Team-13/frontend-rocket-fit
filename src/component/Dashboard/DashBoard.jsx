@@ -1,21 +1,87 @@
-import "./DashBoard.css";
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
 import { Bar, Pie } from "react-chartjs-2";
 import { BiSolidMoon } from "react-icons/Bi";
-import { HiMiniFire } from "react-icons/hi2";
 import SideInformation from "../navbar/SideInformationBar.jsx";
 import { CategoryScale, Chart, registerables } from "chart.js";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Colors } from "chart.js";
+
+//setup chart
+Chart.register(CategoryScale);
+Chart.register(...registerables);
+Chart.register(Colors);
+
+// const activityType = {
+//   Running: "running",
+//   Walking: "walking",
+//   Cycling: "cycling",
+//   Swimming: "swimming",
+//   Hiking: "hiking",
+//   WeightTraining: "weight_training",
+//   Yoga: "yoga",
+//   Surfing: "surfing",
+//   Basketball: "basketball",
+//   Football: "football",
+//   Badminton: "badminton",
+//   Tennis: "tennis",
+//   Volleyball: "volleyball",
+// };
+
+const initialDashboardData = {
+  durationPerDay: [
+    {
+      day: "sun",
+      value: 0,
+    },
+    {
+      day: "mon",
+      value: 0,
+    },
+    {
+      day: "tue",
+      value: 0,
+    },
+    {
+      day: "wed",
+      value: 0,
+    },
+    {
+      day: "thu",
+      value: 0,
+    },
+    {
+      day: "fri",
+      value: 0,
+    },
+    {
+      day: "sat",
+      value: 0,
+    },
+  ],
+  activityPerWeek: [],
+};
 
 export const DashBoard = () => {
-  Chart.register(CategoryScale);
-  Chart.register(...registerables);
-  const labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const [dashboardData, setDashboardData] = useState(initialDashboardData);
+  //get data
+  useEffect(() => {
+    const getDashboardData = async () => {
+      const url = "http://localhost:8000";
+      return await axios
+        .get(url + "/dashboard")
+        .then((res) => setDashboardData(res.data));
+    };
+
+    getDashboardData();
+  }, []);
+  //map item like initialDashboardData
   const BarChartData = {
-    labels: labels,
+    labels: dashboardData.durationPerDay.map((item) => item.day),
     datasets: [
       {
-        label: "My Duation (min.)",
-        data: [65, 59, 80, 81, 56, 55, 40],
+        label: "My Duration (min.)",
+        data: dashboardData.durationPerDay.map((item) => item.value),
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(255, 159, 64, 0.2)",
@@ -40,11 +106,11 @@ export const DashBoard = () => {
   };
 
   const PieChartData = {
-    labels: ["Run", "Swim", "Weigth", "Bike", "Yoga"],
+    labels: dashboardData.activityPerWeek.map((item) => item.activityType),
     datasets: [
       {
         label: "# of Votes",
-        data: [4, 0, 1, 0, 1],
+        data: dashboardData.activityPerWeek.map((item) => item.value),
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",
@@ -68,22 +134,32 @@ export const DashBoard = () => {
   return (
     <>
       <NavbarLoggedIn />
-      <div className="dashboard object-cover max-w-screen-2xl mx-auto my-0">
+      <div
+        id="dashboard"
+        className="object-cover max-w-screen-2xl mx-auto my-0 flex flex-row"
+      >
         {/* SideInformation */}
-        <div className="user-profile z-0">
+        <div id="user-profile" className=" z-0 w-1/4 lg:block hidden">
           <SideInformation />
         </div>
+
         {/* dashboard */}
-        <div className="data-dashboard  bg-gray-100">
-          <h1>
+        <div
+          id="data-dashboard"
+          className=" lg:w-3/4 lg:p-[30px] justify-center text-start bg-gray-100 w-full "
+        >
+          <h1 className="pl-0 m-4">
             <strong> DASHBOARD</strong>
           </h1>
-          <h3>
+          <h3 className="pl-0 m-4">
             <strong>WEEKLY OVERVIEW</strong>
           </h3>
-          {/* Card sleep & cal */}
-          <div className="summarize-sleep-cal -z-1">
-            <div className="data-sleep ">
+
+          <div
+            id="card_sleep_BMI"
+            className=" -z-1 flex lg:flex-row lg:justify-around lg:py-[30px] flex-col justify-around gap-y-5 pt-[30px] m-10"
+          >
+            <div id="card-sleep" className=" lg:w-[45%] items-center w-full ">
               <div className="card bg-base-300">
                 <div className="card-body">
                   <p>4.25</p>
@@ -94,21 +170,76 @@ export const DashBoard = () => {
                 </div>
               </div>
             </div>
-            <div className="data-calories">
+
+            <div
+              id="card-BMI"
+              className="lg:w-[45%] items-center w-full pb-[30px]"
+            >
               <div className="card bg-base-300">
                 <div className="card-body">
-                  <p>300</p>
-                  <h2 className="card-title">Calories</h2>
-                  <div className="card-actions justify-end">
-                    <HiMiniFire />
+                  <p>16.65</p>
+                  <h2 className="card-title">BMI</h2>
+                  <div className="flex justify-center">
+                    {/* <ul className="">
+                      <li className="">underweight</li>
+                      <li className="">normal</li>
+                      <li className="">overweight</li>
+                      <li className="">obese</li>
+                      <li className="">extremly obese</li>
+                    </ul> */}
+                  </div>
+                  <div className="flex  justify-end">
+                    <svg
+                      width="16px"
+                      height="16px"
+                      viewBox="0 -0.5 17 17"
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                      class="si-glyph si-glyph-wieght"
+                      fill="#000000"
+                    >
+                      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                      <g
+                        id="SVGRepo_tracerCarrier"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></g>
+                      <g id="SVGRepo_iconCarrier">
+                        {" "}
+                        <title>1010</title> <defs> </defs>{" "}
+                        <g
+                          stroke="none"
+                          stroke-width="1"
+                          fill="none"
+                          fill-rule="evenodd"
+                        >
+                          {" "}
+                          <path
+                            d="M16,6.079 L16,5 L14.045,5 L14.045,8 L4,8 L4,5.041 L2,5.041 L2,6.052 L1.039,6.052 L1.039,11.958 L2,11.958 L2,12.955 L4,12.955 L4,10 L14.045,10 L14.045,12.996 L16,12.996 L16,11.958 L17,11.958 L17,6.079 L16,6.079 Z"
+                            fill="#000000"
+                            class="si-glyph-fill"
+                          >
+                            {" "}
+                          </path>{" "}
+                        </g>{" "}
+                      </g>
+                    </svg>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
           {/* chart */}
-          <div className="data-chart">
-            <div className="bar-chart-activity-duration ">
+          <div
+            id="data-chart"
+            className=" flex lg:flex-row lg:justify-around lg:p-[30px] flex-col justify-around gap-y-5 m-10"
+          >
+            <div
+              id="bar-chart-activity-duration"
+              className=" bg-base-300 p-3 rounded-lg h-[300px] lg:w-2/4 lg:mr-[15px] flex justify-center items-center w-full"
+            >
               <Bar
                 data={BarChartData}
                 options={{
@@ -124,7 +255,11 @@ export const DashBoard = () => {
                 }}
               />
             </div>
-            <div className="pie-chart-activity-type ">
+
+            <div
+              id="pie-chart-activity-type"
+              className=" bg-base-300 p-3 rounded-lg m-auto h-[300px] lg:w-2/4 lg:ml-[15px] flex justify-center items-center w-full"
+            >
               <Pie
                 data={PieChartData}
                 options={{
@@ -132,6 +267,9 @@ export const DashBoard = () => {
                     title: {
                       display: true,
                       text: "Your Activity Type In The Week",
+                    },
+                    legend: {
+                      position: "right",
                     },
                   },
                 }}
