@@ -1,9 +1,8 @@
-import { useState } from "react";
 import CardFunction from "./CardFunction";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const CardDisplay = ({ activities, deleteData, updateData }) => {
-  const [alertShare, setAlertShare] = useState(false);
   const handleShare = async (
     _id,
     activity_type,
@@ -24,10 +23,12 @@ const CardDisplay = ({ activities, deleteData, updateData }) => {
       const response = await axios.post("http://127.0.0.1:8000/post/", newPost);
       if (response.status === 200) {
         console.log("Post created successfully", response);
-        setAlertShare(true);
-        setTimeout(() => {
-          setAlertShare(false);
-        }, 2000);
+        Swal.fire({
+          icon: "success",
+          title: "Your activity has been shared!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     } catch (error) {
       console.error("Failed to create post", error);
@@ -105,26 +106,6 @@ const CardDisplay = ({ activities, deleteData, updateData }) => {
           );
         })}
       </div>
-      {alertShare && (
-        <div>
-          <div className="alert alert-success fixed w-full lg:w-[70%] bottom-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="stroke-current shrink-0 h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span>Your activity has been shared!</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
