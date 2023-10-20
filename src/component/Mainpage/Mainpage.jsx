@@ -27,7 +27,7 @@ const Mainpage = () => {
 <div className="w-full ">
             <div className="flex flex-row justify-center mx-auto my-0 max-w-screen-2xl md:mx-auto">
                 
-                <aside className="sticky top-0 hidden shadow-lg lg:w-1/4 lg:block">
+                <aside className="top-0 hidden shadow-lg lg:w-1/4 lg:block">
                 <SideInformation />
                 </aside>
                 
@@ -137,7 +137,7 @@ const Mainpage = () => {
                     {/* End Form Area */}
                 </div>
                 
-                <div className="sticky top-0 flex-col hidden shadow-md lg:flex lg:w-1/4">
+                <div className="top-0 flex-col hidden shadow-md lg:flex lg:w-1/4">
                     <div className="self-start m-6">
                     <h1 className="text-3xl font-semibold">Connection</h1>
                     </div>
