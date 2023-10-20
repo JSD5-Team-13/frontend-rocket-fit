@@ -18,6 +18,7 @@ import CalendarMain from './component/Calandar/Calendar.jsx';
 import AccountSetting from './component/Account/AccountSetting.jsx';
 import { ResetPassword } from './component/Login/ResetPassword';
 import CreateProfile from './component/CreateProfile/CreateProfile';
+import Connection from './component/Connection/Connection.jsx';
 
 const router = createBrowserRouter ([
   {
@@ -72,6 +73,10 @@ const router = createBrowserRouter ([
     path : "/account",
     element : <AccountSetting />
   },
+  {
+    path : "/connection",
+    element : <Connection />
+  }
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(

@@ -1,3 +1,6 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
 import { useState, useEffect } from "react";
 import axios from "axios";

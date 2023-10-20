@@ -1,22 +1,25 @@
-import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx"
-import SideInformation from "../navbar/SideInformationBar.jsx"
+import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
+import SideInformation from "../navbar/SideInformationBar.jsx";
 import { useState } from "react";
-import {HiOutlinePlusSm,HiOutlinePresentationChartLine,HiOutlineMoon} from 'react-icons/hi'
-import MockupProfile from "../../assets/blank-profile-picture-973460_960_720.jpg"
+import {
+  HiOutlinePlusSm,
+  HiOutlinePresentationChartLine,
+  HiOutlineMoon,
+} from "react-icons/hi";
+import MockupProfile from "../../assets/blank-profile-picture-973460_960_720.jpg";
 
 function getDate() {
-    const today = new Date();
-    const month = today.getMonth() +1 ;
-    const year = today.getFullYear();
-    const date = today.getDate();
-    return `${date}/${month}/${year}`;
+  const today = new Date();
+  const month = today.getMonth() + 1;
+  const year = today.getFullYear();
+  const date = today.getDate();
+  return `${date}/${month}/${year}`;
 }
 
 const Mainpage = () => {
-
-    // eslint-disable-next-line no-unused-vars
-    const [currentDate, setCurrentDate] = useState(getDate());
-    const username = "username";
+  // eslint-disable-next-line no-unused-vars
+  const [currentDate, setCurrentDate] = useState(getDate());
+  const username = "username";
 
     return (
         <div className=" h-[100vh] fixed w-full">
