@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react/prop-types */
+import React, { useEffect, useState } from "react";
 import Layout from "../Layout.jsx";
 
 
@@ -7,27 +8,134 @@ import Layout from "../Layout.jsx";
 import Account from "./accountComponent/Account.jsx";
 import Password from "./accountComponent/Password.jsx";
 import Privacy from "./accountComponent/Privacy.jsx";
+import axios from "axios";
 
 const AccountSetting = () => {
   const [option, setOption] = useState("ACCOUNT");
-
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [userData, setUserData] = useState("");
+  
   const showOption = (option) => {
     switch (option) {
       case "ACCOUNT":
-        return <Account />;
+        return <Account setShowAlert={setShowAlert} setAlertMessage={setAlertMessage} />;
 
       case "PASSWORD":
-        return <Password />;
+        return <Password setShowAlert={setShowAlert} setAlertMessage={setAlertMessage}/>;
 
-      case "PRIVACY":
+      case "DELETE ACCOUNT":
         return <Privacy />;
       default:
         return null;
     }
   };
 
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      axios
+        .get("https://mock-fitness.onrender.com/user/view", {
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+        })
+        .then((response) => {
+          const userDataFromAPI = response.data.username;
+          setUserData(userDataFromAPI);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data", error);
+        });
+    }
+  }, []);
+
+
+  const Alert = ({ message, onClose }) => {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-row items-end justify-center max-w-[95%] mx-auto mb-10 md:w-4/6 lg:w-3/6">
+        {alertMessage === "Update completed" ? (
+          <div className="alert alert-success flex flex-col md:justify-between justify-center w-full gap-2 md:flex-row lg:gap-[1rem]">
+            <div className="flex flex-col items-center justify-center md:gap-4 md:flex-row">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6 stroke-current shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>Your update completed!</span>
+            </div>
+            <div className="flex flex-row items-center justify-center">
+              <button onClick={onClose}>Close</button>
+            </div>
+          </div>
+        ) : alertMessage === "Password not correct" ? (
+          <div className="alert alert-error flex flex-col md:justify-between justify-center w-full gap-2 md:flex-row md:gap-[1rem]">
+            <div className="flex flex-col items-center justify-center md:gap-4 md:flex-row">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6 stroke-current shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>Current password is not correct</span>
+            </div>
+            <div className="flex flex-row items-center justify-center">
+              <button onClick={onClose}>Close</button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col md:justify-between justify-center w-full gap-2 md:flex-row alert alert-warning md:gap-[1rem]">
+            <div className="flex flex-col items-center justify-center md:gap-4 md:flex-row">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6 stroke-current shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+              <span>{message}</span>
+            </div>
+            <div className="flex flex-row items-center justify-center">
+              <button onClick={onClose}>Close</button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const closeAlert = () => {
+    setShowAlert(false); // ปิดหน้าต่างแจ้งเตือน
+    setAlertMessage(""); // ล้างข้อความแจ้งเตือน
+  };
+
+
   return (
     <Layout className="max-w-[1440px] flex items-center">
+
+    {showAlert && <Alert message={alertMessage} onClose={closeAlert} />}
+
       {/* mobile mode  */}
       <div className="flex flex-col justify-between flex-grow w-full h-[95vh]  lg:hidden">
         <div>
@@ -41,7 +149,7 @@ const AccountSetting = () => {
           <div>
             {/* profile  */}
             <div className="flex flex-col items-center justify-center w-full mx-auto">
-              <Profile />
+              <Profile userData={userData} />
             </div>
 
             <div
@@ -83,14 +191,14 @@ const AccountSetting = () => {
                 <div
                   tabIndex={0}
                   className="flex flex-row items-center h-10 collapse collapse-arrow"
-                  onClick={() => setOption("PRIVACY")}
+                  onClick={() => setOption("DELETE ACCOUNT")}
                 >
                   <div className="text-xl font-medium lowercase collapse-title">
                     Privacy
                   </div>
                 </div>
 
-                {option ==="PRIVACY" ? showOption(option): null}
+                {option ==="DELETE ACCOUNT" ? showOption(option): null}
               </div>
             </div>
           </div>
@@ -114,7 +222,7 @@ const AccountSetting = () => {
 
           {/* left area */}
           <div className="w-2/5 max-w-[1440px] border-r-2 h-full">
-            <Profile />
+            <Profile userData={userData} />
             <div className="flex flex-col justify-start">
               <div
                 className="w-full flex items-center h-[4rem] pl-10 text-3xl hover:bg-slate-100 font-bold lowercase"
@@ -130,9 +238,9 @@ const AccountSetting = () => {
               </div>
               <div
                 className="w-full flex items-center h-[4rem] pl-10 text-3xl hover:bg-slate-100 font-bold lowercase"
-                onClick={() => setOption("PRIVACY")} // เมื่อคลิกเลือก "Security & Privacy"
+                onClick={() => setOption("DELETE ACCOUNT")} // เมื่อคลิกเลือก "Security & Privacy"
               >
-                <h3>Security & Privacy</h3>
+                <h3>Delete Account</h3>
               </div>
             </div>
             <div className="w-full flex items-center h-[4rem] pl-10 text-3xl hover:bg-slate-100 font-bold lowercase">
@@ -166,7 +274,7 @@ const AccountSetting = () => {
 
 
 
-const Profile = () => {
+const Profile = ({ userData }) => {
   return (
     <div className="flex flex-col items-center w-full gap-4 px-2 py-4">
       <div className="w-48 h-48 overflow-hidden rounded-full">
@@ -177,7 +285,7 @@ const Profile = () => {
         />
       </div>
       <div className="text-3xl font-semibold text-center">
-        <h3>John Doh</h3>
+      <h2>@{userData}</h2>
       </div>
     </div>
   );
