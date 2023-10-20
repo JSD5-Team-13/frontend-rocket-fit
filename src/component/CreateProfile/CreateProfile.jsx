@@ -5,11 +5,12 @@ const CreateProfile = () => {
     <section className="lg:flex lg:justify-center lg:items-center lg:h-screen">
       <div className="flex flex-col items-center lg:bg-[#D9D9D9] lg:w-[70%]  lg:pb-[3rem] lg:rounded-[1.5rem]">
         {/* profile picture */}
-        <div className="lg:bg-white bg-[#D9D9D9] h-[12rem] w-[12rem] mt-[3rem] rounded-full flex flex-col justify-center items-center">
+
+        <div className="lg:bg-white bg-[#D9D9D9] h-[12rem] w-[12rem] max-w-xs mt-[3rem] rounded-full flex flex-col justify-center items-center ">
           <MdPeopleAlt className="text-[5rem] text-black" />
           <div>
             <input type="file" id="files" className="hidden" />
-            <label htmlFor="files" className="font-bold">
+            <label htmlFor="files" className="font-bold hover:text-red-500">
               Upload Profile Picture
             </label>
           </div>
@@ -23,9 +24,32 @@ const CreateProfile = () => {
         <div>
           {/*input Height Weight */}
           <div className="grid gap-4 grid-cols-2 p-5">
+            {/* First Name */}
             <div className="form-control w-full max-w-xs">
-              {" "}
-              {/* Height */}
+              <label className="label">
+                <span className="label-text">First Name</span>
+              </label>
+              <input
+                type="text"
+                placeholder="First Name"
+                className="input bg-[#D9D9D9] lg:bg-white w-full max-w-xs"
+              />
+            </div>
+
+            {/* Last Name */}
+            <div className="form-control w-full max-w-xs">
+              <label className="label">
+                <span className="label-text">Last Name</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Last Name"
+                className="input bg-[#D9D9D9] lg:bg-white w-full max-w-xs"
+              />
+            </div>
+
+            {/* Height */}
+            <div className="form-control w-full max-w-xs">
               <label className="label">
                 <span className="label-text">Height</span>
               </label>
@@ -36,9 +60,8 @@ const CreateProfile = () => {
               />
             </div>
 
+            {/* Weight */}
             <div className="form-control w-full max-w-xs">
-              {" "}
-              {/* Weight */}
               <label className="label">
                 <span className="label-text">Weight</span>
               </label>
@@ -48,25 +71,12 @@ const CreateProfile = () => {
                 className="input bg-[#D9D9D9] lg:bg-white w-full max-w-xs"
               />
             </div>
-
-            {/* <div>
-               Bmi & Status 
-              <div className="form-control w-full max-w-xs">
-                 BMI 
-                <label className="label">
-                  <span className="label-text">BMI</span>
-                </label>
-                <div className="input bg-[#D9D9D9] lg:bg-white w-full max-w-xs"></div>
-              </div>
-              <div>  Status </div>
-            </div> */}
           </div>
 
           {/*Gender & DoB */}
           <div className="w-[100%] px-5 ">
+            {/* Gender */}
             <div className="form-control w-full ">
-              {" "}
-              {/* Gender */}
               <label className="label">
                 <span className="label-text">Gender</span>
               </label>
@@ -81,9 +91,8 @@ const CreateProfile = () => {
               </select>
             </div>
 
+            {/* DoB */}
             <div className="form-control w-full ">
-              {" "}
-              {/* DoB */}
               <label className="label">
                 <span className="label-text">Date of Birth</span>
               </label>
