@@ -37,7 +37,7 @@ const NavbarLoggedIn = () => {
                     <div className="px-4 dropdown dropdown-hover dropdown-end">
                         <label tabIndex={0} className="text-white">Profile</label>
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
-                            <li><a href='/setting'>Setting</a></li>
+                            <li><a href='/account'>Setting</a></li>
                             <li><a>Log Out</a></li>
                         </ul>
                     </div>
@@ -64,7 +64,7 @@ const NavbarLoggedIn = () => {
                             <li><a href='/activity'>My Activity</a></li>
                             <li><a href='/dashboard'>Dashboard</a></li>
                             <p className='underline'>Profile</p>
-                            <li><a href='/setting'>Setting</a></li>
+                            <li><a href='/account'>Setting</a></li>
                             <li><a>Log Out</a></li>
                         </ul>
                     </div>
