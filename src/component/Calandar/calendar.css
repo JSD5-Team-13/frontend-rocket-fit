@@ -15,17 +15,6 @@ body {
   margin: 0 auto;
 }
 
-/* Modern header styles */
-.app-header {
-  text-align: center;
-  margin: 16px 0;
-}
-
-.app-header h1 {
-  font-size: 24px;
-  color: #333;
-}
-
 /* Modern main content styles */
 .app-main {
   display: flex;
@@ -163,14 +152,6 @@ body {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: none;
-}
-
-/* Modal header styles */
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
 }
 
 .event-indicator {
