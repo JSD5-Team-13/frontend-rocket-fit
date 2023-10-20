@@ -33,6 +33,7 @@ const ActivityForm = () => {
     setSelectedImage("");
   }, [reload]);
 
+  // eslint-disable-next-line react/prop-types
   const Alert = ({ message, onClose }) => {
     return (
       <div className="fixed inset-0 z-50 flex flex-row items-end justify-center w-[95%] mx-auto mb-10 md:w-4/6 lg:w-3/6">
@@ -147,14 +148,18 @@ const ActivityForm = () => {
       }
 
       const response = await axios.post(
-        "https://earth-testapi-new-com.onrender.com/activities",
+        "https://mock-fitness.onrender.com/activity",
         {
           activity_type: selectedType,
-          activity_name: createdTitle,
-          activity_describe: createdDesc,
+          title: createdTitle,
+          description: createdDesc,
           duration: durationTime,
           date: selectDate,
-          image: selectedImage,
+          image_url: selectedImage,
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          },
         }
       );
 
@@ -172,15 +177,11 @@ const ActivityForm = () => {
   return (
     <Layout>
       <div className="flex flex-row w-screen max-w-[1440px] mx-auto justify-between items-start">
-        <div className="hidden w-2/6 px-2 lg:block">
-          <SideInformation />
-        </div>
-
-        <div className="flex flex-col px-4  pt-2 pb-8 items-center justify-center mx-auto w-full gap-[1.5rem]">
+        <div className="flex flex-col px-4  pt-2 pb-8 items-center justify-center mx-auto w-full max-w-[1024px] gap-[1.5rem]">
           <h1 className="w-full mx-auto mt-[2rem] text-2xl md:text-[2rem] lg:text-[3rem] font-bold text-center md:text-left">
             Create Activity
           </h1>
-          <div className="w-full  max-w-[424px] flex flex-col sm:min-w-[425px] lg:w-full lg:max-w-[1024px] p-4 m-4 bg-white rounded-lg shadow-lg">
+          <div className="w-full min-w-[320px] max-w-[424px] flex flex-col sm:min-w-full md:min-w-full lg:w-full lg:max-w-[1024px] p-4 m-4 bg-white rounded-lg shadow-lg">
             {showAlert && <Alert message={alertMessage} onClose={closeAlert} />}
 
             {/* top area */}
@@ -193,7 +194,6 @@ const ActivityForm = () => {
 
             {/* middle area */}
             <div className="flex flex-col justify-around w-full lg:flex-row lg:gap-4">
-
               {/* left area    */}
               <div className="w-full lg:w-2/4 lg:h-full">
                 <ActivityName
@@ -232,11 +232,7 @@ const ActivityForm = () => {
           </div>
           {/* bottom area  */}
           <div className="flex flex-row items-center justify-center w-full gap-4">
-
-            <button
-              className="w-1/4 btn"
-              onClick={ResetHandler}
-            >
+            <button className="w-1/4 btn" onClick={ResetHandler}>
               Cancel
             </button>
 
@@ -276,10 +272,9 @@ export const ActivityType = ({ selectedType, setSelectedType }) => {
 
   return (
     <div className="w-full lg:w-2/4">
-      <label htmlFor="activityType" className="font-medium uppercase text-md">
+      <label htmlFor="activityType" className="mb-2 font-medium uppercase text-md">
         Activity Type
       </label>
-      <br />
       <select
         className="w-full px-4 text-[1rem] rounded-md md:select-lg select select-bordered mb-4 text-center"
         value={selectedType}
@@ -316,10 +311,9 @@ export const ActivityName = ({ createdTitle, setCreatedTitle }) => {
 
   return (
     <div>
-      <label htmlFor="activityTitle" className="font-medium uppercase text-md">
+      <label htmlFor="activityTitle" className="mb-2 font-medium uppercase text-md">
         Title
       </label>
-      <br />
       <input
         type="text"
         className="w-full p-2 px-4 mt-1 mb-4 rounded-md input input-bordered"
@@ -342,10 +336,9 @@ export const ActivityDesc = ({ createdDesc, setCreatedDesc }) => {
 
   return (
     <div className="h-auto resize-y lg:h-full">
-      <label htmlFor="activityDesc" className="font-medium uppercase text-md">
+      <label htmlFor="activityDesc" className="mb-2 font-medium uppercase text-md">
         Description
       </label>
-      <br />
       <textarea
         type="text"
         value={createdDesc}
@@ -368,11 +361,10 @@ export const ActivityDuration = ({ durationTime, setDurationTime }) => {
     <div className="w-full xs:w-2/4 md:w-full lg:w-2/4">
       <label
         htmlFor="activityDuration"
-        className="font-medium uppercase text-md"
+        className="mb-2 font-medium uppercase text-md"
       >
         Duration (min.)
       </label>
-      <br />
       <input
         type="number"
         value={durationTime}
@@ -396,12 +388,11 @@ export const ActivityDate = ({ selectDate, setSelectDate }) => {
   };
   return (
     <div className="w-full xs:w-2/4 md:w-full lg:w-2/4">
-      <label htmlFor="activityDate" className="font-medium uppercase text-md">
+      <label htmlFor="activityDate" className="mb-2 font-medium uppercase text-md">
         Date
       </label>
-      <br />
       <input
-        type="date"
+        type="datetime-local"
         // defaultValue={currentDate}
         value={selectDate}
         className="w-full p-2 px-4 mt-1 mb-4 text-center rounded-md input input-bordered"

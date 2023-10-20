@@ -19,21 +19,25 @@ const Mainpage = () => {
     const username = "username";
 
     return (
-        <>
-            <NavbarLoggedIn />
-            <div className="flex flex-row max-w-screen-2xl my-0 mx-auto md:m-auto">
+        <div className=" h-[100vh] fixed w-full">
+
+<div className="w-full ">
+ <NavbarLoggedIn />    
+</div>
+<div className="w-full ">
+            <div className="flex flex-row justify-center mx-auto my-0 max-w-screen-2xl md:mx-auto">
                 
-                <aside className="lg:w-1/4 hidden lg:block shadow-lg">
+                <aside className="sticky top-0 hidden shadow-lg lg:w-1/4 lg:block">
                 <SideInformation />
                 </aside>
                 
-                <div className="lg:w-2/4 flex flex-col bg-gray-100 items-center">
+                <div className="flex flex-col items-center overflow-scroll flex-hidden h-[100vh] pb-40 bg-gray-100 lg:w-2/4">
                     
-                    <div className="m-6 self-start">
+                    <div className="self-start m-6">
                     <h1 className="text-3xl font-semibold">Welcome, {username}</h1>
                     <p className="">{currentDate}</p>
                     </div>
-                    <img src="https://images.pexels.com/photos/12169236/pexels-photo-12169236.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="banner" className="w-[80%] h-[20%]" />
+                    <img src="https://images.pexels.com/photos/12169236/pexels-photo-12169236.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="banner" className="w-[80%] h-[20%]   object-cover" />
                     
                     {/* Form Area */}
                     {/* Crete Activity Area */}
@@ -91,13 +95,53 @@ const Mainpage = () => {
                             </div>
                         </div>
                     </div>
+                    <div className="card card-side card-compact bg-base-300 shadow-xl w-[80%] mt-4 mb-6">
+                        <figure className="w-[20%] avatar">
+                        <HiOutlineMoon className="w-[55%] h-[60%] rounded-full"/>
+                        </figure>
+                        <div className="card-body">
+                            <p className="font-bold">Sleep Time</p>
+                            <div className="flex flex-row">
+                                <label htmlFor="sleep" className="self-center mr-2">Edit:</label>
+                                <input id="sleep"type="time" className="input input-bordered input-sm w-[40%] max-w-xs" />
+                                <button className="btn btn-sm btn-accent rounded-full w-[30%] mx-4">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="card card-side card-compact bg-base-300 shadow-xl w-[80%] mt-4 mb-6">
+                        <figure className="w-[20%] avatar">
+                        <HiOutlineMoon className="w-[55%] h-[60%] rounded-full"/>
+                        </figure>
+                        <div className="card-body">
+                            <p className="font-bold">Sleep Time</p>
+                            <div className="flex flex-row">
+                                <label htmlFor="sleep" className="self-center mr-2">Edit:</label>
+                                <input id="sleep"type="time" className="input input-bordered input-sm w-[40%] max-w-xs" />
+                                <button className="btn btn-sm btn-accent rounded-full w-[30%] mx-4">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                                        <div className="card card-side card-compact bg-base-300 shadow-xl w-[80%] mt-4 mb-6">
+                        <figure className="w-[20%] avatar">
+                        <HiOutlineMoon className="w-[55%] h-[60%] rounded-full"/>
+                        </figure>
+                        <div className="card-body">
+                            <p className="font-bold">Sleep Time</p>
+                            <div className="flex flex-row">
+                                <label htmlFor="sleep" className="self-center mr-2">Edit:</label>
+                                <input id="sleep"type="time" className="input input-bordered input-sm w-[40%] max-w-xs" />
+                                <button className="btn btn-sm btn-accent rounded-full w-[30%] mx-4">Save</button>
+                            </div>
+                        </div>
+                    </div>
                     {/* End Form Area */}
                 </div>
-                <div className="hidden lg:flex flex-col lg:w-1/4 shadow-md">
-                    <div className="m-6 self-start">
+                
+                <div className="sticky top-0 flex-col hidden shadow-md lg:flex lg:w-1/4">
+                    <div className="self-start m-6">
                     <h1 className="text-3xl font-semibold">Connection</h1>
                     </div>
-                    <div className="mx-6 my-4 grid grid-rows-3 grid-flow-col gap-10 ">
+                    <div className="grid grid-flow-col grid-rows-3 gap-10 mx-6 my-4 ">
                     <img src={MockupProfile} className="w-[72px] rounded-full"/>
                     <img src={MockupProfile} className="w-[72px] rounded-full"/>
                     <img src={MockupProfile} className="w-[72px] rounded-full"/>
@@ -110,8 +154,10 @@ const Mainpage = () => {
                     </div>
                     <a className="self-end mx-4">More</a>
                 </div>
-            </div>
-        </>
+            </div>    
+</div>
+
+        </div>
     )
 }
 
