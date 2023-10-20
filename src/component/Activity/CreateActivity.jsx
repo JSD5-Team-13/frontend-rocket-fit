@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from "react";
 import Layout from "../Layout.jsx";
-import SideInformation from "../navbar/SideInformationBar.jsx";
+// import SideInformation from "../navbar/SideInformationBar.jsx";
 import axios from "axios";
 
 const ActivityForm = () => {
@@ -166,6 +166,7 @@ const ActivityForm = () => {
       console.log("Created completed", response.data);
       setAlertMessage("Created completed");
       setShowAlert(true);
+      
     } catch (error) {
       console.error("Create failed ", error);
       setAlertMessage("Created failed");

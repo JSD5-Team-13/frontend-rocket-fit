@@ -98,6 +98,8 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
     <div className={`w-full`}>
       <div className="justify-between w-auto px-2 mx-2 my-2 border rounded-2xl border-base-300 bg-base-200 lg:flex lg:flex-col lg:items-center lg: lg:py-2 lg:border-none lg:bg-transparent ">
         <form className="flex flex-col items-start w-full gap-2 py-4 text-left justify-stretch items-between">
+          
+          {/* username */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="username" className="w-1/3">
               Username
@@ -111,7 +113,7 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
               disabled
             />
           </div>
-
+          {/* first name */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="first_name" className="w-1/3">
               First name
@@ -125,6 +127,7 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
             />
           </div>
 
+            {/* last name  */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="last_name" className="w-1/3">
               Last name
@@ -137,8 +140,8 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
               className="w-2/3 text-center rounded-md input input-bordered input-sm"
             />
           </div>
-
-          <div className="flex flex-row items-center justify-between w-full gap-2">
+          {/* mock input */}
+          {/* <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="email" className="w-1/3">
               Email
             </label>
@@ -149,9 +152,9 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
               onChange={handleInputChange}
               className="w-full text-center border-2 rounded-md input input-bordered input-sm"
             />
-          </div>
-
-          <div className="flex flex-row items-center justify-between w-full gap-2">
+          </div> */}
+          {/* mock input */}
+          {/* <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="phone" className="w-1/3">
               Phone
             </label>
@@ -163,9 +166,9 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
               placeholder="xxx-xxx-xxxx"
               className="w-2/3 text-center rounded-md input input-bordered input-sm"
             />
-          </div>
-
-          <div className="flex flex-row items-center justify-between w-full gap-2">
+          </div> */}
+          {/* mock input */}
+          {/* <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="location" className="w-1/3">
               Location
             </label>
@@ -176,7 +179,7 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
               onChange={handleInputChange}
               className="w-2/3 text-center rounded-md input input-bordered input-sm"
             />
-          </div>
+          </div> */}
         </form>
 
         <div className="flex flex-row items-center w-full mt-4 mb-4 justify-evenly">
