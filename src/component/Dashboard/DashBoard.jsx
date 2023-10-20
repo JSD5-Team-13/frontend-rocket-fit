@@ -156,7 +156,7 @@ export const DashBoard = () => {
           className=" lg:w-3/4 lg:p-[15px] justify-center text-start bg-gray-100 w-full mt-[80px]"
         >
           <h1 className="pl-0 m-4 text-[2rem]">
-            <strong> DASHBOARD</strong>
+            <strong>DASHBOARD</strong>
           </h1>
           <h3 className="pl-0 m-4 text-[2rem]">
             <strong>WEEKLY OVERVIEW</strong>
@@ -165,16 +165,16 @@ export const DashBoard = () => {
           <div className=" lg:m-0 lg:p-0 m-5">
             {/* card */}
             <div
-              id="card_sleep_BMI"
-              className=" -z-1 flex lg:flex-row lg:justify-around  flex-col justify-around gap-y-5 lg:pt-[30px] "
+              id="card_Sleep-BMI"
+              className="-z-1 flex lg:flex-row lg:justify-between lg:px-3 flex-col gap-y-5 lg:pt-[30px] "
             >
-              <div id="card-sleep" className=" lg:w-[45%] items-center w-full ">
+              <div id="card-sleep" className=" lg:w-[49%] items-center w-full ">
                 <div className="card bg-base-300">
                   <div className="card-body">
-                    <p>4.25</p>
-                    <h2 className="card-title">Hours</h2>
+                    <p className="text-[1.5rem]">4.25</p>
+                    <h2 className="card-title text-[2rem]">Hours</h2>
                     <div className="card-actions justify-end">
-                      <BiSolidMoon />
+                      <BiSolidMoon className="text-[50px]" />
                     </div>
                   </div>
                 </div>
@@ -182,25 +182,16 @@ export const DashBoard = () => {
 
               <div
                 id="card-BMI"
-                className="lg:w-[45%] items-center w-full pb-[30px]"
+                className="lg:w-[49%] items-center w-full pb-[30px]"
               >
                 <div className="card bg-base-300">
                   <div className="card-body">
-                    <p>16.65</p>
-                    <h2 className="card-title">BMI</h2>
-                    <div className="flex justify-center">
-                      {/* <ul className="">
-                      <li className="">underweight</li>
-                      <li className="">normal</li>
-                      <li className="">overweight</li>
-                      <li className="">obese</li>
-                      <li className="">extremly obese</li>
-                    </ul> */}
-                    </div>
+                    <p className="text-[1.5rem]">16.65</p>
+                    <h2 className="card-title text-[2rem]">BMI</h2>
                     <div className="flex  justify-end">
                       <svg
-                        width="16px"
-                        height="16px"
+                        width="50px"
+                        height="50px"
                         viewBox="0 -0.5 17 17"
                         version="1.1"
                         xmlns="http://www.w3.org/2000/svg"
@@ -243,11 +234,12 @@ export const DashBoard = () => {
             {/* chart */}
             <div
               id="data-chart"
-              className=" flex lg:flex-row lg:justify-around lg:px-[30px] flex-col justify-around gap-y-5"
+              className=" flex lg:flex-row lg:px-3 lg:justify-between flex-col justify-around "
             >
+              {/* bar */}
               <div
                 id="bar-chart-activity-duration"
-                className=" bg-base-300 p-3 rounded-lg h-[300px] lg:w-2/4 lg:mr-[15px] flex justify-center items-center w-full"
+                className=" bg-base-300 p-3 rounded-lg h-[300px] lg:w-[49%] flex justify-center items-center w-full mb-[30px] "
               >
                 <Bar
                   data={BarChartData}
@@ -264,10 +256,10 @@ export const DashBoard = () => {
                   }}
                 />
               </div>
-
+              {/* pie */}
               <div
                 id="pie-chart-activity-type"
-                className=" bg-base-300 p-3 rounded-lg m-auto h-[300px] lg:w-2/4 lg:ml-[15px] flex justify-center items-center w-full"
+                className=" bg-base-300 p-3 rounded-lg h-[300px] lg:w-[49%] flex justify-center items-center w-full"
               >
                 <Pie
                   data={PieChartData}
