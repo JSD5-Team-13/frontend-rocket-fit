@@ -4,9 +4,11 @@ import NavbarLoggedIn from "./navbar/NavbarLoggedIn.jsx"
 const Layout = ({children}) => {
 
     return (
-        <div>
-            <NavbarLoggedIn /> 
-            {children}
+        <div className="flex-col justify-center">
+            <div className="mx-auto">
+             <NavbarLoggedIn /> 
+              {children}  
+            </div>
         </div>
     )
 } 
