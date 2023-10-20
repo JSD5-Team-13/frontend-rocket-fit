@@ -236,7 +236,7 @@ const CalendarMain = () => {
             <dialog id="my_modal_2" className="modal">
               <div className="modal-box w-full max-w-sm">
                 <div className="modal-header">
-                  <h2>Create Memo</h2>
+                  <h2 className="text-xl font-bold">Create Memo</h2>
                 </div>
                 <div className="modal-content">
                   <form
