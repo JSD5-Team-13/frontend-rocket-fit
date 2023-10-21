@@ -3,8 +3,10 @@ import React, { useEffect, useState } from "react";
 import Layout from "../Layout.jsx";
 // import SideInformation from "../navbar/SideInformationBar.jsx";
 import axios from "axios";
-
+//  axios.defaults.withCredentials = true;
+ 
 const ActivityForm = () => {
+ 
   const [selectedType, setSelectedType] = useState("");
   const [createdTitle, setCreatedTitle] = useState("");
   const [createdDesc, setCreatedDesc] = useState("");
@@ -148,17 +150,18 @@ const ActivityForm = () => {
       }
 
       const response = await axios.post(
-        "https://mock-fitness.onrender.com/activity",
+        "http://localhost:3000/activity/",
         {
           activity_type: selectedType,
           title: createdTitle,
           description: createdDesc,
           duration: durationTime,
           date: selectDate,
-          image_url: selectedImage,
-        }, {
+          image: selectedImage
+        }, {}, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            'Content-Type': 'multipart/form-data',
           },
         }
       );
@@ -413,10 +416,28 @@ export const ActivityImage = ({ selectedImage, setSelectedImage }) => {
 
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setSelectedImage(e.target.result);
-      };
       reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target.result;
+  
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const maxWidth = 800; // ขนาดที่คุณต้องการ
+          const scaleFactor = maxWidth / img.width;
+          const newWidth = img.width * scaleFactor;
+          const newHeight = img.height * scaleFactor;
+  
+          canvas.width = newWidth;
+          canvas.height = newHeight;
+  
+          ctx.drawImage(img, 0, 0, newWidth, newHeight);
+  
+          const resizedImageDataURL = canvas.toDataURL('image/jpeg', 0.7); // กำหนดปรับคุณภาพและรูปแบบของรูปภาพที่ต้องการ
+          setSelectedImage(resizedImageDataURL);
+        };
+      };
     } else {
       setSelectedImage(null);
     }

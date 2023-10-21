@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import Layout from "../Layout.jsx";
-
+import Swal from "sweetalert2";
 
 
 //import component
@@ -51,79 +51,42 @@ const AccountSetting = () => {
   }, []);
 
 
-  const Alert = ({ message, onClose }) => {
-    return (
-      <div className="fixed inset-0 z-50 flex flex-row items-end justify-center max-w-[95%] mx-auto mb-10 md:w-4/6 lg:w-3/6">
-        {alertMessage === "Update completed" ? (
-          <div className="alert alert-success flex flex-col md:justify-between justify-center w-full gap-2 md:flex-row lg:gap-[1rem]">
-            <div className="flex flex-col items-center justify-center md:gap-4 md:flex-row">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 stroke-current shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span>Your update completed!</span>
-            </div>
-            <div className="flex flex-row items-center justify-center">
-              <button onClick={onClose}>Close</button>
-            </div>
-          </div>
-        ) : alertMessage === "Password not correct" ? (
-          <div className="alert alert-error flex flex-col md:justify-between justify-center w-full gap-2 md:flex-row md:gap-[1rem]">
-            <div className="flex flex-col items-center justify-center md:gap-4 md:flex-row">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 stroke-current shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span>Current password is not correct</span>
-            </div>
-            <div className="flex flex-row items-center justify-center">
-              <button onClick={onClose}>Close</button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col md:justify-between justify-center w-full gap-2 md:flex-row alert alert-warning md:gap-[1rem]">
-            <div className="flex flex-col items-center justify-center md:gap-4 md:flex-row">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 stroke-current shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
-              </svg>
-              <span>{message}</span>
-            </div>
-            <div className="flex flex-row items-center justify-center">
-              <button onClick={onClose}>Close</button>
-            </div>
-          </div>
-        )}
-      </div>
-    );
+  const Alert = ({ message }) => {
+    const { text, status } = message;
+
+    switch (status) {
+      case "success":
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: text,
+          showConfirmButton: true,
+        }).then(closeAlert());
+        break;
+      case "warning":
+        Swal.fire({
+          position: "center",
+          icon: "warning",
+          title: text,
+          showConfirmButton: true,
+        }).then(closeAlert());
+        break;
+
+        case "error":
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: text,
+          showConfirmButton: true,
+        }).then(closeAlert());
+        break;
+
+
+      default:
+        break;
+    }
   };
+
 
   const closeAlert = () => {
     setShowAlert(false); // ปิดหน้าต่างแจ้งเตือน
@@ -134,7 +97,7 @@ const AccountSetting = () => {
   return (
     <Layout className="max-w-[1440px] flex items-center">
 
-    {showAlert && <Alert message={alertMessage} onClose={closeAlert} />}
+    {showAlert && <Alert message={alertMessage}/>}
 
       {/* mobile mode  */}
       <div className="flex flex-col justify-between flex-grow w-full h-[95vh]  lg:hidden">

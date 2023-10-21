@@ -65,13 +65,12 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
       })
       .then((response) => {
         console.log(`Account ID : ${response.data._id} is updated information`);
-        setAlertMessage("Update completed");
+        setAlertMessage(response.data.message);
         setShowAlert(true);
-        console.log(userData)
       })
       .catch((error) => {
-        
         console.error("Error updating account: ", error);
+        
       });
   };
 
@@ -87,6 +86,7 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
         .then((response) => {
           const userDataFromAPI = response.data;
           setUserData(userDataFromAPI);
+          console.log("reset form")
         })
         .catch((error) => {
           console.error("Error fetching user data", error);
