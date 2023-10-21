@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../Layout.jsx";
 // import SideInformation from "../navbar/SideInformationBar.jsx";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ActivityForm = () => {
   const [selectedType, setSelectedType] = useState("");
@@ -15,6 +16,7 @@ const ActivityForm = () => {
   const [alertMessage, setAlertMessage] = useState("");
 
   const [reload, setReload] = useState(true);
+  const navigate = useNavigate()
 
   const ResetHandler = () => {
     setSelectedType("");
@@ -22,6 +24,7 @@ const ActivityForm = () => {
     setCreatedDesc("");
     setDurationTime("");
     setSelectedImage("");
+    navigate("/activity")
   };
 
   useEffect(() => {
@@ -179,7 +182,7 @@ const ActivityForm = () => {
     <Layout>
       <div className="flex flex-row w-screen max-w-[1440px] mx-auto justify-between items-start">
         <div className="flex flex-col px-4  pt-2 pb-8 items-center justify-center mx-auto w-full max-w-[1024px] gap-[1.5rem]">
-          <h1 className="w-full mx-auto mt-[2rem] text-2xl md:text-[2rem] lg:text-[3rem] font-bold text-center md:text-left">
+          <h1 className="w-full mx-auto mt-[2rem] text-[2rem] uppercase font-bold text-center md:text-left">
             Create Activity
           </h1>
           <div className="w-full min-w-[320px] max-w-[424px] flex flex-col sm:min-w-full md:min-w-full lg:w-full lg:max-w-[1024px] p-4 m-4 bg-white rounded-lg shadow-lg">
@@ -277,7 +280,7 @@ export const ActivityType = ({ selectedType, setSelectedType }) => {
         Activity Type
       </label>
       <select
-        className="w-full px-4 text-[1rem] rounded-md md:select-lg select select-bordered mb-4 text-center"
+        className="w-full text-[1rem] rounded-md md:select-lg select select-bordered mb-4 text-center"
         value={selectedType}
         onChange={HandleTypeChange}
       >

@@ -11,19 +11,48 @@ const CalendarMain = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [memos, setMemos] = useState([]);
   const [memoId, setMemosId] = useState();
+  const [userId , setUserId] = useState("");
 
   useEffect(() => {
-    const getData = async () => {
-      const response = await axios.get("http://127.0.0.1:8000/calendar");
-      const data = response.data;
-      setMemos(data);
-    };
-    getData();
+    const token = localStorage.getItem("rockettoken");
+  
+    if (token) {
+      // Fetch user data
+      axios.get("http://127.0.0.1:8000/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setUserId(response.data.id);
+  
+          axios.get(`http://127.0.0.1:8000/calendar?userId=${response.data.id}`)
+          .then((memoResponse) => {
+            if (memoResponse.status === 200) {
+              setMemos(memoResponse.data);
+            } else {
+              console.log("Failed to fetch memos");
+            }
+          })
+          .catch((error) => {
+            console.log("Error fetching memos from the database", error);
+          });
+        } else {
+          console.log("Failed to fetch user data");
+        }
+      })
+      .catch((error) => {
+        console.log("Error fetching user data from the database", error);
+      });
+    }
   }, []);
 
   const createMemo = async (memoData) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/calendar", memoData);
+      const response = await axios.post("http://127.0.0.1:8000/calendar", {
+        ...memoData
+      });
       if (response.status === 200) {
         Swal.fire({
           icon: 'success',
@@ -132,8 +161,8 @@ const CalendarMain = () => {
       endTime: formData.endTime,
       activity: formData.activity,
       description: formData.description,
+      userId : userId 
     };
-
     // Create the memo
     createMemo(memoData);
 
@@ -186,7 +215,7 @@ const CalendarMain = () => {
     <>
       <NavbarLoggedIn />
       <div className="app-container">
-        <header className="flex lg:justify-start justify-center mt-[100px] mb-4 lg:mb-[2rem] gap-4 lg:ml-[149px]">
+        <header className="flex lg:justify-start justify-center mt-[100px] mb-4 lg:mb-[2rem] gap-4">
           <h1 className="text-[2rem] lg:text-4xl  uppercase font-bold">
             Calendar
           </h1>

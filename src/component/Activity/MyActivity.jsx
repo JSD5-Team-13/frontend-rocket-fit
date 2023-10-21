@@ -89,7 +89,7 @@ const MyActivity = () => {
 
         {/* Activity Cards Display*/}
         <section className="lg:pl-4 lg:w-3/4 lg:ml-[25%] lg:bg-gray-300 lg:relative min-h-screen">
-          <h1 className="text-[2rem] my-5 text-center font-bold lg:text-left  lg:ml-10">
+          <h1 className="text-[2rem] my-5 text-center uppercase font-bold lg:text-left  lg:ml-10">
             My Activity
           </h1>
 

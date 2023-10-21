@@ -4,25 +4,37 @@ import MockupProfile from "../../assets/blank-profile-picture-973460_960_720.jpg
 
 
 const SideInformation = () => {
-    
     const height = 165;
     const weight = 40;
-
     const [activity,setActivity] = useState([]);
-
-    useEffect(() => {
-        const getData = async() => {
-        const response = await axios.get(
-          "https://earth-testapi-new-com.onrender.com/activities")
-          setActivity(response.data)
-        }
-        getData(); 
-    },[])
-
     const maxItems = 2;
     const displayedData = activity.slice(0, maxItems);
+    const [userData , setUserData] = useState("")
 
-    
+
+    useEffect(() => {
+        const token = localStorage.getItem("rockettoken");
+        if (token) {
+          axios.get("http://127.0.0.1:8000/users", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((response) => {
+              
+              if (response.status === 200) {
+                setUserData(response.data);
+                console.log(userData)
+              } else {
+                console.log("Failed to fetch user data");
+              }
+            })
+            .catch((error) => {
+              console.log(`Error fetching user data from the database`, error);
+            });
+        }
+    }, []);
+
     return (
         <div className="w-full laptop:w-full h-[100vh] border-solid border-2 flex-col items-center hidden laptop:flex lg:flex">
             <div className="avatar">
@@ -31,7 +43,7 @@ const SideInformation = () => {
                 </div>
             </div>
             <div className="mb-6">
-                <p>Your Name</p>
+                <p>{userData.username}</p>
             </div>
             <div className="flex flex-row w-[100%] justify-around mb-6">
                 <div className="flex flex-col ">
