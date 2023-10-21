@@ -3,10 +3,9 @@ import React, { useEffect, useState } from "react";
 import Layout from "../Layout.jsx";
 // import SideInformation from "../navbar/SideInformationBar.jsx";
 import axios from "axios";
-//  axios.defaults.withCredentials = true;
- 
+import { useNavigate } from "react-router-dom";
+
 const ActivityForm = () => {
- 
   const [selectedType, setSelectedType] = useState("");
   const [createdTitle, setCreatedTitle] = useState("");
   const [createdDesc, setCreatedDesc] = useState("");
@@ -15,8 +14,10 @@ const ActivityForm = () => {
   const [selectedImage, setSelectedImage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [userId , setUserId] = useState("");
 
   const [reload, setReload] = useState(true);
+  const navigate = useNavigate()
 
   const ResetHandler = () => {
     setSelectedType("");
@@ -24,6 +25,7 @@ const ActivityForm = () => {
     setCreatedDesc("");
     setDurationTime("");
     setSelectedImage("");
+    navigate("/activity")
   };
 
   useEffect(() => {
@@ -34,6 +36,28 @@ const ActivityForm = () => {
     setSelectDate("");
     setSelectedImage("");
   }, [reload]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("rockettoken");
+    if (token) {
+      axios.get("http://127.0.0.1:8000/users", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            setUserId(response.data.id);
+            console.log(userId)
+          } else {
+            console.log("Failed to fetch user data");
+          }
+        })
+        .catch((error) => {
+          console.log(`Error fetching user data from the database`, error);
+        });
+    }
+  }, []);
 
   // eslint-disable-next-line react/prop-types
   const Alert = ({ message, onClose }) => {
@@ -150,22 +174,18 @@ const ActivityForm = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:3000/activity/",
+        "http://127.0.0.1:8000/activity",
         {
           activity_type: selectedType,
-          title: createdTitle,
-          description: createdDesc,
+          activity_name: createdTitle,
+          activity_describe: createdDesc,
           duration: durationTime,
           date: selectDate,
-          image: selectedImage
-        }, {}, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            'Content-Type': 'multipart/form-data',
-          },
+          image: selectedImage,
+          userId: userId
         }
       );
-
+      
       console.log("Created completed", response.data);
       setAlertMessage("Created completed");
       setShowAlert(true);
@@ -182,7 +202,7 @@ const ActivityForm = () => {
     <Layout>
       <div className="flex flex-row w-screen max-w-[1440px] mx-auto justify-between items-start">
         <div className="flex flex-col px-4  pt-2 pb-8 items-center justify-center mx-auto w-full max-w-[1024px] gap-[1.5rem]">
-          <h1 className="w-full mx-auto mt-[2rem] text-2xl md:text-[2rem] lg:text-[3rem] font-bold text-center md:text-left">
+          <h1 className="w-full mx-auto mt-[2rem] text-[2rem] uppercase font-bold text-center md:text-left">
             Create Activity
           </h1>
           <div className="w-full min-w-[320px] max-w-[424px] flex flex-col sm:min-w-full md:min-w-full lg:w-full lg:max-w-[1024px] p-4 m-4 bg-white rounded-lg shadow-lg">
@@ -280,7 +300,7 @@ export const ActivityType = ({ selectedType, setSelectedType }) => {
         Activity Type
       </label>
       <select
-        className="w-full px-4 text-[1rem] rounded-md md:select-lg select select-bordered mb-4 text-center"
+        className="w-full text-[1rem] rounded-md md:select-lg select select-bordered mb-4 text-center"
         value={selectedType}
         onChange={HandleTypeChange}
       >
@@ -416,28 +436,10 @@ export const ActivityImage = ({ selectedImage, setSelectedImage }) => {
 
     if (file) {
       const reader = new FileReader();
-      reader.readAsDataURL(file);
       reader.onload = (e) => {
-        const img = new Image();
-        img.src = e.target.result;
-  
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          const maxWidth = 800; // ขนาดที่คุณต้องการ
-          const scaleFactor = maxWidth / img.width;
-          const newWidth = img.width * scaleFactor;
-          const newHeight = img.height * scaleFactor;
-  
-          canvas.width = newWidth;
-          canvas.height = newHeight;
-  
-          ctx.drawImage(img, 0, 0, newWidth, newHeight);
-  
-          const resizedImageDataURL = canvas.toDataURL('image/jpeg', 0.7); // กำหนดปรับคุณภาพและรูปแบบของรูปภาพที่ต้องการ
-          setSelectedImage(resizedImageDataURL);
-        };
+        setSelectedImage(e.target.result);
       };
+      reader.readAsDataURL(file);
     } else {
       setSelectedImage(null);
     }
