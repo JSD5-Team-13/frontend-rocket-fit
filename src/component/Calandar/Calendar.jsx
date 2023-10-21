@@ -48,7 +48,7 @@ const CalendarMain = () => {
     }
   }, []);
 
-  const createMemo = async (memoData , userId) => {
+  const createMemo = async (memoData) => {
     try {
       const response = await axios.post("http://127.0.0.1:8000/calendar", {
         ...memoData
