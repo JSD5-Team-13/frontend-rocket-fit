@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../Layout.jsx";
 // import SideInformation from "../navbar/SideInformationBar.jsx";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ActivityForm = () => {
   const [selectedType, setSelectedType] = useState("");
@@ -15,6 +16,7 @@ const ActivityForm = () => {
   const [alertMessage, setAlertMessage] = useState("");
 
   const [reload, setReload] = useState(true);
+  const navigate = useNavigate()
 
   const ResetHandler = () => {
     setSelectedType("");
@@ -22,6 +24,7 @@ const ActivityForm = () => {
     setCreatedDesc("");
     setDurationTime("");
     setSelectedImage("");
+    navigate("/activity")
   };
 
   useEffect(() => {

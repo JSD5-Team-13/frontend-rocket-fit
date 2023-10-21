@@ -2,8 +2,10 @@
 import LogoFull from '../../assets/logo-full.png'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import Logo from '../../assets/logo.png'
+import { useNavigate } from 'react-router-dom'
 
 const NavbarLoggedIn = () => {
+    const navigate = useNavigate()
     return (
         <div className="navbar bg-neutral h-[5rem] fixed z-10">
             {/* Navigation Bar Start */}
@@ -38,7 +40,8 @@ const NavbarLoggedIn = () => {
                         <label tabIndex={0} className="text-white">Profile</label>
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
                             <li><a href='/account'>Setting</a></li>
-                            <li><a>Log Out</a></li>
+                            <li><button
+                            onClick={() => (localStorage.clear() , navigate("/login"))}>Log Out</button></li>
                         </ul>
                     </div>
                 </div>

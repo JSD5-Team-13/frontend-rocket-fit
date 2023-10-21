@@ -1,12 +1,13 @@
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
 import SideInformation from "../navbar/SideInformationBar.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   HiOutlinePlusSm,
   HiOutlinePresentationChartLine,
   HiOutlineMoon,
 } from "react-icons/hi";
 import MockupProfile from "../../assets/blank-profile-picture-973460_960_720.jpg";
+import axios from "axios";
 
 function getDate() {
   const today = new Date();
@@ -19,7 +20,30 @@ function getDate() {
 const Mainpage = () => {
   // eslint-disable-next-line no-unused-vars
   const [currentDate, setCurrentDate] = useState(getDate());
-  const username = "username";
+  const [userData, setUserData] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("rockettoken");
+    if (token) {
+      axios.get("http://127.0.0.1:8000/users", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          
+          if (response.status === 200) {
+            setUserData(response.data);
+            console.log(userData)
+          } else {
+            console.log("Failed to fetch user data");
+          }
+        })
+        .catch((error) => {
+          console.log(`Error fetching user data from the database`, error);
+        });
+    }
+  }, []);
 
   return (
     <div className=" h-[100vh] fixed w-full">
@@ -34,13 +58,13 @@ const Mainpage = () => {
 
           <div className="flex flex-col items-center overflow-scroll flex-hidden h-[100vh] pb-40 bg-gray-100 lg:w-2/4 mt-[79px]">
             <div className="self-start m-6">
-              <h1 className="text-3xl font-semibold">Welcome, {username}</h1>
+              <h1 className="text-3xl font-semibold">Welcome, {userData.username}</h1>
               <p className="">{currentDate}</p>
             </div>
             <img
               src="https://images.pexels.com/photos/12169236/pexels-photo-12169236.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
               alt="banner"
-              className="w-[80%] h-[20%]   object-cover"
+              className="w-[80%] h-[30%]  object-cover rounded-xl"
             />
 
             {/* Form Area */}

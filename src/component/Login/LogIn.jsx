@@ -1,5 +1,5 @@
 import Navbar from "../navbar/NavbarNoneLoggedIn";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/Fa";
 import { FaLock } from "react-icons/Fa";
 import { useState } from "react";
@@ -10,12 +10,18 @@ export const LogIn = () => {
     username : "",
     password : ""
 })
+  const navigate = useNavigate();
 
   const login = async (userData) => {
     const response = await axios.post("http://127.0.0.1:8000/login" , userData)
     if (response.status === 200) {
       localStorage.setItem('rockettoken',response.data.token)
-      alert("login successfully")
+      alert("login successfully");
+      if (response.data.isCreatedProfile === true) {
+      navigate("/main") }
+      else {
+      navigate("/create_profile")
+      }
     } else if (response.status === 401) {
       alert("username already exist")
     } else {
