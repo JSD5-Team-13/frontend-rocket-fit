@@ -3,6 +3,7 @@ import LogoFull from '../../assets/logo-full.png'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import Logo from '../../assets/logo.png'
 import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 const NavbarLoggedIn = () => {
     const navigate = useNavigate()
@@ -41,7 +42,13 @@ const NavbarLoggedIn = () => {
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
                             <li><a href='/account'>Setting</a></li>
                             <li><button
-                            onClick={() => (localStorage.clear() , navigate("/login"))}>Log Out</button></li>
+                            onClick={() => (
+                                localStorage.clear(), 
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Logout Success'
+                                  }).then(
+                                navigate("/login")))}>Log Out</button></li>
                         </ul>
                     </div>
                 </div>

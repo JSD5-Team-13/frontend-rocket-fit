@@ -14,6 +14,7 @@ const ActivityForm = () => {
   const [selectedImage, setSelectedImage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [userId , setUserId] = useState("");
 
   const [reload, setReload] = useState(true);
   const navigate = useNavigate()
@@ -35,6 +36,28 @@ const ActivityForm = () => {
     setSelectDate("");
     setSelectedImage("");
   }, [reload]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("rockettoken");
+    if (token) {
+      axios.get("http://127.0.0.1:8000/users", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            setUserId(response.data.id);
+            console.log(userId)
+          } else {
+            console.log("Failed to fetch user data");
+          }
+        })
+        .catch((error) => {
+          console.log(`Error fetching user data from the database`, error);
+        });
+    }
+  }, []);
 
   // eslint-disable-next-line react/prop-types
   const Alert = ({ message, onClose }) => {
@@ -151,21 +174,18 @@ const ActivityForm = () => {
       }
 
       const response = await axios.post(
-        "https://mock-fitness.onrender.com/activity",
+        "http://127.0.0.1:8000/activity",
         {
           activity_type: selectedType,
-          title: createdTitle,
-          description: createdDesc,
+          activity_name: createdTitle,
+          activity_describe: createdDesc,
           duration: durationTime,
           date: selectDate,
-          image_url: selectedImage,
-        }, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
-          },
+          image: selectedImage,
+          userId: userId
         }
       );
-
+      
       console.log("Created completed", response.data);
       setAlertMessage("Created completed");
       setShowAlert(true);

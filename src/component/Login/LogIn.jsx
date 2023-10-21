@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/Fa";
 import { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export const LogIn = () => {
   const [value , setValue] = useState({
@@ -13,21 +14,34 @@ export const LogIn = () => {
   const navigate = useNavigate();
 
   const login = async (userData) => {
-    const response = await axios.post("http://127.0.0.1:8000/login", userData);
-    if (response.status === 200) {
-      localStorage.setItem('rockettoken',response.data.token)
-      alert("login successfully");
-      if (response.data.isCreatedProfile === true) {
-      navigate("/main") }
-      else {
-      navigate("/create_profile")
-      }
-    } else if (response.status === 401) {
-      alert("username already exist");
-    } else {
-      console.log("error");
+    try {
+        const response = await axios.post("http://127.0.0.1:8000/login", userData);
+        console.log(response.status);
+
+        if (response.status === 200) {
+            localStorage.setItem('rockettoken', response.data.token);
+            Swal.fire({
+                icon: 'success',
+                title: 'Login Success'
+            });
+            if (response.data.isCreatedProfile === true) {
+                navigate("/main");
+            } else {
+                navigate("/create_profile");
+            }
+        } else if (response.status === 401) { // Use "else if" here
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid password or username'
+            });
+        } else {
+            console.log("error");
+        }
+    } catch (error) {
+        console.error(error);
+        // Handle any network or other errors here
     }
-  };
+};
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

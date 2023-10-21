@@ -26,8 +26,7 @@ const CalendarMain = () => {
       .then((response) => {
         if (response.status === 200) {
           setUserId(response.data.id);
-  
-          axios.get(`http://127.0.0.1:8000/calendar?userId=${response.data.id}`)
+          axios.get(`http://127.0.0.1:8000/calendar?userId=${userId}`)
           .then((memoResponse) => {
             if (memoResponse.status === 200) {
               setMemos(memoResponse.data);
@@ -46,7 +45,7 @@ const CalendarMain = () => {
         console.log("Error fetching user data from the database", error);
       });
     }
-  }, []);
+  }, [userId]);
 
   const createMemo = async (memoData) => {
     try {
