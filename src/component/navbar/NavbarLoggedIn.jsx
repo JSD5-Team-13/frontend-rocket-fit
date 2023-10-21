@@ -2,14 +2,17 @@
 import LogoFull from '../../assets/logo-full.png'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import Logo from '../../assets/logo.png'
+import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 const NavbarLoggedIn = () => {
+    const navigate = useNavigate()
     return (
         <div className="navbar bg-neutral h-[5rem] fixed z-10">
             {/* Navigation Bar Start */}
             <div className="navbar-start">
-                <img src={LogoFull} alt='logo' className='hidden w-auto h-10 mx-4 lg:block' />
-                <img src={Logo} alt='logo' className='w-auto h-10 mx-4 lg:hidden' />
+                <a href="/main"><img src={LogoFull} alt='logo' className='hidden w-auto h-10 mx-4 lg:block' /></a>
+                <a href="/main"><img src={Logo} alt='logo' className='w-auto h-10 mx-4 lg:hidden' /></a>
             </div>
             {/* Navigation Bar End */}
             <div className="navbar-end">
@@ -38,7 +41,14 @@ const NavbarLoggedIn = () => {
                         <label tabIndex={0} className="text-white">Profile</label>
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
                             <li><a href='/account'>Setting</a></li>
-                            <li><a>Log Out</a></li>
+                            <li><button
+                            onClick={() => (
+                                localStorage.clear(), 
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Logout Success'
+                                  }).then(
+                                navigate("/login")))}>Log Out</button></li>
                         </ul>
                     </div>
                 </div>

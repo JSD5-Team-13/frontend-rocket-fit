@@ -8,22 +8,41 @@ import axios from "axios";
 const MyActivity = () => {
   const [activities, setActivities] = useState([]);
   const [reload, setReload] = useState(false);
+  const [userId, setUserId] = useState("");
 
   // Get all activity cards
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/activity/"
-        );
-        setActivities(response.data);
-        console.log("Got data Successfully!", response);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    getData();
-  }, [reload]);
+    const token = localStorage.getItem("rockettoken");
+    if (token) {
+      // Fetch user data
+      axios.get("http://127.0.0.1:8000/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setUserId(response.data.id);
+          axios.get(`http://127.0.0.1:8000/activity?userId=${userId}`)
+          .then((response) => {
+            if (response.status === 200) {
+              setActivities(response.data);
+            } else {
+              console.log("Failed to fetch memos");
+            }
+          })
+          .catch((error) => {
+            console.log("Error fetching memos from the database", error);
+          });
+        } else {
+          console.log("Failed to fetch user data");
+        }
+      })
+      .catch((error) => {
+        console.log("Error fetching user data from the database", error);
+      });
+    }
+  }, [userId]);
 
   // Update a activity card
   const updateData = async (
@@ -89,7 +108,7 @@ const MyActivity = () => {
 
         {/* Activity Cards Display*/}
         <section className="lg:pl-4 lg:w-3/4 lg:ml-[25%] lg:bg-gray-300 lg:relative min-h-screen">
-          <h1 className="text-[2rem] my-5 text-center font-bold lg:text-left  lg:ml-10">
+          <h1 className="text-[2rem] my-5 text-center uppercase font-bold lg:text-left  lg:ml-10">
             My Activity
           </h1>
 

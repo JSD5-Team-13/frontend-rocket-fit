@@ -35,7 +35,7 @@ export const Register = () => {
   return (
     <div>
       <Navbar />
-      <section className="lg:flex lg:justify-center lg:items-center h-screen flex flex-col items-center justify-center ">
+      <section className="lg:flex lg:justify-center lg:items-center h-screen flex flex-col items-center justify-center">
         <div className="m-[3rem] lg:bg-[#D9D9D9] lg:w-[50%] lg:flex lg:flex-col lg:mx-auto flex flex-col items-center justify-center rounded-xl py-10 ">
           <h2 className="font-bold text-center text-[2rem]">Register</h2>
 

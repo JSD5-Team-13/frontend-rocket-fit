@@ -101,7 +101,7 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
           
           {/* username */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
-            <label htmlFor="username" className="w-1/3">
+            <label htmlFor="username" className="w-1/3 font-bold">
               Username
             </label>
             <input
@@ -115,7 +115,7 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
           </div>
           {/* first name */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
-            <label htmlFor="first_name" className="w-1/3">
+            <label htmlFor="first_name" className="w-1/3 font-bold">
               First name
             </label>
             <input
@@ -129,7 +129,7 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
 
             {/* last name  */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
-            <label htmlFor="last_name" className="w-1/3">
+            <label htmlFor="last_name" className="w-1/3 font-bold">
               Last name
             </label>
             <input

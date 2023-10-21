@@ -25,7 +25,7 @@ const Connection = () => {
       <NavbarLoggedIn />
       <div className="max-w-screen-xl m-auto h-[80vh]">
         <div className="flex flex-col justify-center items-center">
-          <div className="flex flex-col lg:flex-row justify-center mt-[110px] mb-4 lg:mb-[2rem] lg:self-start gap-4 lg:ml-10">
+          <div className="flex flex-col lg:flex-row justify-center mt-[110px] mb-4 lg:mb-[2rem] lg:self-start gap-4 ">
             <h1 className="text-[2rem] font-bold uppercase">Connection</h1>
             <form className="flex relative items-center justify-end ">
               <button className="absolute text-2xl m-3">

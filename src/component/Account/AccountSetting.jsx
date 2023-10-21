@@ -104,9 +104,9 @@ const AccountSetting = () => {
         <div>
           {/* title head */}
           <div className="flex flex-col items-center justify-center w-5/6 p-4 mx-auto md:w-5/6 lg:max-w-5/6 gap-[1.5rem]">
-            <h1 className="w-full text-2xl font-bold text-left uppercase">
+            <p className="w-full text-[2rem] font-bold text-left uppercase">
               Account Setting
-            </h1>
+            </p>
           </div>
 
           <div>
@@ -126,7 +126,7 @@ const AccountSetting = () => {
                   className="flex flex-row items-center h-10 collapse collapse-arrow"
                   onClick={() => setOption("ACCOUNT")}
                 >
-                  <div className="text-xl font-medium lowercase collapse-title">
+                  <div className="text-xl font-medium collapse-title">
                     Account
                   </div>
                 </div>
@@ -176,7 +176,7 @@ const AccountSetting = () => {
       {/* desktop mode */}
       <div className="hidden lg:block">
       <div className="flex-col p-[2rem] flex justify-center mx-auto items-center w-full max-w-[1440px]">
-        <div className="w-full text-3xl font-extrabold text-left uppercase">
+        <div className="w-full text-[2rem] font-bold text-left uppercase">
           <h2>Account Setting</h2>
         </div>
 
@@ -188,25 +188,25 @@ const AccountSetting = () => {
             <Profile userData={userData} />
             <div className="flex flex-col justify-start">
               <div
-                className="w-full flex items-center h-[4rem] pl-10 text-3xl hover:bg-slate-100 font-bold lowercase"
+                className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold"
                 onClick={() => setOption("ACCOUNT")} // เมื่อคลิกเลือก "Account"
               >
                 <h3>Account</h3>
               </div>
               <div
-                className="w-full flex items-center h-[4rem] pl-10 text-3xl hover:bg-slate-100 font-bold lowercase"
+                className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold"
                 onClick={() => setOption("PASSWORD")} // เมื่อคลิกเลือก "Password"
               >
                 <h3>Password</h3>
               </div>
               <div
-                className="w-full flex items-center h-[4rem] pl-10 text-3xl hover:bg-slate-100 font-bold lowercase"
+                className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold"
                 onClick={() => setOption("DELETE ACCOUNT")} // เมื่อคลิกเลือก "Security & Privacy"
               >
                 <h3>Delete Account</h3>
               </div>
             </div>
-            <div className="w-full flex items-center h-[4rem] pl-10 text-3xl hover:bg-slate-100 font-bold lowercase">
+            <div className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold">
               <h3>Log out</h3>
             </div>
           </div>
