@@ -34,7 +34,6 @@ const Mainpage = () => {
           
           if (response.status === 200) {
             setUserData(response.data);
-            console.log(userData)
           } else {
             console.log("Failed to fetch user data");
           }
@@ -43,7 +42,7 @@ const Mainpage = () => {
           console.log(`Error fetching user data from the database`, error);
         });
     }
-  }, []);
+  });
 
   return (
     <div className=" h-[100vh] fixed w-full">

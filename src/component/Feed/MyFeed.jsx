@@ -4,6 +4,7 @@
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import UserIcon from "../../assets/user-icon.svg";
 import {
   FaRegHeart,
@@ -17,20 +18,41 @@ import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 const MyFeed = () => {
   const [posts, setPosts] = useState([]);
   const [reload, setReload] = useState(false);
-
+  // const [userId , setUserId] = useState("");
+  const {userId} = useParams()
   // Get all posts
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const response = await axios.get("http://127.0.0.1:8000/post/");
-        setPosts(response.data);
-        console.log("Got data Successfully!", response);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      }
-    };
-    getData();
-  }, [reload]);
+    const token = localStorage.getItem("rockettoken");
+    if (token) {
+      // Fetch user data
+      axios.get("http://127.0.0.1:8000/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          // setUserId(response.data.id);
+          axios.get(`http://127.0.0.1:8000/post/${userId}`)
+          .then((response) => {
+            if (response.status === 200) {
+              setPosts(response.data);
+            } else {
+              console.log("Failed to fetch memos");
+            }
+          })
+          .catch((error) => {
+            console.log("Error fetching memos from the database", error);
+          });
+        } else {
+          console.log("Failed to fetch user data");
+        }
+      })
+      .catch((error) => {
+        console.log("Error fetching user data from the database", error);
+      });
+    }
+  }, [userId]);
 
   // Update a post
   const updateData = async (_id, activity_name, activity_describe) => {
