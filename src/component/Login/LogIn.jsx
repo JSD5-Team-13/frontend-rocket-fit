@@ -7,41 +7,45 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 export const LogIn = () => {
-  const [value , setValue] = useState({
-    username : "",
-    password : ""
-})
+  const [value, setValue] = useState({
+    email: "",
+    password: "",
+  });
   const navigate = useNavigate();
 
   const login = async (userData) => {
     try {
-        const response = await axios.post("http://127.0.0.1:8000/login", userData);
-        console.log(response.status);
+      const response = await axios.post(
+        "http://127.0.0.1:8000/login",
+        userData
+      );
+      console.log(response.status);
 
-        if (response.status === 200) {
-            localStorage.setItem('rockettoken', response.data.token);
-            Swal.fire({
-                icon: 'success',
-                title: 'Login Success'
-            });
-            if (response.data.isCreatedProfile === true) {
-                navigate("/main");
-            } else {
-                navigate("/create_profile");
-            }
-        } else if (response.status === 401) { // Use "else if" here
-            Swal.fire({
-                icon: 'error',
-                title: 'Invalid password or username'
-            });
+      if (response.status === 200) {
+        localStorage.setItem("rockettoken", response.data.token);
+        Swal.fire({
+          icon: "success",
+          title: "Login Success",
+        });
+        if (response.data.isCreatedProfile === true) {
+          navigate("/main");
         } else {
-            console.log("error");
+          navigate("/create_profile");
         }
+      } else if (response.status === 400) {
+        // Use "else if" here
+        Swal.fire({
+          icon: "error",
+          title: "Invalid password or username",
+        });
+      } else {
+        console.log("error");
+      }
     } catch (error) {
-        console.error(error);
-        // Handle any network or other errors here
+      console.error(error);
+      // Handle any network or other errors here
     }
-};
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -52,12 +56,10 @@ export const LogIn = () => {
   };
 
   const handleLogin = () => {
-    console.log(value);
     const userData = {
-      username: value.username,
+      email: value.email,
       password: value.password,
     };
-    console.log(userData);
     login(userData);
   };
 
@@ -76,10 +78,10 @@ export const LogIn = () => {
             <div className="flex relative items-center">
               <FaUser className="absolute text-2xl m-3" />
               <input
-                type="text"
-                value={value.username}
+                type="email"
+                value={value.email}
                 onChange={handleInputChange}
-                name="username"
+                name="email"
                 placeholder="xxxxxxx@gmail.com"
                 className="input input-bordered input-success w-full max-w-xs bg-[#D9D9D9] text-center lg:bg-white"
               />
