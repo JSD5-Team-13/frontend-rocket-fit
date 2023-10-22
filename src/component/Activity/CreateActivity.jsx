@@ -57,7 +57,7 @@ const ActivityForm = () => {
           console.log(`Error fetching user data from the database`, error);
         });
     }
-  }, []);
+  }, [userId, reload]);
 
   // eslint-disable-next-line react/prop-types
   const Alert = ({ message, onClose }) => {

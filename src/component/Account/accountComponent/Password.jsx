@@ -3,7 +3,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const Password = ({ setShowAlert, setAlertMessage }) => {
+const Password = ({ userId, userData, setUserData, setShowAlert, setAlertMessage }) => {
+  
+  const serverUrl = "http://127.0.0.1:8000"
+  const token = localStorage.getItem("rockettoken");
+  
   const [password, setPassword] = useState({
     currentPassword: '',
     newPassword: '',
@@ -44,11 +48,11 @@ const Password = ({ setShowAlert, setAlertMessage }) => {
 
     axios
       .put(
-        'https://mock-fitness.onrender.com/user/update/password',
+        serverUrl + "/users/password/" + userId,
         { currentPassword, newPassword, renewPassword },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       )

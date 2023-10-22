@@ -1,92 +1,90 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-
-
-const Account = ({ setShowAlert, setAlertMessage }) => {
-  
-  const [userData, setUserData] = useState(
-    {
-      username: "",
-      first_name: "",
-      last_name: "",
-      email: "",
-      phone: "",
-      location: "",
-    }
-  );
+const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}) => {
+  const serverUrl = "http://127.0.0.1:8000"
+  const token = localStorage.getItem("rockettoken");
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      axios
-        .get("https://mock-fitness.onrender.com/user/view", {
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        })
-        .then((response) => {
-          const userDataFromAPI = response.data;
-
+    if (token) {
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get(serverUrl + "/users/" + userId, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+  
+          const user = response.data;
+  
           // Create a new object with properties in the desired order
           const orderedUserData = {
-            username: userDataFromAPI.username,
-            first_name: userDataFromAPI.first_name,
-            last_name: userDataFromAPI.last_name,
-            email: userDataFromAPI.email,
-            phone: userDataFromAPI.phone,
-            location: userDataFromAPI.location,
+            username: user.username,
+            FirstName: user.FirstName,
+            LastName: user.LastName,
+            email: user.email,
+            // phone: user.phone,
+            // location: user.location,
           };
-      
+  
           setUserData(orderedUserData);
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error("Error fetching user data", error);
-        });
+        }
+      };
+      fetchUserData();
     }
   }, []);
-
+  
 
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setUserData((prevData) => ({
-      ...prevData,
+    setUserData({
+      ...userData,
       [name]: value,
-    }));
+    });
   };
 
-  const updateAccount = () => {
-    axios
-      .put("https://mock-fitness.onrender.com/user/update", userData, {
+  const updateAccount = async () => {
+
+    try {
+      const response = await axios.put(serverUrl + "/users/" + userId, userData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          // 'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-      })
-      .then((response) => {
-        console.log(`Account ID : ${response.data._id} is updated information`);
-        setAlertMessage(response.data.message);
-        setShowAlert(true);
-      })
-      .catch((error) => {
-        console.error("Error updating account: ", error);
-        
       });
+  
+      if (response.status === 200) {
+        console.log(`Account ID : ${userId} is updated information`);
+        setAlertMessage({ text: response.data.message, status: 'success' });
+        setShowAlert(true);
+      } else {
+        console.log(response.data.error);
+        setAlertMessage({ text: response.data.error, status: 'error' });
+        setShowAlert(true);
+      }
+    } catch (error) {
+      setAlertMessage({ text: error.response.data.message, status: 'error' });
+      setShowAlert(true);
+      console.error("Error updating account: ", error);
+    }
   };
-
   const resetForm = () => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      axios
-        .get("https://mock-fitness.onrender.com/user/view", {
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
+    
+    if (token) {
+      axios.get(serverUrl + "/users/" + userId, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         })
         .then((response) => {
           const userDataFromAPI = response.data;
           setUserData(userDataFromAPI);
           console.log("reset form")
+          console.log(userData)
         })
         .catch((error) => {
           console.error("Error fetching user data", error);
@@ -101,7 +99,7 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
           
           {/* username */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
-            <label htmlFor="username" className="w-1/3 font-bold">
+            <label htmlFor="username" className="w-1/3">
               Username
             </label>
             <input
@@ -115,13 +113,13 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
           </div>
           {/* first name */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
-            <label htmlFor="first_name" className="w-1/3 font-bold">
+            <label htmlFor="FirstName" className="w-1/3">
               First name
             </label>
             <input
               type="text"
-              name="first_name"
-              value={userData.first_name}
+              name="FirstName"
+              value={userData.FirstName || ""}
               onChange={handleInputChange}
               className="w-2/3 text-center rounded-md input input-bordered input-sm"
             />
@@ -129,30 +127,30 @@ const Account = ({ setShowAlert, setAlertMessage }) => {
 
             {/* last name  */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
-            <label htmlFor="last_name" className="w-1/3 font-bold">
+            <label htmlFor="LastName" className="w-1/3">
               Last name
             </label>
             <input
               type="text"
-              name="last_name"
-              value={userData.last_name}
+              name="LastName"
+              value={userData.LastName || ""}
               onChange={handleInputChange}
               className="w-2/3 text-center rounded-md input input-bordered input-sm"
             />
           </div>
           {/* mock input */}
-          {/* <div className="flex flex-row items-center justify-between w-full gap-2">
+          <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="email" className="w-1/3">
               Email
             </label>
             <input
               type="email"
               name="email"
-              value={userData.email}
+              value={userData.email || ""}
               onChange={handleInputChange}
-              className="w-full text-center border-2 rounded-md input input-bordered input-sm"
+              className="w-2/3 text-center rounded-md input input-bordered input-sm"
             />
-          </div> */}
+          </div>
           {/* mock input */}
           {/* <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="phone" className="w-1/3">

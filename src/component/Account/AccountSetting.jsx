@@ -2,53 +2,147 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../Layout.jsx";
 import Swal from "sweetalert2";
-
+import axios from "axios";
+// import { useNavigate } from "react-router-dom";
 
 //import component
 import Account from "./accountComponent/Account.jsx";
 import Password from "./accountComponent/Password.jsx";
 import Privacy from "./accountComponent/Privacy.jsx";
-import axios from "axios";
+import { Profile } from "./accountComponent/Profile.jsx";
+
 
 const AccountSetting = () => {
+  const serverUrl = "http://127.0.0.1:8000"
   const [option, setOption] = useState("ACCOUNT");
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const [userData, setUserData] = useState("");
+  const [userData, setUserData] = useState({});
+  const [userId , setUserId] = useState("");
+  const [reload, setReload] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("rockettoken");
   
+    if (token) {
+      axios
+        .get(serverUrl + "/users/", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(async (response) => {
+          if (response.status === 200) {
+            setUserId(response.data.id);
+            console.log(response.data.id); // ตรวจสอบว่าได้รับค่า id ให้ถูกต้อง
+  
+            axios
+              .get(serverUrl + "/users/" + response.data.id, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then((userResponse) => {
+                if (userResponse.status === 200) {
+                  const user = userResponse.data;
+  
+                  const listDataByUser = {
+                    username: user.username,
+                    FirstName: user.FirstName,
+                    LastName: user.LastName,
+                    email: user.email,
+                    userId: response.data.id, // ใช้ค่า id ที่ได้จาก response แรก
+                  };
+                  console.log(response.data.id);
+                  setUserData(listDataByUser);
+                } else {
+                  console.log("Failed to fetch user data");
+                }
+              })
+              .catch((error) => {
+                console.log("Error fetching user data from the database", error);
+              });
+          } else {
+            console.log("Failed to fetch user data");
+          }
+        })
+        .catch((error) => {
+          console.log("Error fetching user data from the database", error);
+        });
+    }
+  }, [reload]);
+  
+  
+  
+  
+  // const fetchUserDataById = async() => {
+  //   try {
+  //     const token = localStorage.getItem("rockettoken");
+  //     const response = await axios.get(serverUrl + "/users/" + userId, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       }
+  //     });
+  //     if (response.status === 200) {
+  
+  //       const user = response.data;
+
+  //       // Create a new object with properties in the desired order
+  //       const listDataByUser = {
+  //         username: user.username,
+  //         FirstName: user.FirstName,
+  //         LastName: user.LastName,
+  //         email: user.email,
+  //         phone: user.phone,
+  //         location: user.location,
+  //         // userId: userId
+  //       };
+
+  //       setUserData(listDataByUser);
+  //     }
+  //   } catch (error) {
+  //     console.log(`Error fetching user data from the database`, error);
+  //   }
+  // }
+
+  // fetchUserDataById()
+
   const showOption = (option) => {
     switch (option) {
       case "ACCOUNT":
-        return <Account setShowAlert={setShowAlert} setAlertMessage={setAlertMessage} />;
+        return <Account 
+                  userId={userId}
+                  userData={userData}
+                  setUserData={setUserData}
+                  setShowAlert={setShowAlert} 
+                  setAlertMessage={setAlertMessage}
+                  reload={reload} 
+                  setReload={setReload} 
+                  />;
 
       case "PASSWORD":
-        return <Password setShowAlert={setShowAlert} setAlertMessage={setAlertMessage}/>;
+        return <Password 
+                  userId={userId}
+                  userData={userData}
+                  setUserData={setUserData}
+                  setShowAlert={setShowAlert} 
+                  setAlertMessage={setAlertMessage}
+                  reload={reload} 
+                  setReload={setReload} 
+                  />;
 
       case "DELETE ACCOUNT":
-        return <Privacy />;
+        return <Privacy 
+                  userId={userId}
+                  setShowAlert={setShowAlert} 
+                  setAlertMessage={setAlertMessage}
+                  reload={reload} 
+                  setReload={setReload} 
+                  />;
       default:
         return null;
     }
   };
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      axios
-        .get("https://mock-fitness.onrender.com/user/view", {
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        })
-        .then((response) => {
-          const userDataFromAPI = response.data.username;
-          setUserData(userDataFromAPI);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data", error);
-        });
-    }
-  }, []);
 
 
   const Alert = ({ message }) => {
@@ -112,7 +206,15 @@ const AccountSetting = () => {
           <div>
             {/* profile  */}
             <div className="flex flex-col items-center justify-center w-full mx-auto">
-              <Profile userData={userData} />
+
+              <Profile    userId={userId}
+                  userData={userData}
+                  setUserData={setUserData}
+                  setShowAlert={setShowAlert} 
+                  setAlertMessage={setAlertMessage}
+                  reload={reload} 
+                  setReload={setReload}  />
+
             </div>
 
             <div
@@ -231,26 +333,6 @@ const AccountSetting = () => {
       </div>
 
     </Layout>
-  );
-};
-
-
-
-
-const Profile = ({ userData }) => {
-  return (
-    <div className="flex flex-col items-center w-full gap-4 px-2 py-4">
-      <div className="w-48 h-48 overflow-hidden rounded-full">
-        <img
-          src="https://img.freepik.com/free-photo/front-view-man-posing-with-sunglasses_23-2149415775.jpg?size=626&ext=jpg&ga=GA1.1.300391043.1686214159&semt=sph"
-          alt="profile-picture"
-          className="object-cover"
-        />
-      </div>
-      <div className="text-3xl font-semibold text-center">
-      <h2>@{userData}</h2>
-      </div>
-    </div>
   );
 };
 
