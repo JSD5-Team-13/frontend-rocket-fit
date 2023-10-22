@@ -50,6 +50,7 @@ const initialDashboardData = {
 
 export const DashBoard = () => {
   const [dashboardData, setDashboardData] = useState(initialDashboardData);
+  //เรียกใช้ userData จาก userContext
   const { userData } = useContext(userContext);
 
   //get data
@@ -119,11 +120,20 @@ export const DashBoard = () => {
     ],
   };
 
+  //caculate BMI
   const calBMI = (height, weight) => {
     const meterHeight = height / 100;
     return weight / (meterHeight * meterHeight);
   };
-
+  //resultBMI
+  const resultBMI = () => {
+    const yourBMi = calBMI(userData.height, userData.weight);
+    if (yourBMi < 18.5) return "Underweight";
+    if (yourBMi >= 18.5 || yourBMi <= 24.9) return "Heathty";
+    if (yourBMi >= 25.0 || yourBMi <= 29.9) return "Overweight";
+    if (yourBMi > 30.0) return "Obese";
+    return "default data";
+  };
   return (
     <>
       <NavbarLoggedIn />
@@ -179,7 +189,8 @@ export const DashBoard = () => {
                       {calBMI(userData.height, userData.weight).toFixed(2)}
                     </p>
                     <h2 className="card-title text-[2rem]">BMI</h2>
-                    <div className="flex  justify-end">
+                    <div className="flex items-center">
+                      <p className="text-[1.5rem]">{resultBMI()}</p>
                       <svg
                         width="50px"
                         height="50px"
