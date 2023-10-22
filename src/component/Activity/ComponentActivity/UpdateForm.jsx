@@ -11,10 +11,14 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
   const [activity_describe, setActivity_describe] = useState("");
   const [image, setImage] = useState("");
 
+  // show date with correct form YYYY-MM-DD
+  const apiDate = new Date(activity.date);
+  const formattedDate = apiDate.toISOString().split("T")[0]; // "YYYY-MM-DD"
+  
   useEffect(() => {
     if (activity) {
       setId(activity._id);
-      setDate(activity.date);
+      setDate(formattedDate);
       setDuration(activity.duration);
       setActivity_type(activity.activity_type);
       setActivity_name(activity.activity_name);
@@ -61,7 +65,7 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
               {/* Card Data */}
               <section>
                 {/* Activity type */}
-                <label className="label">
+                <label className="label" htmlFor="activity_type">
                   <span className="label-tex">Activity Type:</span>
                 </label>
                 <select
@@ -74,51 +78,54 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
                   <option disabled value="">
                     Choose Activity
                   </option>
-                  <option value="running">Running</option>
-                  <option value="walking">Walking</option>
-                  <option value="cycling">Cycling</option>
-                  <option value="swimming">Swimming</option>
-                  <option value="hiking">Hiking</option>
-                  <option value="weight training">Weight Training</option>
-                  <option value="yoga">Yoga</option>
-                  <option value="surfing">Surfing</option>
-                  <option value="basketball">Basketball</option>
-                  <option value="football">Football</option>
-                  <option value="badminton">Badminton</option>
-                  <option value="tennis">Tennis</option>
-                  <option value="volleyball">Volleyball</option>
+                  <option value="Running">Running</option>
+                  <option value="Walking">Walking</option>
+                  <option value="Cycling">Cycling</option>
+                  <option value="Swimming">Swimming</option>
+                  <option value="Hiking">Hiking</option>
+                  <option value="Weight Training">Weight Training</option>
+                  <option value="Yoga">Yoga</option>
+                  <option value="Surfing">Surfing</option>
+                  <option value="Basketball">Basketball</option>
+                  <option value="Football">Football</option>
+                  <option value="Badminton">Badminton</option>
+                  <option value="Tennis">Tennis</option>
+                  <option value="Volleyball">Volleyball</option>
                 </select>
 
                 {/* Date */}
-                <label className="label">
+                <label className="label" htmlFor="date">
                   <span className="label-tex">Date:</span>
                 </label>
                 <input
                   className="input input-bordered w-full"
                   type="date"
+                  id="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                 />
 
                 {/* Duration */}
-                <label className="label">
+                <label className="label" htmlFor="duration">
                   <span className="label-tex">Duration (Mins):</span>
                 </label>
                 <input
                   className="input input-bordered w-full"
                   type="number"
+                  id="duration"
                   placeholder="00"
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
                 />
 
                 {/* Activity Describe */}
-                <label className="label">
+                <label className="label" htmlFor="activity_describe">
                   <span className="label-tex">Activity Describe:</span>
                 </label>
                 <input
                   className="input input-bordered w-full mb-4"
                   type="text"
+                  id="activity_describe"
                   placeholder="Activity Describe"
                   value={activity_describe}
                   onChange={(e) => setActivity_describe(e.target.value)}
@@ -172,7 +179,7 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
                 </label>
                 <label
                   className="flex justify-center items-center input input-bordered input-sm w-1/2 hover:text-red-500 focus:outline-none"
-                  onClick={() => setImage(null)}
+                  onClick={() => setImage("")}
                 >
                   <AiOutlineDelete size={22} />
                   <span className="hidden lg:block lg:ml-2">Reset Image</span>

@@ -17,20 +17,46 @@ import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 const MyFeed = () => {
   const [posts, setPosts] = useState([]);
   const [reload, setReload] = useState(false);
+  const [userId, setUserId] = useState("");
 
-  // Get all posts
+  // Get posts for the user with their user_id
   useEffect(() => {
-    const getData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/post/");
-        setPosts(response.data);
-        console.log("Got data Successfully!", response);
+        const token = localStorage.getItem("rockettoken");
+        if (token) {
+          // Fetch user data
+          const userResponse = await axios.get("http://127.0.0.1:8000/users", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (userResponse.status === 200) {
+            const userId = userResponse.data.id;
+            setUserId(userId);
+
+            // Use the userId for the get posts
+            const postsResponse = await axios.get(
+              `http://127.0.0.1:8000/post?userId=${userId}`
+            );
+
+            if (postsResponse.status === 200) {
+              setPosts(postsResponse.data);
+            } else {
+              console.log("Failed to fetch posts");
+            }
+          } else {
+            console.log("Failed to fetch user data");
+          }
+        }
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error("Error fetching data:", error);
       }
     };
-    getData();
-  }, [reload]);
+
+    fetchData();
+  }, [userId, reload]);
 
   // Update a post
   const updateData = async (_id, activity_name, activity_describe) => {
@@ -103,6 +129,33 @@ const MyFeed = () => {
 const FeedProfile = () => {
   const [aboutMe, setAboutMe] = useState("Let others know more about you!");
   const [isEdit, setIsEdit] = useState(false);
+  const [userData, setUserData] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("rockettoken");
+        if (token) {
+          // Fetch user data
+          const response = await axios.get("http://127.0.0.1:8000/users", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.status === 200) {
+            setUserData(response.data);
+          } else {
+            console.log("Failed to fetch user data");
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleEditAboutMe = () => {
     setIsEdit(true);
@@ -125,7 +178,7 @@ const FeedProfile = () => {
 
         {/* Profile Data */}
         <div className="lg:flex lg:flex-col">
-          <h3 className="font-bold text-lg lg:text-center">Username</h3>
+          <h3 className="font-bold text-lg lg:text-center">{userData.username}</h3>
           <button
             className="hidden lg:block lg:mt-2 lg:mb-5 btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]"
             onClick={handleEditAboutMe}
@@ -180,10 +233,38 @@ const FeedProfile = () => {
 };
 
 const PostDisplay = ({ posts, updateData, deleteData }) => {
+  const [userData, setUserData] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("rockettoken");
+        if (token) {
+          // Fetch user data
+          const response = await axios.get("http://127.0.0.1:8000/users", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.status === 200) {
+            setUserData(response.data);
+          } else {
+            console.log("Failed to fetch user data");
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const timeOptions = {
     hour: "numeric",
     minute: "2-digit",
-    hour12: true,
+    hour12: false,
   };
 
   return (
@@ -209,14 +290,14 @@ const PostDisplay = ({ posts, updateData, deleteData }) => {
 
               {/* Post Data */}
               <article>
-                <h3 className="font-bold text-lg">Username</h3>
+                <h3 className="font-bold text-lg">{userData.username}</h3>
                 <div className="flex">
                   <p className="mr-3 uppercase">
                     {new Date(post.createdAt).toLocaleDateString("en-GB")}
                   </p>
                   <p className="uppercase">
                     {new Date(post.createdAt).toLocaleTimeString(
-                      "en-US",
+                      "en-GB",
                       timeOptions
                     )}
                   </p>
