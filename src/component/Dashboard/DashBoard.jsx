@@ -3,30 +3,16 @@ import { Bar, Pie } from "react-chartjs-2";
 import { BiSolidMoon } from "react-icons/Bi";
 import SideInformation from "../navbar/SideInformationBar.jsx";
 import { CategoryScale, Chart, registerables } from "chart.js";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Colors } from "chart.js";
+import { userContext } from "../context/UserContext.jsx";
+import { API_URL } from "../../const.jsx";
 
 //setup chart
 Chart.register(CategoryScale);
 Chart.register(...registerables);
 Chart.register(Colors);
-
-// const activityType = {
-//   Running: "running",
-//   Walking: "walking",
-//   Cycling: "cycling",
-//   Swimming: "swimming",
-//   Hiking: "hiking",
-//   WeightTraining: "weight_training",
-//   Yoga: "yoga",
-//   Surfing: "surfing",
-//   Basketball: "basketball",
-//   Football: "football",
-//   Badminton: "badminton",
-//   Tennis: "tennis",
-//   Volleyball: "volleyball",
-// };
 
 const initialDashboardData = {
   durationPerDay: [
@@ -64,21 +50,20 @@ const initialDashboardData = {
 
 export const DashBoard = () => {
   const [dashboardData, setDashboardData] = useState(initialDashboardData);
+  //เรียกใช้ userData จาก userContext
+  const { userData } = useContext(userContext);
+
   //get data
   useEffect(() => {
     const getDashboardData = async () => {
-      const url = "http://localhost:8000";
       return await axios
-        //get all
-        .get(url + `/dashboard`)
-        //get buy user id
-        // .get(url + `/dashboard/${id}`)
-
+        .get(API_URL + `/dashboard/${userData.id}`)
         .then((res) => setDashboardData(res.data));
     };
 
     getDashboardData();
-  }, []);
+  }, [userData]);
+
   //map item like initialDashboardData
   const BarChartData = {
     labels: dashboardData.durationPerDay.map((item) => item.day),
@@ -135,6 +120,20 @@ export const DashBoard = () => {
     ],
   };
 
+  //caculate BMI
+  const calBMI = (height, weight) => {
+    const meterHeight = height / 100;
+    return weight / (meterHeight * meterHeight);
+  };
+  //resultBMI
+  const resultBMI = () => {
+    const yourBMi = calBMI(userData.height, userData.weight);
+    if (yourBMi < 18.5) return "Underweight";
+    if (yourBMi >= 18.5 || yourBMi <= 24.9) return "Heathty";
+    if (yourBMi >= 25.0 || yourBMi <= 29.9) return "Overweight";
+    if (yourBMi > 30.0) return "Obese";
+    return "default data";
+  };
   return (
     <>
       <NavbarLoggedIn />
@@ -186,39 +185,42 @@ export const DashBoard = () => {
               >
                 <div className="card bg-base-300">
                   <div className="card-body">
-                    <p className="text-[1.5rem]">16.65</p>
+                    <p className="text-[1.5rem]">
+                      {calBMI(userData.height, userData.weight).toFixed(2)}
+                    </p>
                     <h2 className="card-title text-[2rem]">BMI</h2>
-                    <div className="flex  justify-end">
+                    <div className="flex items-center">
+                      <p className="text-[1.5rem]">{resultBMI()}</p>
                       <svg
                         width="50px"
                         height="50px"
                         viewBox="0 -0.5 17 17"
                         version="1.1"
                         xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink"
-                        class="si-glyph si-glyph-wieght"
+                        xmlnsXlink="http://www.w3.org/1999/xlink"
+                        className="si-glyph si-glyph-wieght"
                         fill="#000000"
                       >
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                         <g
                           id="SVGRepo_tracerCarrier"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         ></g>
                         <g id="SVGRepo_iconCarrier">
                           {" "}
                           <title>1010</title> <defs> </defs>{" "}
                           <g
                             stroke="none"
-                            stroke-width="1"
+                            strokeWidth="1"
                             fill="none"
-                            fill-rule="evenodd"
+                            fillRule="evenodd"
                           >
                             {" "}
                             <path
                               d="M16,6.079 L16,5 L14.045,5 L14.045,8 L4,8 L4,5.041 L2,5.041 L2,6.052 L1.039,6.052 L1.039,11.958 L2,11.958 L2,12.955 L4,12.955 L4,10 L14.045,10 L14.045,12.996 L16,12.996 L16,11.958 L17,11.958 L17,6.079 L16,6.079 Z"
                               fill="#000000"
-                              class="si-glyph-fill"
+                              className="si-glyph-fill"
                             >
                               {" "}
                             </path>{" "}

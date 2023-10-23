@@ -5,6 +5,7 @@ import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import UserIcon from "../../assets/user-icon.svg";
 import {
   FaRegHeart,
