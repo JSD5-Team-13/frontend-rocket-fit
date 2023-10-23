@@ -22,6 +22,14 @@ const Password = ({ userId, userData, setUserData, setShowAlert, setAlertMessage
     }));
   };
 
+  const handleReset = () => {
+    setPassword({
+      currentPassword: '',
+      newPassword: '',
+      renewPassword: '',
+    })
+  }
+
   const logoutAndRedirectToLogin = async () => {
     setTimeout(() => {
         localStorage.removeItem('token');
@@ -48,7 +56,7 @@ const Password = ({ userId, userData, setUserData, setShowAlert, setAlertMessage
 
     axios
       .put(
-        serverUrl + "/users/password/" + userId,
+        serverUrl + "/users/setting/password/" + userId,
         { currentPassword, newPassword, renewPassword },
         {
           headers: {
@@ -117,7 +125,7 @@ const Password = ({ userId, userData, setUserData, setShowAlert, setAlertMessage
         <div className="flex flex-row items-center w-full mt-4 mb-4 justify-evenly">
           <button
             className="btn btn-sm btn-active"
-            onClick={() => console.log("cancel")}
+            onClick={handleReset}
           >
             Cancel
           </button>

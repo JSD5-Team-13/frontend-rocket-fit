@@ -6,36 +6,36 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
   const serverUrl = "http://127.0.0.1:8000"
   const token = localStorage.getItem("rockettoken");
 
-  useEffect(() => {
-    if (token) {
-      const fetchUserData = async () => {
-        try {
-          const response = await axios.get(serverUrl + "/users/" + userId, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+  // useEffect(() => {
+  //   if (token) {
+  //     const fetchUserData = async () => {
+  //       try {
+  //         const response = await axios.get(serverUrl + "/users/setting/" + userId, {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         });
   
-          const user = response.data;
+  //         const user = response.data;
   
-          // Create a new object with properties in the desired order
-          const orderedUserData = {
-            username: user.username,
-            FirstName: user.FirstName,
-            LastName: user.LastName,
-            email: user.email,
-            // phone: user.phone,
-            // location: user.location,
-          };
+  //         // Create a new object with properties in the desired order
+  //         const orderedUserData = {
+  //           username: user.username,
+  //           FirstName: user.FirstName,
+  //           LastName: user.LastName,
+  //           email: user.email,
+  //           // phone: user.phone,
+  //           // location: user.location,
+  //         };
   
-          setUserData(orderedUserData);
-        } catch (error) {
-          console.error("Error fetching user data", error);
-        }
-      };
-      fetchUserData();
-    }
-  }, []);
+  //         setUserData(orderedUserData);
+  //       } catch (error) {
+  //         console.error("Error fetching user data", error);
+  //       }
+  //     };
+  //     fetchUserData();
+  //   }
+  // }, []);
   
 
 
@@ -50,7 +50,7 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
   const updateAccount = async () => {
 
     try {
-      const response = await axios.put(serverUrl + "/users/" + userId, userData, {
+      const response = await axios.put(serverUrl + "/users/setting/account/" + userData.userId, userData, {
         headers: {
           // 'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -75,7 +75,7 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
   const resetForm = () => {
     
     if (token) {
-      axios.get(serverUrl + "/users/" + userId, {
+      axios.get(serverUrl + "/users/setting/" + userData.userId, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

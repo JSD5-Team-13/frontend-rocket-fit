@@ -37,7 +37,7 @@ const Privacy = ({ userId, setShowAlert, setAlertMessage }) => {
         return;
       }
       const response = await axios.put(
-        serverUrl + "/users/deactivate/" + userId, {
+        serverUrl + "/users/setting/deactivate/" + userId, {
           confirmToDeactivated: deactivate},
         {
           headers: {

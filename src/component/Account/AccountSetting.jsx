@@ -9,7 +9,7 @@ import axios from "axios";
 import Account from "./accountComponent/Account.jsx";
 import Password from "./accountComponent/Password.jsx";
 import Privacy from "./accountComponent/Privacy.jsx";
-import { Profile } from "./accountComponent/Profile.jsx";
+import Profile from "./accountComponent/Profile.jsx";
 
 
 const AccountSetting = () => {
@@ -37,7 +37,7 @@ const AccountSetting = () => {
             console.log(response.data.id); // ตรวจสอบว่าได้รับค่า id ให้ถูกต้อง
   
             axios
-              .get(serverUrl + "/users/" + response.data.id, {
+              .get(serverUrl + "/users/setting/" + response.data.id, {
                 headers: {
                   Authorization: `Bearer ${token}`,
                 },
@@ -51,6 +51,7 @@ const AccountSetting = () => {
                     FirstName: user.FirstName,
                     LastName: user.LastName,
                     email: user.email,
+                    profile_url: user.profile_url,
                     userId: response.data.id, // ใช้ค่า id ที่ได้จาก response แรก
                   };
                   console.log(response.data.id);
@@ -207,13 +208,17 @@ const AccountSetting = () => {
             {/* profile  */}
             <div className="flex flex-col items-center justify-center w-full mx-auto">
 
-              <Profile    userId={userId}
-                  userData={userData}
-                  setUserData={setUserData}
-                  setShowAlert={setShowAlert} 
-                  setAlertMessage={setAlertMessage}
-                  reload={reload} 
-                  setReload={setReload}  />
+              <Profile    
+              
+              userId={userId}
+              userData={userData}
+              setUserData={setUserData}
+              setShowAlert={setShowAlert}
+              setAlertMessage={setAlertMessage} // ส่ง setAlertMessage ไปยังคอมโพเนนต์ Profile
+              reload={reload}
+              setReload={setReload}
+              
+              />
 
             </div>
 
@@ -347,5 +352,7 @@ const Logout = () => {
     </div>
   );
 };
+
+
 
 export default AccountSetting;
