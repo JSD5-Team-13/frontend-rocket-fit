@@ -139,7 +139,7 @@ const FeedProfile = () => {
       {/* Header Profile */}
       <section className="flex items-center lg:flex-col lg:mt-3">
         {/* Profile Avatar */}
-        <figure className="avatar m-5">
+        <figure className="m-5 avatar">
           <div className="w-[4.5rem] rounded-full bg-gray-300">
             <img src={UserIcon} alt="Image Profile" />
           </div>
@@ -147,7 +147,7 @@ const FeedProfile = () => {
 
         {/* Profile Data */}
         <div className="lg:flex lg:flex-col">
-          <h3 className="font-bold text-lg lg:text-center">Username</h3>
+          <h3 className="text-lg font-bold lg:text-center">Username</h3>
           <button
             className="hidden lg:block lg:mt-2 lg:mb-5 btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]"
             onClick={handleEditAboutMe}
@@ -173,11 +173,11 @@ const FeedProfile = () => {
 
       {/* Profile Status */}
       <section>
-        <p className="hidden lg:block mt-5 mb-2 font-bold text-center">
+        <p className="hidden mt-5 mb-2 font-bold text-center lg:block">
           About Me
         </p>
         {isEdit ? (
-          <div className="mx-3 flex flex-col justify-center">
+          <div className="flex flex-col justify-center mx-3">
             <textarea
               value={aboutMe}
               onChange={(e) => setAboutMe(e.target.value)}
@@ -212,11 +212,11 @@ const PostDisplay = ({ posts, updateData, deleteData }) => {
     <div className="flex flex-col-reverse">
       {posts.map((post) => (
         <div key={post._id} className="p-3 lg:p-0 lg:mb-5">
-          <div className="relative border border-black lg:mt-8 lg:border-none lg:rounded-xl flex flex-col lg:bg-white shadow-xl">
+          <div className="relative flex flex-col border border-black shadow-xl lg:mt-8 lg:border-none lg:rounded-xl lg:bg-white">
             {/* Header Post */}
             <section className="flex items-center">
               {/* Post Avatar */}
-              <figure className="avatar m-5">
+              <figure className="m-5 avatar">
                 <div className="w-[4.5rem] rounded-full bg-gray-300">
                   <img src={UserIcon} alt="Image Profile" />
                 </div>
@@ -231,7 +231,7 @@ const PostDisplay = ({ posts, updateData, deleteData }) => {
 
               {/* Post Data */}
               <article>
-                <h3 className="font-bold text-lg">Username</h3>
+                <h3 className="text-lg font-bold">Username</h3>
                 <div className="flex">
                   <p className="mr-3 uppercase">
                     {new Date(post.createdAt).toLocaleDateString("en-GB")}
@@ -252,7 +252,7 @@ const PostDisplay = ({ posts, updateData, deleteData }) => {
 
             {/* Body Post */}
             <section className="ml-5 mt-2 mb-4 lg:order-2 lg:ml-[7.5rem] lg:mt-4">
-              <p className="font-semibold mb-1 uppercase">
+              <p className="mb-1 font-semibold uppercase">
                 {post.activity_name}
               </p>
               <p>{post.activity_describe}</p>
@@ -322,7 +322,7 @@ const PostFunction = ({ post, updateData, deleteData }) => {
 
         {/* Menu Function */}
         {isOpen && (
-          <div className="flex flex-col w-28 bg-gray-200 rounded-btn">
+          <div className="flex flex-col bg-gray-200 w-28 rounded-btn">
             <button
               className="flex p-2 hover:bg-[#1CD6CE] rounded-md text-start"
               onClick={handleUpdate}
@@ -330,7 +330,7 @@ const PostFunction = ({ post, updateData, deleteData }) => {
               <AiOutlineEdit size={22} /> <span className="ml-2">Edit</span>
             </button>
             <button
-              className="flex p-2 hover:bg-red-400 rounded-md text-start"
+              className="flex p-2 rounded-md hover:bg-red-400 text-start"
               onClick={handleDelete}
             >
               <AiOutlineDelete size={22} /> <span className="ml-2">Delete</span>
@@ -377,15 +377,15 @@ const UpdateForm = ({ post, updateData, onClose }) => {
   return (
     <section className="fixed top-0 left-0 w-[100%] h-[100%] bg-black/50 flex justify-center items-center z-[100]">
       <div className="bg-white p-8 rounded-2xl mx-7 md:w-[500px]">
-        <h3 className="font-bold text-lg">Update Your Post!</h3>
+        <h3 className="text-lg font-bold">Update Your Post!</h3>
 
-        <div className="p-2 md:p-7 rounded-xl mt-5">
+        <div className="p-2 mt-5 md:p-7 rounded-xl">
           {/* Activity name */}
           <label className="label">
             <span className="label-tex">Activity Name:</span>
           </label>
           <input
-            className="input input-bordered w-full mb-3"
+            className="w-full mb-3 input input-bordered"
             type="text"
             placeholder="Activity Name"
             value={activity_name}
@@ -397,7 +397,7 @@ const UpdateForm = ({ post, updateData, onClose }) => {
             <span className="label-tex">Activity Describe:</span>
           </label>
           <input
-            className="input input-bordered w-full"
+            className="w-full input input-bordered"
             type="text"
             placeholder="Activity Describe"
             value={activity_describe}
@@ -406,8 +406,8 @@ const UpdateForm = ({ post, updateData, onClose }) => {
         </div>
 
         {/* Footer Modal */}
-        <footer className="modal-action flex justify-center px-4">
-          <button className="btn w-20" onClick={onClose}>
+        <footer className="flex justify-center px-4 modal-action">
+          <button className="w-20 btn" onClick={onClose}>
             Cancel
           </button>
           <button
@@ -425,8 +425,8 @@ const UpdateForm = ({ post, updateData, onClose }) => {
 const ConfirmDeleteDialog = ({ onConfirm, onClose }) => {
   return (
     <section className="fixed top-0 left-0 w-[100%] h-[100%] bg-black/50 flex justify-center items-center z-[100]">
-      <div className="bg-white p-8 rounded-2xl mx-7">
-        <h3 className="font-bold text-lg">Delete Your Post!</h3>
+      <div className="p-8 bg-white rounded-2xl mx-7">
+        <h3 className="text-lg font-bold">Delete Your Post!</h3>
         <p className="py-4 text-[1rem]">
           This post will be deleted and you won't be able to find it anymore.
         </p>
@@ -437,7 +437,7 @@ const ConfirmDeleteDialog = ({ onConfirm, onClose }) => {
             Cancel
           </button>
           <button
-            className="btn text-red-500 hover:bg-red-500 hover:text-white"
+            className="text-red-500 btn hover:bg-red-500 hover:text-white"
             onClick={onConfirm}
           >
             Delete
@@ -492,15 +492,15 @@ const CommentDisplay = () => {
     <div className="bg-[#8DE2DF] p-2 lg:rounded-xl lg:shadow-xl border-b-2">
       <section className="flex items-center">
         {/* Avatar */}
-        <figure className="avatar m-3">
-          <div className="w-12 rounded-full bg-gray-100">
+        <figure className="m-3 avatar">
+          <div className="w-12 bg-gray-100 rounded-full">
             <img src={UserIcon} alt="Image Profile" />
           </div>
         </figure>
 
         {/* Comment */}
         <div className="w-full">
-          <p className="font-semibold mb-1">Username</p>
+          <p className="mb-1 font-semibold">Username</p>
           <div className="flex">
             <p className="w-full mr-2">This is comment~</p>
             <button className="mr-7" onClick={toggleHeart}>
@@ -522,20 +522,20 @@ const CommentForm = () => {
     <div className="bg-[#8DE2DF] p-2 lg:rounded-xl lg:mb-3 lg:shadow-xl">
       <section className="flex items-center">
         {/* Avatar */}
-        <figure className="avatar m-3">
-          <div className="w-12 rounded-full bg-gray-100">
+        <figure className="m-3 avatar">
+          <div className="w-12 bg-gray-100 rounded-full">
             <img src={UserIcon} alt="Image Profile" />
           </div>
         </figure>
 
         {/* Form*/}
         <div className="w-full">
-          <p className="font-semibold mb-1">Username</p>
+          <p className="mb-1 font-semibold">Username</p>
           <div className="flex">
             <input
               type="text"
               placeholder="write comment"
-              className="input input-sm input-bordered w-full mr-2 focus:outline-none"
+              className="w-full mr-2 input input-sm input-bordered focus:outline-none"
             />
             <button className="btn btn-sm mr-2 border-none bg-[#132640] text-white hover:bg-[#132640] hover:text-yellow-300">
               POST
