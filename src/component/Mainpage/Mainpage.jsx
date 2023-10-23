@@ -42,7 +42,7 @@ const Mainpage = () => {
           console.log(`Error fetching user data from the database`, error);
         });
     }
-  });
+  }, []);
 
   return (
     <div className=" h-[100vh] fixed w-full">

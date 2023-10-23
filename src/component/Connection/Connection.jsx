@@ -5,85 +5,226 @@ import axios from "axios";
 
 const Connection = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [connections, setConnections] = useState([
-    { name: "John Doe", image: "john-doe.jpg", isFollowing: false },
-    { name: "Jane Smith", image: "jane-smith.jpg", isFollowing: false },
-    { name: "Alice Johnson", image: "alice-johnson.jpg", isFollowing: false },
-    // Add more connection objects here with 'name' and 'image' properties.
-  ]);
-  const [activeTab, setActiveTab] = useState("following"); // 'following' or 'followers'
-  const [isSearching, setIsSearching] = useState(false); // Track if a search is active
-  const [isFollowing, setIsFollowing] = useState(false); // Track if a user is followed or unfollowed
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [userId, setUserId] = useState("");
-  const [userData, setUserData] = useState("");
+  const [userData, setUserData] = useState({});
+  const [activeTab, setActiveTab] = useState("following");
+  const [followingData, setFollowingData] = useState([]);
+  const [followersData, setFollowersData] = useState([]);
 
+  console.log(userData._id);
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
+      // Fetch user data
       axios
         .get("http://127.0.0.1:8000/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
-        .then(async (response) => {
+        .then((response) => {
           if (response.status === 200) {
             setUserId(response.data.id);
-            try {
-              const userDataResponse = await axios.get(
-                `http://127.0.0.1:8000/users/${userId}`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
+            // Now that you have the user ID, fetch user data based on the ID
+            axios
+              .get(`http://127.0.0.1:8000/users/${response.data.id}`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then((fetchUser) => {
+                if (fetchUser.status === 200) {
+                  setUserData(fetchUser.data);
+                } else {
+                  console.error("Cannot retrieve user data");
                 }
-              );
-              if (userDataResponse.status === 200) {
-                setUserData(userDataResponse.data);
-              } else {
-                console.log("fetch user data error");
-              }
-            } catch (error) {
-              console.log("Error fetching user data from the database", error);
-            }
+              })
+              .catch((error) => {
+                console.error("Error fetching user data", error);
+              });
           } else {
-            console.log("Failed to fetch user data");
+            console.error("Failed to fetch user data");
           }
         })
         .catch((error) => {
-          console.log("Error fetching user data from the database", error);
+          console.error("Error fetching user data", error);
         });
     }
-  }, [userId]);
 
-  const handleSearchInputChange = (e) => {
-    setSearchQuery(e.target.value);
-    setIsSearching(true); // A search is active
+    // The first useEffect runs only once, on component mount, so it won't cause loops.
+  }, []);
+
+  useEffect(() => {
+    // Check if userData.following is available
+    if (userData.following && userData.following.length > 0) {
+      const token = localStorage.getItem("rockettoken");
+      const fetchFollowingData = async () => {
+        try {
+          const followingPromises = userData.following.map((userId) =>
+            axios.get(`http://127.0.0.1:8000/users/${userId}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+          );
+
+          const followingResponses = await Promise.all(followingPromises);
+
+          const followingData = followingResponses.map((response) => {
+            if (response.status === 200) {
+              return response.data;
+            } else {
+              console.error("Error fetching following data");
+              return null; // Handle the error case here
+            }
+          });
+
+          setFollowingData(followingData.filter((user) => user));
+        } catch (error) {
+          console.error("Error fetching following data", error);
+        }
+      };
+      fetchFollowingData();
+    }
+  }, [userData.following]);
+
+  useEffect(() => {
+    // Check if userData.followers is available
+    if (userData.followers && userData.followers.length > 0) {
+      const token = localStorage.getItem("rockettoken");
+      const fetchFollowersData = async () => {
+        try {
+          const followersPromises = userData.followers.map((userId) =>
+            axios.get(`http://127.0.0.1:8000/users/${userId}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+          );
+
+          const followersResponses = await Promise.all(followersPromises);
+
+          const followersData = followersResponses.map((response) => {
+            if (response.status === 200) {
+              return response.data;
+            } else {
+              console.error("Error fetching followers data");
+              return null; // Handle the error case here
+            }
+          });
+
+          setFollowersData(followersData.filter((user) => user));
+        } catch (error) {
+          console.error("Error fetching followers data", error);
+        }
+      };
+      fetchFollowersData();
+    }
+  }, [userData.followers]); // Use userId as a dependency
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    setIsSearching(true);
+    performSearch(query);
   };
 
-  const toggleFollow = (index) => {
-    const updatedConnections = [...connections];
-    updatedConnections[index].isFollowing =
-      !updatedConnections[index].isFollowing;
-    setConnections(updatedConnections);
-    setIsFollowing(true); // A user has been followed/unfollowed
+  const performSearch = (query) => {
+    if (query) {
+      const token = localStorage.getItem("rockettoken");
+      axios
+        .get(`http://127.0.0.1:8000/all?username=${query}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((searchResponse) => {
+          if (searchResponse.status === 200) {
+            setSearchResults(searchResponse.data);
+          } else {
+            console.error("Error fetching search results");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching search results", error);
+        });
+    } else {
+      setSearchResults([]);
+    }
   };
 
-  const filteredConnections = connections.filter((connection) => {
-    return connection.name.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  const handleFollow = (user) => {
+    const token = localStorage.getItem("rockettoken");
+    const userId = user._id;
 
-  // Create a list of all connection names for the datalist
-  const connectionNames = connections.map((connection) => connection.name);
+    // Check if the user is already being followed
+    if (userData.following.includes(userId)) {
+      // If the user is already being followed, send an unfollow request
+      axios
+        .post(
+          `http://127.0.0.1:8000/connection/unfollow/${userId}`,
+          { userid: userData._id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            // Update your UI or user data as needed to reflect that the user is now unfollowed
+            // Example: setUserData({ ...userData, following: userData.following.filter(id => id !== userId) });
+            setUserData({
+              ...userData,
+              following: userData.following.filter((id) => id !== userId),
+            });
+          } else {
+            console.error("Failed to unfollow user");
+          }
+        })
+        .catch((error) => {
+          console.error("Error unfollowing user", error);
+        });
+    } else {
+      // If the user is not being followed, send a follow request
+      axios
+        .post(
+          `http://127.0.0.1:8000/connection/follow/${userId}`,
+          { userid: userData._id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            // Update your UI or user data as needed to reflect that the user is now being followed
+            // Example: setUserData({ ...userData, following: [...userData.following, userId] });
+            setUserData({
+              ...userData,
+              following: [...userData.following, userId],
+            });
+          } else {
+            console.error("Failed to follow user");
+          }
+        })
+        .catch((error) => {
+          console.error("Error following user", error);
+        });
+    }
+  };
 
   return (
     <>
       <NavbarLoggedIn />
       <div className="max-w-screen-xl m-auto h-[80vh]">
         <div className="flex flex-col justify-center items-center">
-          <div className="flex flex-col lg:flex-row justify-center mt-[110px] mb-4 lg:mb-[2rem] lg:self-start gap-4 ">
+          <div className="flex flex-col lg:flex-row justify-center mt-[110px] mb-4 lg:mb-[2rem] lg:self-start gap-4">
             <h1 className="text-[2rem] font-bold uppercase">Connection</h1>
-            <form className="flex relative items-center justify-end ">
+            <form className="flex relative items-center justify-end">
               <button className="absolute text-2xl m-3">
                 <AiOutlineSearch />
               </button>
@@ -91,49 +232,16 @@ const Connection = () => {
                 placeholder="Search"
                 className="input input-ghost input-sm w-full max-w-xl bg-[#D9D9D9] text-center rounded-2xl"
                 value={searchQuery}
-                onChange={handleSearchInputChange}
-                list="connectionsList" // Link the input to the datalist
+                onChange={handleSearchChange}
               />
-              {/* Create a datalist with options for connection names */}
-              <datalist id="connectionsList">
-                {connectionNames.map((name) => (
-                  <option key={name} value={name} />
-                ))}
-              </datalist>
             </form>
           </div>
 
-          <div className="flex">
-            {isSearching && (
-              <button
-                className={`${
-                  activeTab === "following"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-300 text-gray-800"
-                } py-2 px-4 rounded-l-xl`}
-                onClick={() => setActiveTab("following")}
-              >
-                Following
-              </button>
-            )}
-            {isSearching && (
-              <button
-                className={`${
-                  activeTab === "followers"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-300 text-gray-800"
-                } py-2 px-4 rounded-r-xl`}
-                onClick={() => setActiveTab("followers")}
-              >
-                Followers
-              </button>
-            )}
-          </div>
-
-          <div className="w-[90%] lg:w-[70%] flex flex-col items-center lg:grid lg:grid-cols-2 lg:justify-items-center bg-base-300 p-4 my-4 rounded-xl">
-            {activeTab === "following" && isSearching && (
-              <>
-                {filteredConnections.map((connection, index) => (
+          <div className="w-[90%] lg:w-[70%] flex flex-col items-center bg-base-300 p-4 my-4 rounded-xl">
+            {isSearching && searchResults && (
+              <div>
+                <h2 className="text-xl font-bold my-2">Search Results:</h2>
+                {searchResults.map((user, index) => (
                   <div
                     key={index}
                     className="card w-[95%] bg-base-100 shadow-xl my-4"
@@ -141,64 +249,128 @@ const Connection = () => {
                     <div className="card-body">
                       <div className="flex flex-row items-center">
                         <img
-                          src={connection.image}
+                          src={user.image}
                           alt="profile"
                           className="rounded-full w-24 h-24 mr-4"
                         />
                         <div className="flex flex-col">
                           <h1 className="font-bold text-lg my-2">
-                            {connection.name}
+                            <a href={`/myfeed/${user._id}`}>{user.username}</a>
                           </h1>
-                          <button
-                            className={`btn btn-sm btn-accent rounded-2xl ${
-                              connection.isFollowing ? "bg-red-500" : ""
-                            }`}
-                            onClick={() => toggleFollow(index)}
-                          >
-                            {connection.isFollowing ? "Unfollow" : "Follow"}
-                          </button>
                         </div>
+                        <button
+                          className="p-2 btn btn-sm btn-accent rounded-full ml-auto"
+                          onClick={() => handleFollow(user)}
+                        >
+                          {userData.following.includes(user._id)
+                            ? "Following"
+                            : "Follow"}
+                        </button>
                       </div>
                     </div>
                   </div>
                 ))}
-              </>
-            )}
-
-            {activeTab === "followers" && isSearching && (
-              <>
-                {filteredConnections.map((connection, index) => (
-                  <div
-                    key={index}
-                    className="card w-[95%] bg-base-100 shadow-xl my-4"
-                  >
-                    <div className="card-body">
-                      <div className="flex flex-row items-center">
-                        <img
-                          src={connection.image}
-                          alt="profile"
-                          className="rounded-full w-24 h-24 mr-4"
-                        />
-                        <div className="flex flex-col">
-                          <h1 className="font-bold text-lg my-2">
-                            {connection.name}
-                          </h1>
-                          <button
-                            className={`btn btn-sm btn-accent rounded-2xl ${
-                              connection.isFollowing ? "bg-red-500" : ""
-                            }`}
-                            onClick={() => toggleFollow(index)}
-                          >
-                            {connection.isFollowing ? "Unfollow" : "Follow"}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </>
+              </div>
             )}
           </div>
+
+          <div className="flex justify-center mt-4">
+            <button
+              className={`mr-2 p-2 ${
+                activeTab === "following"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
+              }`}
+              onClick={() => setActiveTab("following")}
+            >
+              Following
+            </button>
+            <button
+              className={`p-2 ${
+                activeTab === "followers"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
+              }`}
+              onClick={() => setActiveTab("followers")}
+            >
+              Followers
+            </button>
+          </div>
+          {activeTab === "following" && followingData.length > 0 && (
+            <div>
+              <h2 className="text-xl font-bold my-2">
+                Following: {followingData.length}
+              </h2>
+              {followingData.map((user, index) => (
+                <div
+                  key={index}
+                  className="card w-[95%] bg-base-100 shadow-xl my-4"
+                >
+                  <div className="card-body">
+                    <div className="flex flex-row items-center">
+                      <img
+                        src={user.image}
+                        alt="profile"
+                        className="rounded-full w-24 h-24 mr-4"
+                      />
+                      <div className="flex flex-col">
+                        <h1 className="font-bold text-lg my-2">
+                          <a href={`/myfeed/${user._id}`}>{user.username}</a>
+                        </h1>
+                        {/* Add more user details here */}
+                      </div>
+                      <button
+                        className="p-2 btn btn-sm btn-accent rounded-full ml-auto"
+                        onClick={() => handleFollow(user)}
+                      >
+                        {userData.following.includes(user._id)
+                          ? "Following"
+                          : "Follow"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeTab === "followers" && followersData.length > 0 && (
+            <div>
+              <h2 className="text-xl font-bold my-2">
+                Following: {followersData.length}
+              </h2>
+              {followersData.map((user, index) => (
+                <div
+                  key={index}
+                  className="card w-[95%] bg-base-100 shadow-xl my-4"
+                >
+                  <div className="card-body">
+                    <div className="flex flex-row items-center">
+                      <img
+                        src={user.image}
+                        alt="profile"
+                        className="rounded-full w-24 h-24 mr-4"
+                      />
+                      <div className="flex flex-col">
+                        <h1 className="font-bold text-lg my-2">
+                          <a href={`/myfeed/${user._id}`}>{user.username}</a>
+                        </h1>
+                        {/* Add more user details here */}
+                      </div>
+                      <button
+                        className="p-2 btn btn-sm btn-accent rounded-full ml-auto"
+                        onClick={() => handleFollow(user)}
+                      >
+                        {userData.followers.includes(user._id)
+                          ? "Following"
+                          : "Follow"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>

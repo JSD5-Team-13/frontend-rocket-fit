@@ -46,7 +46,7 @@ const NavbarLoggedIn = () => {
                         <label tabIndex={0} className="text-white">Connection</label>
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
                             <li><a href='/connection'>Connection</a></li>
-                            <li><a href='/myfeed'>My Feed</a></li>
+                            <li><a href={`/myfeed/${userId}`}>My Feed</a></li>
                         </ul>
                     </div>
                     <div className="px-4 dropdown dropdown-hover dropdown-end">
