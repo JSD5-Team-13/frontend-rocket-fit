@@ -10,39 +10,44 @@ const MyActivity = () => {
   const [reload, setReload] = useState(false);
   const [userId, setUserId] = useState("");
 
-  // Get all activity cards
+  // Get activities for the user with their user_id
   useEffect(() => {
-    const token = localStorage.getItem("rockettoken");
-    if (token) {
-      // Fetch user data
-      axios.get("http://127.0.0.1:8000/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          setUserId(response.data.id);
-          axios.get(`http://127.0.0.1:8000/activity?userId=${userId}`)
-          .then((response) => {
-            if (response.status === 200) {
-              setActivities(response.data);
-            } else {
-              console.log("Failed to fetch memos");
-            }
-          })
-          .catch((error) => {
-            console.log("Error fetching memos from the database", error);
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("rockettoken");
+        if (token) {
+          // Fetch user data
+          const userResponse = await axios.get("http://127.0.0.1:8000/users", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           });
-        } else {
-          console.log("Failed to fetch user data");
+
+          if (userResponse.status === 200) {
+            const userId = userResponse.data.id;
+            setUserId(userId);
+
+            // Use the userId for the get activities
+            const activitiesResponse = await axios.get(
+              `http://127.0.0.1:8000/activity?userId=${userId}`
+            );
+
+            if (activitiesResponse.status === 200) {
+              setActivities(activitiesResponse.data);
+            } else {
+              console.log("Failed to fetch activities");
+            }
+          } else {
+            console.log("Failed to fetch user data");
+          }
         }
-      })
-      .catch((error) => {
-        console.log("Error fetching user data from the database", error);
-      });
-    }
-  }, [userId]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [userId, reload]);
 
   // Update a activity card
   const updateData = async (
@@ -52,7 +57,7 @@ const MyActivity = () => {
     activity_type,
     activity_name,
     activity_describe,
-    image,
+    image
   ) => {
     try {
       const requestData = {
