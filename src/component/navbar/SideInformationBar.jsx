@@ -1,12 +1,12 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { userContext } from "../context/userContext";
 import MockupProfile from "../../assets/blank-profile-picture-973460_960_720.jpg";
 
 const SideInformation = () => {
-  const [activity, setActivity] = useState([]);
+  const { userData , activity} = useContext(userContext);
   const maxItems = 2;
-  const displayedData = activity.slice(0, maxItems);
-  const { userData , eachUserData} = useContext(userContext);
+  const reversedActivity = [...activity].reverse();
+  const displayedData = reversedActivity.slice(0, maxItems);
 
   return (
     <div className="w-full laptop:w-full h-[100vh] border-solid border-2 flex-col items-center hidden laptop:flex lg:flex">
@@ -57,7 +57,6 @@ const SideInformation = () => {
             <h2 className="card-title">{activity.activity_name}</h2>
             <p>{activity.activity_describe}</p>
             <div className="justify-end card-actions">
-              {/* Add card actions here if needed */}
             </div>
           </div>
         </div>

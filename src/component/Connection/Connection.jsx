@@ -262,8 +262,7 @@ const Connection = () => {
             </button>
           </div>
           {activeTab === "following" &&
-            followingData.length > 0 &&
-            searchResults.length === 0 && (
+            followingData.length > 0 && (
               <div>
                 <h2 className="text-xl font-bold my-2">
                   Following: {followingData.length}

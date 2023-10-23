@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
   //และสร้างAction Fucntionต่างๆที่เราจะอนุญาตให้ Component ปลายทางสามารถทำได้
   const [userData, setUserData] = useState({});
   const [userId, setUserId] = useState("");
-  const [eachUserData, setEachUserData] = useState({}); // [{}
+  const [activity, setActivity] = useState([]); // [{}
   
   console.log(userData)
   //get user Data from "/users"
@@ -39,22 +39,25 @@ export const UserProvider = ({ children }) => {
         .catch((error) => {
           console.log(`Error fetching user data from the database`, error);
         });
+    } else {
+      setUserId("");
+      setUserData({});
+      setActivity([]);
     }
   }, []);
 
-   //get user Data from "/users/:id"
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
       axios
-        .get(API_URL + `/users/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      .get(API_URL + `/activity?userId=${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         })
         .then((response) => {
           if (response.status === 200) {
-            setEachUserData(response.data);
+            setActivity(response.data);
           } else {
             console.log("Failed to fetch user data");
           }
@@ -62,18 +65,20 @@ export const UserProvider = ({ children }) => {
         .catch((error) => {
           console.log(`Error fetching user data from the database`, error);
         });
+    } else {
+      setActivity([]);
     }
-  }, [userId]);
+  },[userId]);
 
   return (
     //ส่งค่า userData, setUserData ไปให้ {children}
     <userContext.Provider value={{ 
       userData, 
       setUserData,
-      eachUserData,
-      setEachUserData,
       userId,
-      setUserId
+      setUserId,
+      activity,
+      setActivity
       }}>
       {children}
     </userContext.Provider>
