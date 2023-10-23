@@ -4,6 +4,7 @@
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import UserIcon from "../../assets/user-icon.svg";
 import {
   FaRegHeart,
@@ -15,11 +16,13 @@ import { HiOutlineCog } from "react-icons/hi";
 import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 
 const MyFeed = () => {
+  const { userId } = useParams();
   const [posts, setPosts] = useState([]);
   const [reload, setReload] = useState(false);
-  const [userId, setUserId] = useState("");
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [currentUserData, setCurrentUserData] = useState(null);
 
-  // Get posts for the user with their user_id
+  // Get posts for the user with their userId or friend userId
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,12 +36,12 @@ const MyFeed = () => {
           });
 
           if (userResponse.status === 200) {
-            const userId = userResponse.data.id;
-            setUserId(userId);
+            setCurrentUserId(userResponse.data.id);
+            setCurrentUserData(userResponse.data);
 
-            // Use the userId for the get posts
+            // Use the currentUserId and userId from the route to decide which posts to fetch
             const postsResponse = await axios.get(
-              `http://127.0.0.1:8000/post?userId=${userId}`
+              `http://127.0.0.1:8000/post/${userId}`
             );
 
             if (postsResponse.status === 200) {
@@ -56,7 +59,7 @@ const MyFeed = () => {
     };
 
     fetchData();
-  }, [userId, reload]);
+  }, [userId, reload, setCurrentUserId]);
 
   // Update a post
   const updateData = async (_id, activity_name, activity_describe) => {
@@ -103,22 +106,31 @@ const MyFeed = () => {
       <main className="flex max-w-screen-2xl mx-auto mt-[5rem]">
         {/* Side Profile */}
         <aside className="fixed mt-[5rem] top-0 z-50 w-full flex flex-col pb-3 lg:h-screen lg:max-w-[25%] lg:block bg-white 2xl:max-w-[400px] lg:border-l-2">
-          <FeedProfile />
+          {userId === currentUserId ? (
+            <UserProfile />
+          ) : (
+            <FriendProfile />
+          )}
         </aside>
 
         {/* Section Post Display */}
         <section className="w-full mt-[13rem] md:mt-[10rem] lg:mt-0 lg:ml-[25%] lg:max-w-[75%] lg:bg-gray-300 min-h-screen">
           <h1 className="hidden lg:block text-[2rem] mt-5 ml-16 font-bold uppercase">
-            My Feed
+            Feed
           </h1>
 
           {/* Post Display */}
           <div className="lg:w-[70%] lg:mx-auto">
-            <PostDisplay
-              posts={posts}
-              updateData={updateData}
-              deleteData={deleteData}
-            />
+            {userId === currentUserId ? (
+              <UserPost
+                posts={posts}
+                updateData={updateData}
+                deleteData={deleteData}
+                userData={currentUserData}
+              />
+            ) : (
+              <FriendPost posts={posts} />
+            )}
           </div>
         </section>
       </main>
@@ -126,10 +138,12 @@ const MyFeed = () => {
   );
 };
 
-const FeedProfile = () => {
+const UserProfile = () => {
   const [aboutMe, setAboutMe] = useState("Let others know more about you!");
   const [isEdit, setIsEdit] = useState(false);
   const [userData, setUserData] = useState("");
+  const [editAboutMe, setEditAboutMe] = useState("");
+  const [reload, setReload] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,6 +159,9 @@ const FeedProfile = () => {
 
           if (response.status === 200) {
             setUserData(response.data);
+            setEditAboutMe(response.data.aboutMe);
+
+            console.log(response.data)
           } else {
             console.log("Failed to fetch user data");
           }
@@ -157,11 +174,36 @@ const FeedProfile = () => {
     fetchData();
   }, []);
 
+    // Update about me
+    const updateData = async (
+      _id,
+      aboutMe
+    ) => {
+      try {
+        const requestData = {
+          _id,
+          aboutMe
+        };
+        const response = await axios.put(
+          `http://127.0.0.1:8000/users/${_id}`,
+          requestData
+        );
+  
+        if (response.status === 200) {
+          setReload(!reload);
+          console.log("Updated Successfully!", response);
+        }
+      } catch (error) {
+        console.error("Error updating data:", error);
+      }
+    };
+
   const handleEditAboutMe = () => {
     setIsEdit(true);
   };
 
   const handleSaveAboutMe = () => {
+    updateData(userData._id, editAboutMe),
     setIsEdit(false);
   };
 
@@ -178,7 +220,9 @@ const FeedProfile = () => {
 
         {/* Profile Data */}
         <div className="lg:flex lg:flex-col">
-          <h3 className="font-bold text-lg lg:text-center">{userData.username}</h3>
+          <h3 className="font-bold text-lg lg:text-center">
+            {userData.username}
+          </h3>
           <button
             className="hidden lg:block lg:mt-2 lg:mb-5 btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]"
             onClick={handleEditAboutMe}
@@ -210,7 +254,8 @@ const FeedProfile = () => {
         {isEdit ? (
           <div className="mx-3 flex flex-col justify-center">
             <textarea
-              value={aboutMe}
+              className="border-[1px]"
+              value={editAboutMe}
               onChange={(e) => setAboutMe(e.target.value)}
             ></textarea>
             <button
@@ -232,35 +277,7 @@ const FeedProfile = () => {
   );
 };
 
-const PostDisplay = ({ posts, updateData, deleteData }) => {
-  const [userData, setUserData] = useState("");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("rockettoken");
-        if (token) {
-          // Fetch user data
-          const response = await axios.get("http://127.0.0.1:8000/users", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (response.status === 200) {
-            setUserData(response.data);
-          } else {
-            console.log("Failed to fetch user data");
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+const UserPost = ({ userData, posts, updateData, deleteData }) => {
   const timeOptions = {
     hour: "numeric",
     minute: "2-digit",
@@ -298,6 +315,125 @@ const PostDisplay = ({ posts, updateData, deleteData }) => {
                   <p className="uppercase">
                     {new Date(post.createdAt).toLocaleTimeString(
                       "en-GB",
+                      timeOptions
+                    )}
+                  </p>
+                </div>
+                <div className="flex max-[375px]:flex-col">
+                  <p className="mr-3 uppercase">{post.activity_type}</p>
+                  <p className="uppercase">Duration {post.duration} Mins</p>
+                </div>
+              </article>
+            </section>
+
+            {/* Body Post */}
+            <section className="ml-5 mt-2 mb-4 lg:order-2 lg:ml-[7.5rem] lg:mt-4">
+              <p className="font-semibold mb-1 uppercase">
+                {post.activity_name}
+              </p>
+              <p>{post.activity_describe}</p>
+            </section>
+
+            {post.image && (
+              <figure className="lg:order-1 lg:ml-[7.5rem] lg:mr-6">
+                <img
+                  className="lg:rounded-xl w-[100%] h-[100%] object-cover"
+                  src={post.image}
+                  alt="Image Activity"
+                />
+              </figure>
+            )}
+
+            {/* Bottom Post */}
+            <section className="flex justify-around p-3 lg:p-4 lg:order-3 lg:ml-[7.5rem] lg:mr-6 lg:border-t-2 lg:border-[#1CD6CE]">
+              <HeartBtn />
+              <CommentBtn />
+            </section>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const FriendProfile = () => {
+  return (
+    <div>
+      {/* Header Profile */}
+      <section className="flex items-center lg:flex-col lg:mt-3">
+        {/* Profile Avatar */}
+        <figure className="avatar m-5">
+          <div className="w-[4.5rem] rounded-full bg-gray-300">
+            <img src={UserIcon} alt="Image Profile" />
+          </div>
+        </figure>
+
+        {/* Profile Data */}
+        <div className="lg:flex lg:flex-col">
+          <h3 className="font-bold text-lg lg:text-center">
+            Friend's Username
+          </h3>
+          <button className="hidden lg:block lg:mt-2 lg:mb-5 btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]">
+            Following
+          </button>
+          <div className="flex">
+            <p className="mr-3 font-semibold">
+              <span className="mr-1">0</span>Following
+            </p>
+            <p className="font-semibold">
+              <span className="mr-1">0</span>Followers
+            </p>
+          </div>
+          <button className="lg:hidden btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]">
+            Following
+          </button>
+        </div>
+      </section>
+
+      {/* Profile Status */}
+      <section>
+        <p className="hidden lg:block mt-5 mb-2 font-bold text-center">
+          About Me
+        </p>
+        <p className="mx-5 font-semibold lg:bg-gray-300 lg:rounded-lg lg:px-3 lg:p-3">
+          Friend's status
+        </p>
+      </section>
+    </div>
+  );
+};
+
+const FriendPost = ({ posts }) => {
+  const timeOptions = {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  };
+
+  return (
+    <div className="flex flex-col-reverse">
+      {posts.map((post) => (
+        <div key={post._id} className="p-3 lg:p-0 lg:mb-5">
+          <div className="relative border border-black lg:mt-8 lg:border-none lg:rounded-xl flex flex-col lg:bg-white shadow-xl">
+            {/* Header Post */}
+            <section className="flex items-center">
+              {/* Post Avatar */}
+              <figure className="avatar m-5">
+                <div className="w-[4.5rem] rounded-full bg-gray-300">
+                  <img src={UserIcon} alt="Image Profile" />
+                </div>
+              </figure>
+
+              {/* Post Data */}
+              <article>
+                <h3 className="font-bold text-lg">Friend's Username</h3>
+                <div className="flex">
+                  <p className="mr-3 uppercase">
+                    {new Date(post.createdAt).toLocaleDateString("en-GB")}
+                  </p>
+                  <p className="uppercase">
+                    {new Date(post.createdAt).toLocaleTimeString(
+                      "en-US",
                       timeOptions
                     )}
                   </p>
