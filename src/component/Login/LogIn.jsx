@@ -32,17 +32,21 @@ export const LogIn = () => {
         } else {
           navigate("/create_profile");
         }
-      } else if (response.status === 400) {
-        // Use "else if" here
-        Swal.fire({
-          icon: "error",
-          title: "Invalid password or username",
-        });
       } else {
         console.log("error");
       }
     } catch (error) {
-      console.error(error);
+      if (error.response.status === 401) {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid password or email",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid password or email",
+        });
+      }
       // Handle any network or other errors here
     }
   };
