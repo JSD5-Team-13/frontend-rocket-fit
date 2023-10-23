@@ -3,9 +3,9 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import Navbar from "../navbar/NavbarNoneLoggedIn";
 
 import { useState } from "react";
-// import axios from "axios";
-
-// const api = "http://localhost:8000/";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export const Register = () => {
   const [value, setValue] = useState({
@@ -15,6 +15,25 @@ export const Register = () => {
     confirmPassword: "",
   });
 
+  const navigate = useNavigate();
+
+  const register = async (userData) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/register",
+        userData
+      );
+      console.log(response.status);
+      if (response.data.isCreatedProfile === true) {
+        navigate("/main");
+      } else {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleChange = (e) => {
     setValue({ ...value, [e.target.name]: e.target.value });
   };
@@ -22,13 +41,26 @@ export const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!value.email || !value.username || !value.password) {
-      alert("Please fill out the information completely.");
+      Swal.fire({
+        icon: "error",
+        title: "Please fill out the information completely.",
+      });
       return;
     }
     if (value.password !== value.confirmPassword) {
-      alert("Password not match");
+      Swal.fire({
+        icon: "error",
+        title: "Password not match",
+      });
     } else {
-      console.log(value);
+      register(value)
+        .then((res) => {
+          console.log(res.data);
+          alert(res.data);
+        })
+        .catch((error) => {
+          alert(error.response.data);
+        });
     }
   };
 
@@ -114,7 +146,7 @@ export const Register = () => {
             <div className="flex justify-center mt-[0.5rem]">
               <button
                 onClick={handleSubmit}
-                disabled={value.password.length < 8}
+                disabled={value.password.length < 6}
                 className="btn btn-accent rounded-[1.5rem] w-[15rem]"
               >
                 Register

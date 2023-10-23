@@ -16,6 +16,7 @@ import AccountSetting from "./component/Account/AccountSetting.jsx";
 import { ResetPassword } from "./component/Login/ResetPassword";
 import CreateProfile from "./component/CreateProfile/CreateProfile";
 import Connection from "./component/Connection/Connection.jsx";
+import { UserProvider } from "./component/context/UserContext";
 
 const router = createBrowserRouter([
   {
@@ -77,5 +78,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <UserProvider>
+    <RouterProvider router={router} />
+  </UserProvider>
 );
