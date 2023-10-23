@@ -1,95 +1,19 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
+import { userContext } from "../context/userContext";
 
 const Connection = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [userId, setUserId] = useState("");
-  const [userData, setUserData] = useState({});
+  const { userData, setUserData } = useContext(userContext);
   const [activeTab, setActiveTab] = useState("following");
   const [followingData, setFollowingData] = useState([]);
   const [followersData, setFollowersData] = useState([]);
-
-  console.log(userData._id);
-  useEffect(() => {
-    const token = localStorage.getItem("rockettoken");
-    if (token) {
-      // Fetch user data
-      axios
-        .get("http://127.0.0.1:8000/users", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            setUserId(response.data.id);
-            // Now that you have the user ID, fetch user data based on the ID
-            axios
-              .get(`http://127.0.0.1:8000/users/${response.data.id}`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              })
-              .then((fetchUser) => {
-                if (fetchUser.status === 200) {
-                  setUserData(fetchUser.data);
-                } else {
-                  console.error("Cannot retrieve user data");
-                }
-              })
-              .catch((error) => {
-                console.error("Error fetching user data", error);
-              });
-          } else {
-            console.error("Failed to fetch user data");
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching user data", error);
-        });
-    }
-
-    // The first useEffect runs only once, on component mount, so it won't cause loops.
-  }, []);
-
-  useEffect(() => {
-    // Check if userData.following is available
-    if (userData.following && userData.following.length > 0) {
-      const token = localStorage.getItem("rockettoken");
-      const fetchFollowingData = async () => {
-        try {
-          const followingPromises = userData.following.map((userId) =>
-            axios.get(`http://127.0.0.1:8000/users/${userId}`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            })
-          );
-
-          const followingResponses = await Promise.all(followingPromises);
-
-          const followingData = followingResponses.map((response) => {
-            if (response.status === 200) {
-              return response.data;
-            } else {
-              console.error("Error fetching following data");
-              return null; // Handle the error case here
-            }
-          });
-
-          setFollowingData(followingData.filter((user) => user));
-        } catch (error) {
-          console.error("Error fetching following data", error);
-        }
-      };
-      fetchFollowingData();
-    }
-  }, [userData.following]);
 
   useEffect(() => {
     // Check if userData.followers is available
@@ -125,6 +49,40 @@ const Connection = () => {
     }
   }, [userData.followers]); // Use userId as a dependency
 
+  useEffect(() => {
+    // Check if userData.following is available
+    if (userData.following && userData.following.length > 0) {
+      const token = localStorage.getItem("rockettoken");
+      const fetchFollowingData = async () => {
+        try {
+          const followingPromises = userData.following.map((userId) =>
+            axios.get(`http://127.0.0.1:8000/users/${userId}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+          );
+
+          const followingResponses = await Promise.all(followingPromises);
+
+          const followingData = followingResponses.map((response) => {
+            if (response.status === 200) {
+              return response.data;
+            } else {
+              console.error("Error fetching following data");
+              return null; // Handle the error case here
+            }
+          });
+
+          setFollowingData(followingData.filter((user) => user));
+        } catch (error) {
+          console.error("Error fetching following data", error);
+        }
+      };
+      fetchFollowingData();
+    }
+  }, [userData.following]);
+
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -136,7 +94,7 @@ const Connection = () => {
     if (query) {
       const token = localStorage.getItem("rockettoken");
       axios
-        .get(`http://127.0.0.1:8000/all?username=${query}`, {
+        .get(`http://127.0.0.1:8000/all?firstname=${query}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -166,7 +124,7 @@ const Connection = () => {
       axios
         .post(
           `http://127.0.0.1:8000/connection/unfollow/${userId}`,
-          { userid: userData._id },
+          { userid: userData.id },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -193,7 +151,7 @@ const Connection = () => {
       axios
         .post(
           `http://127.0.0.1:8000/connection/follow/${userId}`,
-          { userid: userData._id },
+          { userid: userData.id },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -238,46 +196,52 @@ const Connection = () => {
             </form>
           </div>
 
-          <div className="w-[90%] lg:w-[70%] flex flex-col items-center bg-base-300 p-4 my-4 rounded-xl">
-            {isSearching && searchResults && (
+          {isSearching && searchResults && searchResults.length > 0 && (
+            <div className="w-[90%] lg:w-[70%] flex flex-col items-center bg-base-300 p-4 my-4 rounded-xl">
               <div>
-                <h2 className="text-xl font-bold my-2">Search Results:</h2>
-                {searchResults.map((user, index) => (
-                  <div
-                    key={index}
-                    className="card w-[95%] bg-base-100 shadow-xl my-4"
-                  >
-                    <div className="card-body">
-                      <div className="flex flex-row items-center">
-                        <img
-                          src={user.image}
-                          alt="profile"
-                          className="rounded-full w-24 h-24 mr-4"
-                        />
-                        <div className="flex flex-col">
-                          <h1 className="font-bold text-lg my-2">
-                            <a href={`/myfeed/${user._id}`}>{user.username}</a>
-                          </h1>
+                <h2 className="text-xl font-bold my-2">
+                  Search Results: {searchResults.length}
+                </h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {searchResults.map((user, index) => (
+                    <div
+                      key={index}
+                      className="card w-[95%] bg-base-100 shadow-xl my-4"
+                    >
+                      <div className="card-body">
+                        <div className="flex flex-row items-center">
+                          <img
+                            src={user.image}
+                            alt="profile"
+                            className="rounded-full w-24 h-24 mr-4"
+                          />
+                          <div className="flex flex-col">
+                            <h1 className="font-bold text-lg my-2">
+                              <a href={`/myfeed/${user._id}`}>
+                                {user.FirstName} {user.LastName}
+                              </a>
+                            </h1>
+                          </div>
+                          <button
+                            className="p-2 btn btn-sm btn-accent rounded-full ml-auto"
+                            onClick={() => handleFollow(user)}
+                          >
+                            {userData.following.includes(user._id)
+                              ? "Following"
+                              : "Follow"}
+                          </button>
                         </div>
-                        <button
-                          className="p-2 btn btn-sm btn-accent rounded-full ml-auto"
-                          onClick={() => handleFollow(user)}
-                        >
-                          {userData.following.includes(user._id)
-                            ? "Following"
-                            : "Follow"}
-                        </button>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
           <div className="flex justify-center mt-4">
             <button
-              className={`mr-2 p-2 ${
+              className={`mr-2 p-2 rounded-lg ${
                 activeTab === "following"
                   ? "bg-blue-500 text-white"
                   : "bg-gray-200"
@@ -287,7 +251,7 @@ const Connection = () => {
               Following
             </button>
             <button
-              className={`p-2 ${
+              className={`p-2 rounded-lg ${
                 activeTab === "followers"
                   ? "bg-blue-500 text-white"
                   : "bg-gray-200"
@@ -297,81 +261,92 @@ const Connection = () => {
               Followers
             </button>
           </div>
-          {activeTab === "following" && followingData.length > 0 && (
-            <div>
-              <h2 className="text-xl font-bold my-2">
-                Following: {followingData.length}
-              </h2>
-              {followingData.map((user, index) => (
-                <div
-                  key={index}
-                  className="card w-[95%] bg-base-100 shadow-xl my-4"
-                >
-                  <div className="card-body">
-                    <div className="flex flex-row items-center">
-                      <img
-                        src={user.image}
-                        alt="profile"
-                        className="rounded-full w-24 h-24 mr-4"
-                      />
-                      <div className="flex flex-col">
-                        <h1 className="font-bold text-lg my-2">
-                          <a href={`/myfeed/${user._id}`}>{user.username}</a>
-                        </h1>
-                        {/* Add more user details here */}
+          {activeTab === "following" &&
+            followingData.length > 0 &&
+            searchResults.length === 0 && (
+              <div>
+                <h2 className="text-xl font-bold my-2">
+                  Following: {followingData.length}
+                </h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {followingData.map((user, index) => (
+                    <div
+                      key={index}
+                      className="card w-[95%] bg-base-100 shadow-xl my-4"
+                    >
+                      <div className="card-body">
+                        <div className="flex flex-row items-center">
+                          <img
+                            src={user.image}
+                            alt="profile"
+                            className="rounded-full w-24 h-24 mr-4"
+                          />
+                          <div className="flex flex-col">
+                            <h1 className="font-bold text-lg my-2">
+                              <a href={`/myfeed/${user._id}`}>
+                                {user.FirstName} {user.LastName}
+                              </a>
+                            </h1>
+                            {/* Add more user details here */}
+                          </div>
+                          <button
+                            className="p-2 btn btn-sm btn-accent rounded-full ml-auto"
+                            onClick={() => handleFollow(user)}
+                          >
+                            {userData.following.includes(user._id)
+                              ? "Following"
+                              : "Follow"}
+                          </button>
+                        </div>
                       </div>
-                      <button
-                        className="p-2 btn btn-sm btn-accent rounded-full ml-auto"
-                        onClick={() => handleFollow(user)}
-                      >
-                        {userData.following.includes(user._id)
-                          ? "Following"
-                          : "Follow"}
-                      </button>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            )}
 
-          {activeTab === "followers" && followersData.length > 0 && (
-            <div>
-              <h2 className="text-xl font-bold my-2">
-                Following: {followersData.length}
-              </h2>
-              {followersData.map((user, index) => (
-                <div
-                  key={index}
-                  className="card w-[95%] bg-base-100 shadow-xl my-4"
-                >
-                  <div className="card-body">
-                    <div className="flex flex-row items-center">
-                      <img
-                        src={user.image}
-                        alt="profile"
-                        className="rounded-full w-24 h-24 mr-4"
-                      />
-                      <div className="flex flex-col">
-                        <h1 className="font-bold text-lg my-2">
-                          <a href={`/myfeed/${user._id}`}>{user.username}</a>
-                        </h1>
-                        {/* Add more user details here */}
+          {activeTab === "followers" &&
+            followersData.length > 0 && (
+              <div>
+                <h2 className="text-xl font-bold my-2">
+                  Followers: {followersData.length}
+                </h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {followersData.map((user, index) => (
+                    <div
+                      key={index}
+                      className="card w-[95%] bg-base-100 shadow-xl my-4"
+                    >
+                      <div className="card-body">
+                        <div className="flex flex-row items-center">
+                          <img
+                            src={user.image}
+                            alt="profile"
+                            className="rounded-full w-24 h-24 mr-4"
+                          />
+                          <div className="flex flex-col">
+                            <h1 className="font-bold text-lg my-2">
+                              <a href={`/myfeed/${user._id}`}>
+                                {user.FirstName} {user.LastName}
+                              </a>
+                            </h1>
+                            {/* Add more user details here */}
+                          </div>
+                          <button
+                            className="p-2 btn btn-sm btn-accent rounded-full ml-auto"
+                            onClick={() => handleFollow(user)}
+                          >
+                            {userData.followers.includes(user._id)
+                              ? "Following"
+                              : "Follow"}
+                          </button>
+                        </div>
                       </div>
-                      <button
-                        className="p-2 btn btn-sm btn-accent rounded-full ml-auto"
-                        onClick={() => handleFollow(user)}
-                      >
-                        {userData.followers.includes(user._id)
-                          ? "Following"
-                          : "Follow"}
-                      </button>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            )}
         </div>
       </div>
     </>
