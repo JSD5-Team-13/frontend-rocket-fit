@@ -6,7 +6,7 @@ import { CategoryScale, Chart, registerables } from "chart.js";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Colors } from "chart.js";
-import { userContext } from "../context/UserContext.jsx";
+import { userContext } from "../context/userContext.jsx";
 import { API_URL } from "../../const.jsx";
 
 //setup chart
@@ -61,7 +61,7 @@ export const DashBoard = () => {
         .then((res) => setDashboardData(res.data));
     };
 
-    getDashboardData();
+    if (userData.id) getDashboardData();
   }, [userData]);
 
   //map item like initialDashboardData
@@ -129,7 +129,7 @@ export const DashBoard = () => {
   const resultBMI = () => {
     const yourBMi = calBMI(userData.height, userData.weight);
     if (yourBMi < 18.5) return "Underweight";
-    if (yourBMi >= 18.5 || yourBMi <= 24.9) return "Heathty";
+    if (yourBMi >= 18.5 || yourBMi <= 24.9) return "Healthy";
     if (yourBMi >= 25.0 || yourBMi <= 29.9) return "Overweight";
     if (yourBMi > 30.0) return "Obese";
     return "default data";
