@@ -66,17 +66,17 @@ export const LogIn = () => {
   return (
     <div>
       <Navbar />
-      <section className="lg:flex lg:justify-center lg:items-center h-screen flex flex-col items-center justify-center ">
+      <section className="flex flex-col items-center justify-center h-screen lg:flex lg:justify-center lg:items-center ">
         <div className="m-[3rem] lg:bg-[#D9D9D9] lg:w-[50%] lg:flex lg:flex-col lg:mx-auto flex flex-col items-center justify-center rounded-xl py-10 ">
           <h2 className="font-bold text-center text-[2rem]">Login</h2>
           {/* Input From */}
           {/* Email */}
-          <div className="form-control w-full max-w-xs">
+          <div className="w-full max-w-xs form-control">
             <label className="label">
-              <span className="label-text font-bold">Email</span>
+              <span className="font-bold label-text">Email</span>
             </label>
-            <div className="flex relative items-center">
-              <FaUser className="absolute text-2xl m-3" />
+            <div className="relative flex items-center">
+              <FaUser className="absolute m-3 text-2xl" />
               <input
                 type="email"
                 value={value.email}
@@ -89,12 +89,12 @@ export const LogIn = () => {
           </div>
 
           {/* Password */}
-          <div className="form-control w-full max-w-xs">
+          <div className="w-full max-w-xs form-control">
             <label className="label">
-              <span className="label-text font-bold">Password :</span>
+              <span className="font-bold label-text">Password :</span>
             </label>
-            <div className="flex relative items-center">
-              <RiLockPasswordLine className="absolute text-2xl m-3" />
+            <div className="relative flex items-center">
+              <RiLockPasswordLine className="absolute m-3 text-2xl" />
               <input
                 type="password"
                 name="password"

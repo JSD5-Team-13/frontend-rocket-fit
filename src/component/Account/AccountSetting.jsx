@@ -1,129 +1,187 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import Layout from "../Layout.jsx";
-
-
+import Swal from "sweetalert2";
+import axios from "axios";
+// import { useNavigate } from "react-router-dom";
 
 //import component
 import Account from "./accountComponent/Account.jsx";
 import Password from "./accountComponent/Password.jsx";
 import Privacy from "./accountComponent/Privacy.jsx";
-import axios from "axios";
+import Profile from "./accountComponent/Profile.jsx";
+
 
 const AccountSetting = () => {
+  const serverUrl = "http://127.0.0.1:8000"
   const [option, setOption] = useState("ACCOUNT");
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const [userData, setUserData] = useState("");
+  const [userData, setUserData] = useState({});
+  const [userId , setUserId] = useState("");
+  const [reload, setReload] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("rockettoken");
   
+    if (token) {
+      axios
+        .get(serverUrl + "/users/", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(async (response) => {
+          if (response.status === 200) {
+            setUserId(response.data.id);
+            console.log(response.data.id); // ตรวจสอบว่าได้รับค่า id ให้ถูกต้อง
+  
+            axios
+              .get(serverUrl + "/users/setting/" + response.data.id, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then((userResponse) => {
+                if (userResponse.status === 200) {
+                  const user = userResponse.data;
+  
+                  const listDataByUser = {
+                    username: user.username,
+                    FirstName: user.FirstName,
+                    LastName: user.LastName,
+                    email: user.email,
+                    profile_url: user.profile_url,
+                    userId: response.data.id, // ใช้ค่า id ที่ได้จาก response แรก
+                  };
+                  console.log(response.data.id);
+                  setUserData(listDataByUser);
+                } else {
+                  console.log("Failed to fetch user data");
+                }
+              })
+              .catch((error) => {
+                console.log("Error fetching user data from the database", error);
+              });
+          } else {
+            console.log("Failed to fetch user data");
+          }
+        })
+        .catch((error) => {
+          console.log("Error fetching user data from the database", error);
+        });
+    }
+  }, [reload]);
+  
+  
+  
+  
+  // const fetchUserDataById = async() => {
+  //   try {
+  //     const token = localStorage.getItem("rockettoken");
+  //     const response = await axios.get(serverUrl + "/users/" + userId, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       }
+  //     });
+  //     if (response.status === 200) {
+  
+  //       const user = response.data;
+
+  //       // Create a new object with properties in the desired order
+  //       const listDataByUser = {
+  //         username: user.username,
+  //         FirstName: user.FirstName,
+  //         LastName: user.LastName,
+  //         email: user.email,
+  //         phone: user.phone,
+  //         location: user.location,
+  //         // userId: userId
+  //       };
+
+  //       setUserData(listDataByUser);
+  //     }
+  //   } catch (error) {
+  //     console.log(`Error fetching user data from the database`, error);
+  //   }
+  // }
+
+  // fetchUserDataById()
+
   const showOption = (option) => {
     switch (option) {
       case "ACCOUNT":
-        return <Account setShowAlert={setShowAlert} setAlertMessage={setAlertMessage} />;
+        return <Account 
+                  userId={userId}
+                  userData={userData}
+                  setUserData={setUserData}
+                  setShowAlert={setShowAlert} 
+                  setAlertMessage={setAlertMessage}
+                  reload={reload} 
+                  setReload={setReload} 
+                  />;
 
       case "PASSWORD":
-        return <Password setShowAlert={setShowAlert} setAlertMessage={setAlertMessage}/>;
+        return <Password 
+                  userId={userId}
+                  userData={userData}
+                  setUserData={setUserData}
+                  setShowAlert={setShowAlert} 
+                  setAlertMessage={setAlertMessage}
+                  reload={reload} 
+                  setReload={setReload} 
+                  />;
 
       case "DELETE ACCOUNT":
-        return <Privacy />;
+        return <Privacy 
+                  userId={userId}
+                  setShowAlert={setShowAlert} 
+                  setAlertMessage={setAlertMessage}
+                  reload={reload} 
+                  setReload={setReload} 
+                  />;
       default:
         return null;
     }
   };
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      axios
-        .get("https://mock-fitness.onrender.com/user/view", {
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        })
-        .then((response) => {
-          const userDataFromAPI = response.data.username;
-          setUserData(userDataFromAPI);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data", error);
-        });
+
+  const Alert = ({ message }) => {
+    const { text, status } = message;
+
+    switch (status) {
+      case "success":
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: text,
+          showConfirmButton: true,
+        }).then(closeAlert());
+        break;
+      case "warning":
+        Swal.fire({
+          position: "center",
+          icon: "warning",
+          title: text,
+          showConfirmButton: true,
+        }).then(closeAlert());
+        break;
+
+        case "error":
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: text,
+          showConfirmButton: true,
+        }).then(closeAlert());
+        break;
+
+
+      default:
+        break;
     }
-  }, []);
-
-
-  const Alert = ({ message, onClose }) => {
-    return (
-      <div className="fixed inset-0 z-50 flex flex-row items-end justify-center max-w-[95%] mx-auto mb-10 md:w-4/6 lg:w-3/6">
-        {alertMessage === "Update completed" ? (
-          <div className="alert alert-success flex flex-col md:justify-between justify-center w-full gap-2 md:flex-row lg:gap-[1rem]">
-            <div className="flex flex-col items-center justify-center md:gap-4 md:flex-row">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 stroke-current shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span>Your update completed!</span>
-            </div>
-            <div className="flex flex-row items-center justify-center">
-              <button onClick={onClose}>Close</button>
-            </div>
-          </div>
-        ) : alertMessage === "Password not correct" ? (
-          <div className="alert alert-error flex flex-col md:justify-between justify-center w-full gap-2 md:flex-row md:gap-[1rem]">
-            <div className="flex flex-col items-center justify-center md:gap-4 md:flex-row">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 stroke-current shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span>Current password is not correct</span>
-            </div>
-            <div className="flex flex-row items-center justify-center">
-              <button onClick={onClose}>Close</button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col md:justify-between justify-center w-full gap-2 md:flex-row alert alert-warning md:gap-[1rem]">
-            <div className="flex flex-col items-center justify-center md:gap-4 md:flex-row">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 stroke-current shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
-              </svg>
-              <span>{message}</span>
-            </div>
-            <div className="flex flex-row items-center justify-center">
-              <button onClick={onClose}>Close</button>
-            </div>
-          </div>
-        )}
-      </div>
-    );
   };
+
 
   const closeAlert = () => {
     setShowAlert(false); // ปิดหน้าต่างแจ้งเตือน
@@ -134,7 +192,7 @@ const AccountSetting = () => {
   return (
     <Layout className="max-w-[1440px] flex items-center">
 
-    {showAlert && <Alert message={alertMessage} onClose={closeAlert} />}
+    {showAlert && <Alert message={alertMessage}/>}
 
       {/* mobile mode  */}
       <div className="flex flex-col justify-between flex-grow w-full h-[95vh]  lg:hidden">
@@ -149,7 +207,19 @@ const AccountSetting = () => {
           <div>
             {/* profile  */}
             <div className="flex flex-col items-center justify-center w-full mx-auto">
-              <Profile userData={userData} />
+
+              <Profile    
+              
+              userId={userId}
+              userData={userData}
+              setUserData={setUserData}
+              setShowAlert={setShowAlert}
+              setAlertMessage={setAlertMessage} // ส่ง setAlertMessage ไปยังคอมโพเนนต์ Profile
+              reload={reload}
+              setReload={setReload}
+              
+              />
+
             </div>
 
             <div
@@ -273,26 +343,6 @@ const AccountSetting = () => {
 
 
 
-
-const Profile = ({ userData }) => {
-  return (
-    <div className="flex flex-col items-center w-full gap-4 px-2 py-4">
-      <div className="w-48 h-48 overflow-hidden rounded-full">
-        <img
-          src="https://img.freepik.com/free-photo/front-view-man-posing-with-sunglasses_23-2149415775.jpg?size=626&ext=jpg&ga=GA1.1.300391043.1686214159&semt=sph"
-          alt="profile-picture"
-          className="object-cover"
-        />
-      </div>
-      <div className="text-3xl font-semibold text-center">
-      <h2>@{userData}</h2>
-      </div>
-    </div>
-  );
-};
-
-
-
 const Logout = () => {
   return (
     <div className="flex flex-col items-center justify-center w-full px-4 mb-4">
@@ -302,5 +352,7 @@ const Logout = () => {
     </div>
   );
 };
+
+
 
 export default AccountSetting;
