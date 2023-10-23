@@ -172,7 +172,8 @@ export const DashBoard = () => {
                   <div className="card-body">
                     <p className="text-[1.5rem]">4.25</p>
                     <h2 className="card-title text-[2rem]">Hours</h2>
-                    <div className="card-actions justify-end">
+                    <div className="card-actions flex items-center">
+                      <p className="text-[1.5rem]">20:00 - 05:00</p>
                       <BiSolidMoon className="text-[50px]" />
                     </div>
                   </div>
