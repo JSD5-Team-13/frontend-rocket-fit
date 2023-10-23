@@ -24,13 +24,28 @@ export const Register = () => {
         userData
       );
       console.log(response.status);
-      if (response.data.isCreatedProfile === true) {
-        navigate("/main");
+      if (response.status === 200) {
+        if (response.data.isCreatedProfile === true) {
+          navigate("/main");
+        } else {
+          navigate("/login");
+        }
+        Swal.fire({
+          icon: "success",
+          title: "Registration Successful",
+        });
       } else {
         navigate("/login");
       }
     } catch (error) {
-      console.error(error);
+      if (error.response.status === 401) {
+        Swal.fire({
+          icon: "error",
+          title: "User already exists. Please choose a different email.",
+        });
+      } else {
+        console.error(error);
+      }
     }
   };
 
