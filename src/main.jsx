@@ -52,7 +52,7 @@ const router = createBrowserRouter([
     element: <MyActivity />,
   },
   {
-    path: "/myfeed",
+    path: "/myfeed/:userId",
     element: <MyFeed />,
   },
   {

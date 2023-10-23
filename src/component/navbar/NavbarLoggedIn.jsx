@@ -4,9 +4,34 @@ import { GiHamburgerMenu } from 'react-icons/gi'
 import Logo from '../../assets/logo.png'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
+import { useState , useEffect } from 'react'
+import axios from 'axios'
 
 const NavbarLoggedIn = () => {
     const navigate = useNavigate()
+    const [userId , setUserId] = useState("")
+
+    useEffect(() => {
+        const token = localStorage.getItem("rockettoken");
+        if (token) {
+          axios.get("http://127.0.0.1:8000/users", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((response) => {
+              
+              if (response.status === 200) {
+                setUserId(response.data.id);
+              } else {
+                console.log("Failed to fetch user data");
+              }
+            })
+            .catch((error) => {
+              console.log(`Error fetching user data from the database`, error);
+            });
+        }
+    }, [userId]);
     return (
         <div className="navbar bg-neutral h-[5rem] fixed z-10">
             {/* Navigation Bar Start */}
@@ -21,7 +46,7 @@ const NavbarLoggedIn = () => {
                         <label tabIndex={0} className="text-white">Connection</label>
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
                             <li><a href='/connection'>Connection</a></li>
-                            <li><a href='/myfeed'>My Feed</a></li>
+                            <li><a href={`/myfeed/${userId}`}>My Feed</a></li>
                         </ul>
                     </div>
                     <div className="px-4 dropdown dropdown-hover dropdown-end">

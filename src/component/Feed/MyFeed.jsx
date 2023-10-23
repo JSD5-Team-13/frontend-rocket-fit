@@ -4,6 +4,7 @@
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import UserIcon from "../../assets/user-icon.svg";
 import {
   FaRegHeart,
@@ -15,25 +16,74 @@ import { HiOutlineCog } from "react-icons/hi";
 import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 
 const MyFeed = () => {
+  const { userId } = useParams();
   const [posts, setPosts] = useState([]);
   const [reload, setReload] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState();
+  const [currentUserData, setCurrentUserData] = useState();
+  const [friendData, setFriendData] = useState();
 
-  // Get all posts
+  // Get posts for the user with their userId or friend userId
   useEffect(() => {
-    const getData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/post/");
-        setPosts(response.data);
-        console.log("Got data Successfully!", response);
+        const token = localStorage.getItem("rockettoken");
+        if (token) {
+          // Fetch user data
+          const userResponse = await axios.get("http://127.0.0.1:8000/users", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (userResponse.status === 200) {
+            setCurrentUserId(userResponse.data.id);
+            setCurrentUserData(userResponse.data);
+
+            // Fetch friend data (if userId is not the current user)
+            if (userId !== currentUserId) {
+              const token = localStorage.getItem("rockettoken");
+              const friendResponse = await axios.get(
+                `http://127.0.0.1:8000/users/${userId}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+
+              if (friendResponse.status === 200) {
+                setFriendData(friendResponse.data);
+                console.log(friendResponse.data);
+              } else {
+                console.log("Failed to fetch friend data");
+              }
+            }
+
+            // Use the currentUserId and userId from the route to decide which posts to fetch
+            const postsResponse = await axios.get(
+              `http://127.0.0.1:8000/post/${userId}`
+            );
+
+            if (postsResponse.status === 200) {
+              setPosts(postsResponse.data);
+            } else {
+              console.log("Failed to fetch posts");
+            }
+          } else {
+            console.log("Failed to fetch user data");
+          }
+        }
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error("Error fetching data:", error);
       }
     };
-    getData();
-  }, [reload]);
+
+    fetchData();
+  }, [userId, reload, setCurrentUserId]);
 
   // Update a post
-  const updateData = async (_id, activity_name, activity_describe) => {
+  const updatePost = async (_id, activity_name, activity_describe) => {
     try {
       const requestData = {
         _id,
@@ -54,8 +104,35 @@ const MyFeed = () => {
     }
   };
 
+  // Update about me
+  const updateUser = async (_id, aboutMe) => {
+    try {
+      const requestData = {
+        _id,
+        aboutMe,
+      };
+      const token = localStorage.getItem("rockettoken");
+      const response = await axios.put(
+        `http://127.0.0.1:8000/users/${userId}`,
+        requestData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setReload(!reload);
+        console.log("Updated Successfully!", response);
+      }
+    } catch (error) {
+      console.error("Error updating data:", error);
+    }
+  };
+
   // Delete a post
-  const deleteData = async (_id) => {
+  const deletePost = async (_id) => {
     try {
       const response = await axios.delete(`http://127.0.0.1:8000/post/${_id}`);
 
@@ -77,22 +154,31 @@ const MyFeed = () => {
       <main className="flex max-w-screen-2xl mx-auto mt-[5rem]">
         {/* Side Profile */}
         <aside className="fixed mt-[5rem] top-0 z-50 w-full flex flex-col pb-3 lg:h-screen lg:max-w-[25%] lg:block bg-white 2xl:max-w-[400px] lg:border-l-2">
-          <FeedProfile />
+          {userId === currentUserId ? (
+            <UserProfile userData={currentUserData} updateUser={updateUser} />
+          ) : (
+            <FriendProfile friendData={friendData} />
+          )}
         </aside>
 
         {/* Section Post Display */}
         <section className="w-full mt-[13rem] md:mt-[10rem] lg:mt-0 lg:ml-[25%] lg:max-w-[75%] lg:bg-gray-300 min-h-screen">
           <h1 className="hidden lg:block text-[2rem] mt-5 ml-16 font-bold uppercase">
-            My Feed
+            Feed
           </h1>
 
           {/* Post Display */}
           <div className="lg:w-[70%] lg:mx-auto">
-            <PostDisplay
-              posts={posts}
-              updateData={updateData}
-              deleteData={deleteData}
-            />
+            {userId === currentUserId ? (
+              <UserPost
+                posts={posts}
+                updatePost={updatePost}
+                deletePost={deletePost}
+                userData={currentUserData}
+              />
+            ) : (
+              <FriendPost friendData={friendData} posts={posts} />
+            )}
           </div>
         </section>
       </main>
@@ -100,16 +186,24 @@ const MyFeed = () => {
   );
 };
 
-const FeedProfile = () => {
-  const [aboutMe, setAboutMe] = useState("Let others know more about you!");
+const UserProfile = ({ userData, updateUser }) => {
+  const [_id, setId] = useState("");
+  const [aboutMe, setAboutMe] = useState("");
   const [isEdit, setIsEdit] = useState(false);
+
+  useEffect(() => {
+    if (userData) {
+      setId(userData._id);
+      setAboutMe(userData.aboutMe);
+    }
+  }, [userData]);
 
   const handleEditAboutMe = () => {
     setIsEdit(true);
   };
 
   const handleSaveAboutMe = () => {
-    setIsEdit(false);
+    updateUser(userData._id, aboutMe), setIsEdit(false);
   };
 
   return (
@@ -118,14 +212,16 @@ const FeedProfile = () => {
       <section className="flex items-center lg:flex-col lg:mt-3">
         {/* Profile Avatar */}
         <figure className="avatar m-5">
-          <div className="w-[4.5rem] rounded-full bg-gray-300">
-            <img src={UserIcon} alt="Image Profile" />
+          <div className="w-[8rem] rounded-full bg-gray-300">
+            <img src={userData.image} alt="Image Profile" />
           </div>
         </figure>
 
         {/* Profile Data */}
         <div className="lg:flex lg:flex-col">
-          <h3 className="font-bold text-lg lg:text-center">Username</h3>
+          <h3 className="font-bold text-lg lg:text-center">
+            {userData.firstname} {userData.lastname}
+          </h3>
           <button
             className="hidden lg:block lg:mt-2 lg:mb-5 btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]"
             onClick={handleEditAboutMe}
@@ -134,10 +230,10 @@ const FeedProfile = () => {
           </button>
           <div className="flex">
             <p className="mr-3 font-semibold">
-              <span className="mr-1">0</span>Following
+              <span className="mr-1">{userData.following.length}</span>Following
             </p>
             <p className="font-semibold">
-              <span className="mr-1">0</span>Followers
+              <span className="mr-1">{userData.followers.length}</span>Followers
             </p>
           </div>
           <button
@@ -157,6 +253,7 @@ const FeedProfile = () => {
         {isEdit ? (
           <div className="mx-3 flex flex-col justify-center">
             <textarea
+              className="border-[1px]"
               value={aboutMe}
               onChange={(e) => setAboutMe(e.target.value)}
             ></textarea>
@@ -170,7 +267,7 @@ const FeedProfile = () => {
         ) : (
           <div>
             <p className="mx-5 font-semibold lg:bg-gray-300 lg:rounded-lg lg:px-3 lg:p-3">
-              {aboutMe}
+              {userData.aboutme}
             </p>
           </div>
         )}
@@ -179,7 +276,141 @@ const FeedProfile = () => {
   );
 };
 
-const PostDisplay = ({ posts, updateData, deleteData }) => {
+const UserPost = ({ userData, posts, updatePost, deletePost }) => {
+  const timeOptions = {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: false,
+  };
+
+  return (
+    <div className="flex flex-col-reverse">
+      {posts.map((post) => (
+        <div key={post._id} className="p-3 lg:p-0 lg:mb-5">
+          <div className="relative border border-black lg:mt-8 lg:border-none lg:rounded-xl flex flex-col lg:bg-white shadow-xl">
+            {/* Header Post */}
+            <section className="flex items-center">
+              {/* Post Avatar */}
+              <figure className="avatar m-5">
+                <div className="w-[4.5rem] rounded-full bg-gray-300">
+                  <img src={userData.image} alt="Image Profile" />
+                </div>
+              </figure>
+
+              {/* Post Function */}
+              <PostFunction
+                post={post}
+                updatePost={updatePost}
+                deletePost={deletePost}
+              />
+
+              {/* Post Data */}
+              <article>
+                <h3 className="font-bold text-lg">{userData.firstname} {userData.lastname}</h3>
+                <div className="flex">
+                  <p className="mr-3 uppercase">
+                    {new Date(post.createdAt).toLocaleDateString("en-GB")}
+                  </p>
+                  <p className="uppercase">
+                    {new Date(post.createdAt).toLocaleTimeString(
+                      "en-GB",
+                      timeOptions
+                    )}
+                  </p>
+                </div>
+                <div className="flex max-[375px]:flex-col">
+                  <p className="mr-3 uppercase">{post.activity_type}</p>
+                  <p className="uppercase">Duration {post.duration} Mins</p>
+                </div>
+              </article>
+            </section>
+
+            {/* Body Post */}
+            <section className="ml-5 mt-2 mb-4 lg:order-2 lg:ml-[7.5rem] lg:mt-4">
+              <p className="font-semibold mb-1 uppercase">
+                {post.activity_name}
+              </p>
+              <p>{post.activity_describe}</p>
+            </section>
+
+            {post.image && (
+              <figure className="lg:order-1 lg:ml-[7.5rem] lg:mr-6">
+                <img
+                  className="lg:rounded-xl w-[100%] h-[100%] object-cover"
+                  src={post.image}
+                  alt="Image Activity"
+                />
+              </figure>
+            )}
+
+            {/* Bottom Post */}
+            <section className="flex justify-around p-3 lg:p-4 lg:order-3 lg:ml-[7.5rem] lg:mr-6 lg:border-t-2 lg:border-[#1CD6CE]">
+              <HeartBtn />
+              <CommentBtn />
+            </section>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const FriendProfile = ({ friendData }) => {
+  if (!friendData) {
+    return <div>Loading friend profile...</div>;
+  }
+
+  return (
+    <div>
+      {/* Header Profile */}
+      <section className="flex items-center lg:flex-col lg:mt-3">
+        {/* Profile Avatar */}
+        <figure className="avatar m-5">
+          <div className="w-[8rem] rounded-full bg-gray-300">
+            <img src={friendData.image} alt="Image Profile" />
+          </div>
+        </figure>
+
+        {/* Profile Data */}
+        <div className="lg:flex lg:flex-col">
+          <h3 className="font-bold text-lg lg:text-center">
+            {friendData.FirstName} {friendData.LastName}
+          </h3>
+          <button className="hidden lg:block lg:mt-2 lg:mb-5 btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]">
+            Following
+          </button>
+          <div className="flex">
+            <p className="mr-3 font-semibold">
+              <span className="mr-1">{friendData.following.length}</span>Following
+            </p>
+            <p className="font-semibold">
+              <span className="mr-1">{friendData.followers.length}</span>Followers
+            </p>
+          </div>
+          <button className="lg:hidden btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]">
+            Following
+          </button>
+        </div>
+      </section>
+
+      {/* Profile Status */}
+      <section>
+        <p className="hidden lg:block mt-5 mb-2 font-bold text-center">
+          About Me
+        </p>
+        <p className="mx-5 font-semibold lg:bg-gray-300 lg:rounded-lg lg:px-3 lg:p-3">
+          {friendData.aboutMe}
+        </p>
+      </section>
+    </div>
+  );
+};
+
+const FriendPost = ({ friendData, posts }) => {
+  if (!friendData) {
+    return <div>Loading friend profile...</div>;
+  }
+
   const timeOptions = {
     hour: "numeric",
     minute: "2-digit",
@@ -196,20 +427,13 @@ const PostDisplay = ({ posts, updateData, deleteData }) => {
               {/* Post Avatar */}
               <figure className="avatar m-5">
                 <div className="w-[4.5rem] rounded-full bg-gray-300">
-                  <img src={UserIcon} alt="Image Profile" />
+                  <img src={friendData.image} alt="Image Profile" />
                 </div>
               </figure>
 
-              {/* Post Function */}
-              <PostFunction
-                post={post}
-                updateData={updateData}
-                deleteData={deleteData}
-              />
-
               {/* Post Data */}
               <article>
-                <h3 className="font-bold text-lg">Username</h3>
+                <h3 className="font-bold text-lg">{friendData.FirstName} {friendData.LastName}</h3>
                 <div className="flex">
                   <p className="mr-3 uppercase">
                     {new Date(post.createdAt).toLocaleDateString("en-GB")}
@@ -258,7 +482,7 @@ const PostDisplay = ({ posts, updateData, deleteData }) => {
   );
 };
 
-const PostFunction = ({ post, updateData, deleteData }) => {
+const PostFunction = ({ post, updatePost, deletePost }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
@@ -276,7 +500,7 @@ const PostFunction = ({ post, updateData, deleteData }) => {
   };
 
   const handleDeleteConfirm = () => {
-    deleteData(post._id);
+    deletePost(post._id);
     setIsOpen(false);
     setShowDeleteConfirm(false);
   };
@@ -318,7 +542,7 @@ const PostFunction = ({ post, updateData, deleteData }) => {
         {showUpdateForm && (
           <UpdateForm
             post={post}
-            updateData={updateData}
+            updatePost={updatePost}
             onClose={handleCancel}
           />
         )}
@@ -334,7 +558,7 @@ const PostFunction = ({ post, updateData, deleteData }) => {
   );
 };
 
-const UpdateForm = ({ post, updateData, onClose }) => {
+const UpdateForm = ({ post, updatePost, onClose }) => {
   const [_id, setId] = useState("");
   const [activity_name, setActivity_name] = useState("");
   const [activity_describe, setActivity_describe] = useState("");
@@ -348,7 +572,7 @@ const UpdateForm = ({ post, updateData, onClose }) => {
   }, [post]);
 
   const updateSubmit = () => {
-    updateData(_id, activity_name, activity_describe);
+    updatePost(_id, activity_name, activity_describe);
     onClose();
   };
 

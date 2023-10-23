@@ -1,12 +1,12 @@
 import { useState, useContext } from "react";
-import { userContext } from "../context/UserContext";
+import { userContext } from "../context/userContext";
 import MockupProfile from "../../assets/blank-profile-picture-973460_960_720.jpg";
 
 const SideInformation = () => {
   const [activity, setActivity] = useState([]);
   const maxItems = 2;
   const displayedData = activity.slice(0, maxItems);
-  const { userData } = useContext(userContext);
+  const { userData , eachUserData} = useContext(userContext);
 
   return (
     <div className="w-full laptop:w-full h-[100vh] border-solid border-2 flex-col items-center hidden laptop:flex lg:flex">
@@ -16,7 +16,7 @@ const SideInformation = () => {
         </div>
       </div>
       <div className="mb-6">
-        <p>{userData.username}</p>
+        <p>{userData.firstname}</p>
       </div>
       <div className="flex flex-row w-[100%] justify-around mb-6">
         <div className="flex flex-col ">

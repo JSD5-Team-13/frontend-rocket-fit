@@ -3,7 +3,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import Navbar from "../navbar/NavbarNoneLoggedIn";
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -20,7 +20,7 @@ export const Register = () => {
   const register = async (userData) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/register",
+        "http://127.0.0.1:8000/register",
         userData
       );
       console.log(response.status);

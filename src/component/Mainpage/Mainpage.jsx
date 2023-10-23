@@ -20,7 +20,8 @@ function getDate() {
 const Mainpage = () => {
   // eslint-disable-next-line no-unused-vars
   const [currentDate, setCurrentDate] = useState(getDate());
-  const [userData, setUserData] = useState("");
+  const [userId, setUserId] = useState("");
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
@@ -33,8 +34,7 @@ const Mainpage = () => {
         .then((response) => {
           
           if (response.status === 200) {
-            setUserData(response.data);
-            console.log(userData)
+            setUserId(response.data.id);
           } else {
             console.log("Failed to fetch user data");
           }
@@ -44,6 +44,27 @@ const Mainpage = () => {
         });
     }
   }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("rockettoken");
+    if (token) {
+      axios.get(`http://127.0.0.1:8000/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            setUserData(response.data);
+          } else {
+            console.log("Failed to fetch user data");
+          }
+        })
+        .catch((error) => {
+          console.log(`Error fetching user data from the database`, error);
+        });
+    }
+  }, [userId]);
 
   return (
     <div className=" h-[100vh] fixed w-full">
@@ -58,7 +79,7 @@ const Mainpage = () => {
 
           <div className="flex flex-col items-center overflow-scroll flex-hidden h-[100vh] pb-40 bg-gray-100 lg:w-2/4 mt-[79px]">
             <div className="self-start m-6">
-              <h1 className="text-3xl font-semibold">Welcome, {userData.username}</h1>
+              <h1 className="text-3xl font-semibold">Welcome, {userData.FirstName}</h1>
               <p className="">{currentDate}</p>
             </div>
             <img
