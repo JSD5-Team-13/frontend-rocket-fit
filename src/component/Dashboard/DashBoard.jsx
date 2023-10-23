@@ -6,7 +6,7 @@ import { CategoryScale, Chart, registerables } from "chart.js";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Colors } from "chart.js";
-import { userContext } from "../context/UserContext.jsx";
+import { userContext } from "../context/userContext.jsx";
 import { API_URL } from "../../const.jsx";
 
 //setup chart
