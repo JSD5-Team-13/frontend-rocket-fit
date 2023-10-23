@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn";
 import { AiOutlineSearch } from "react-icons/ai";
