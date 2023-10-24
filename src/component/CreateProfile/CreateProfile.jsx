@@ -53,6 +53,7 @@ const CreateProfile = () => {
   const updateUser = async (
     id,
     FirstName,
+    LastName,
     height,
     weight,
     gender,
@@ -62,6 +63,7 @@ const CreateProfile = () => {
       const requestData = {
         id: id,
         FirstName: FirstName,
+        LastName: LastName,
         height: height,
         weight: weight,
         gender: gender,
@@ -111,6 +113,7 @@ const CreateProfile = () => {
         updateUser(
           params.id,
           data.FirstName,
+          data.LastName,
           data.height,
           data.weight,
           data.gender,
