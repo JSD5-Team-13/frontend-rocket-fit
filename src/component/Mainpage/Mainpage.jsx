@@ -27,9 +27,6 @@ const Mainpage = () => {
     sleepTime: "HH:MM",
     wakeTime: "HH:MM",
     date: "",
-    sleepTime: "HH:MM",
-    wakeTime: "HH:MM",
-    date: "",
   });
 
   useEffect(() => {

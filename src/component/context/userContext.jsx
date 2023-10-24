@@ -46,6 +46,8 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
+  console.log(userData)
+
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token && userId) {

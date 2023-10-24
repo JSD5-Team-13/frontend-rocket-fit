@@ -45,7 +45,7 @@ const SideInformation = () => {
         </div>
       </div>
       <button className="btn btn-xs btn-accent rounded-full w-[40%] mb-6">
-        <a href="/create_profile">Edit your profile</a>
+        <a href="/account">Edit your profile</a>
       </button>
       <h2 className="self-start mx-7">Lastest Activity</h2>
       {displayedData.map((activity, index) => (
