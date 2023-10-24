@@ -283,7 +283,7 @@ const AccountSetting = () => {
                   <h3>Delete Account</h3>
                 </div>
               </div>
-              <div className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold">
+              {/* <div className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold">
                 <button
                   onClick={() => {
                     Swal.fire({
@@ -303,7 +303,7 @@ const AccountSetting = () => {
                 >
                   Log out
                 </button>
-              </div>
+              </div> */}
             </div>
 
             {/* right area */}
