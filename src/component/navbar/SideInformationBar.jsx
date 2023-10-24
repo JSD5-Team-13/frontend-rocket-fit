@@ -23,7 +23,7 @@ const SideInformation = () => {
           <label htmlFor="height" className="self-center">
             Height
           </label>
-          <p id="height" className="badge badge-accent w-12 h-6">
+          <p id="height" className="w-12 h-6 badge badge-accent">
             {userData.height}
           </p>
         </div>
@@ -31,7 +31,7 @@ const SideInformation = () => {
           <label htmlFor="weight" className="self-center">
             Weight
           </label>
-          <p id="weight" className="badge badge-accent w-12 h-6">
+          <p id="weight" className="w-12 h-6 badge badge-accent">
             {userData.weight}
           </p>
         </div>
@@ -39,7 +39,7 @@ const SideInformation = () => {
           <label htmlFor="age" className="self-center">
             Age
           </label>
-          <p id="age" className="badge badge-accent w-10 h-6">
+          <p id="age" className="w-10 h-6 badge badge-accent">
             {userData.age}
           </p>
         </div>

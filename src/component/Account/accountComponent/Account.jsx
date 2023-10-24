@@ -19,7 +19,6 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
     try {
       const response = await axios.put(serverUrl + "/users/setting/account/" + userData.userId, userData, {
         headers: {
-          // 'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       });
@@ -51,7 +50,6 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
           const userDataFromAPI = response.data;
           setUserData(userDataFromAPI);
           console.log("reset form")
-          console.log(userData)
         })
         .catch((error) => {
           console.error("Error fetching user data", error);
@@ -120,7 +118,7 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
               disabled
             />
           </div>
-          {/* mock input */}
+          {/* w h input */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="bmi" className="w-1/3">
               Weight & Height
@@ -155,7 +153,7 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
               </div>
             </div>
           </div>
-          {/* mock input */}
+          {/* gender input */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="gender" className="w-1/3">
               Gender

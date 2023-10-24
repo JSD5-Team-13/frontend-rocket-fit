@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+  const serverUrl = "https://rocket-fit-api.onrender.com";
+
 const Profile = ({
   userId,
   userData,
@@ -10,7 +12,7 @@ const Profile = ({
   setShowAlert,
   setAlertMessage, // รับ setAlertMessage เป็นพารามิเตอร์
 }) => {
-  const serverUrl = "https://rocket-fit-api.onrender.com";
+
   const token = localStorage.getItem("rockettoken");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -124,18 +126,15 @@ const Profile = ({
 
   return (
     <div>
-      <div className="flex flex-col items-center w-full gap-4 px-2 py-4">
-        <div className="w-[10rem] h-[10rem]  overflow-hidden rounded-full">
+      <div className="flex flex-col items-center gap-4 px-2 py-4 justify-evenly">
           <img
             src={imageFile ? imagePreview : userData.image}
             alt="profile-picture"
-            className="object-cover"
+            className="object-cover w-[10rem] h-[10rem]  overflow-hidden rounded-full"
           />
-        </div>
-
 
       </div>
-      <div className="flex flex-col items-center justify-center w-full gap-4 mx-auto">
+      <div className="flex flex-col items-center justify-center w-full gap-4">
         <div className="flex flex-row justify-center gap-4">
           <label className="block">
             <span className="btn btn-xs btn-primary">upload profile</span>
@@ -145,7 +144,7 @@ const Profile = ({
               type="file"
               accept="image/*"
               onChange={handleFileInputChange}
-              className="flex flex-col w-full text-sm sr-only text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 "
+              className="flex flex-col text-sm sr-only text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 "
             />
           </label>
           {imagePreview && imageFile !== null ? 
@@ -201,20 +200,11 @@ const Profile = ({
                 </div>
               </form>
             </div>
-          ) : //     <form onSubmit={handleSubmitFile}>
-          //   <input type="file" name="file" onChange={handleFileInputChange} />
-          //   <button type="submit">Submit</button>
-          //   <button type="reset" onClick={clearInput}>Cancel</button>
-          // </form>
-
+          ) :
           null}
         </div>
       </div>
       
-        {/* <div className="text-3xl font-semibold text-center">
-          <h2>{userData.FirstName + " " + userData.LastName}  </h2>
-        </div> */}
-
     </div>
   );
 };

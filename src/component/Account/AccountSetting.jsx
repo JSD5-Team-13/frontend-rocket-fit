@@ -11,8 +11,10 @@ import Password from "./accountComponent/Password.jsx";
 import Privacy from "./accountComponent/Privacy.jsx";
 import Profile from "./accountComponent/Profile.jsx";
 
+const serverUrl = "https://rocket-fit-api.onrender.com"
+
 const AccountSetting = () => {
-  const serverUrl = "https://rocket-fit-api.onrender.com"
+  
   const [option, setOption] = useState("ACCOUNT");
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -163,7 +165,8 @@ const AccountSetting = () => {
   };
 
   return (
-    <Layout className="max-w-[1440px] flex items-center">
+    <Layout >
+    <div className="">
       {showAlert && <Alert message={alertMessage} />}
 
       {/* mobile mode  */}
@@ -176,9 +179,9 @@ const AccountSetting = () => {
             </p>
           </div>
 
-          <div>
+          <div className="">
             {/* profile  */}
-            <div className="flex flex-col items-center justify-center w-full mx-auto">
+            <div className="">
               <Profile
                 userId={userId}
                 userData={userData}
@@ -315,7 +318,9 @@ const AccountSetting = () => {
           </div>
         </div>
       </div>
+    </div>      
     </Layout>
+
   );
 };
 
