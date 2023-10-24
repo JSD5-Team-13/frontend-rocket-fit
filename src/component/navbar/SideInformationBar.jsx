@@ -24,7 +24,7 @@ const SideInformation = () => {
             Height
           </label>
           <p id="height" className="badge badge-accent ">
-            {userData.height}
+            {userData.height || 0}
           </p>
         </div>
         <div className="flex flex-col ">
@@ -32,7 +32,7 @@ const SideInformation = () => {
             Weight
           </label>
           <p id="weight" className="badge badge-accent">
-            {userData.weight}
+            {userData.weight || 0}
           </p>
         </div>
         <div className="flex flex-col">
@@ -40,7 +40,7 @@ const SideInformation = () => {
             Age
           </label>
           <p id="age" className="badge badge-accent">
-            {userData.age}
+            {userData.age || 0}
           </p>
         </div>
       </div>
