@@ -188,8 +188,10 @@ export const DashBoard = () => {
                     <p className="text-[1.5rem]">
                       {calBMI(userData.height, userData.weight).toFixed(2)}
                     </p>
+
                     <h2 className="card-title text-[2rem]">BMI</h2>
-                    <div className="flex justify-end">
+                    <div className="flex ">
+                      <p className="text-[1.5rem]">{resultBMI()}</p>
                       <svg
                         width="50px"
                         height="50px"
