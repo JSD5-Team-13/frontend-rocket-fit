@@ -3,7 +3,7 @@ import { userContext } from "../context/userContext";
 import MockupProfile from "../../assets/blank-profile-picture-973460_960_720.jpg";
 
 const SideInformation = () => {
-  const { userData , activity} = useContext(userContext);
+  const { userData, activity } = useContext(userContext);
   const maxItems = 2;
   const reversedActivity = [...activity].reverse();
   const displayedData = reversedActivity.slice(0, maxItems);
@@ -56,8 +56,7 @@ const SideInformation = () => {
           <div className="card-body">
             <h2 className="card-title">{activity.activity_name}</h2>
             <p>{activity.activity_describe}</p>
-            <div className="justify-end card-actions">
-            </div>
+            <div className="justify-end card-actions"></div>
           </div>
         </div>
       ))}

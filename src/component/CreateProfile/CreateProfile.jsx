@@ -21,7 +21,7 @@ const CreateProfile = () => {
   // console.log("toy", uploadImg);
 
   const inputRef = useRef(null);
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
@@ -119,11 +119,12 @@ const CreateProfile = () => {
           data.gender,
           data.DateOfBirth
         );
-        console.log();
+        handleImageUpload();
       } else if (result.isDenied) {
         console.log("Changes are not saved");
       }
     });
+    console.log(handleImageUpload());
   };
 
   const handleImageClick = (e) => {
@@ -133,7 +134,41 @@ const CreateProfile = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     console.log(file);
-    setImage(e.target.files[0]);
+    setImage(file);
+  };
+
+  const handleImageUpload = async () => {
+    try {
+      if (image) {
+        const token = localStorage.getItem("rockettoken");
+        const formData = new FormData();
+        formData.append("image", image);
+
+        // ส่งไฟล์รูปภาพไปยัง Node.js ในส่วนที่จะรับและอัปโหลดไป Cloudinary
+        const response = await axios.put(
+          `http://127.0.0.1:8000/users/${nameUser.id}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "Create Success",
+          });
+          navigate("/main");
+        } else {
+          console.log("error");
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
