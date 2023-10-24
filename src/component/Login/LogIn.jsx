@@ -28,7 +28,8 @@ export const LogIn = () => {
           title: "Login Success",
         });
         if (response.data.isCreatedProfile === true) {
-          navigate("/main");
+          navigate("/main")
+          window.location.reload();
         } else {
           navigate("/create_profile");
         }

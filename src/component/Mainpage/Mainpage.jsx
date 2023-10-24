@@ -8,6 +8,7 @@ import {
 } from "react-icons/hi";
 import MockupProfile from "../../assets/blank-profile-picture-973460_960_720.jpg";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 function getDate() {
   const today = new Date();
@@ -22,6 +23,11 @@ const Mainpage = () => {
   const [currentDate, setCurrentDate] = useState(getDate());
   const [userId, setUserId] = useState("");
   const [userData, setUserData] = useState({});
+  const [sleepTime, setSleepTime] = useState({
+    sleepTime : "HH:MM",
+    wakeTime : "HH:MM",
+    date : "",
+  });
 
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
@@ -66,6 +72,80 @@ const Mainpage = () => {
     }
   }, [userId]);
 
+  const sleepTimeCreate = (sleepTimeData) => {
+    const token = localStorage.getItem("rockettoken");
+    if (token) {
+      axios.post(`http://127.0.0.1:8000/sleeptime`,
+      sleepTimeData
+    )
+    .then((response) => {
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Sleep Time Added",
+        });
+      } else {
+        console.log("error");
+      }
+    })
+    .catch((error) => {
+      console.log(`Error fetching user data from the database`, error);
+      Swal.fire({
+        icon: "error",
+        title: "You already add your sleep time today",
+      });
+    });
+    }
+  }
+    
+  const sleepTimeHandler = () => {
+    // Parse the sleepTime and wakeTime into Date objects
+    const sleepTimeDate = new Date(`2023-10-24T${sleepTime.sleepTime}`);
+    const wakeTimeDate = new Date(`2023-10-24T${sleepTime.wakeTime}`);
+  
+    // Calculate the time difference in milliseconds
+    const timeDifference = wakeTimeDate - sleepTimeDate;
+  
+    // Convert the time difference to hours and minutes
+    const totalHours = Math.floor(timeDifference / (1000 * 60 * 60));
+
+    if (totalHours < 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid time",
+      });
+      return;
+    }
+  
+    // Format the date to match ISO 8601 format (YYYY-MM-DD)
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().slice(0, 10);
+  
+    const sleepTimeData = {
+      date: formattedDate, // Use the formatted date
+      sleeptime: totalHours,
+      userId: userData._id,
+    };
+  
+    sleepTimeCreate(sleepTimeData, userId);
+  
+    setSleepTime({
+      sleepTime: "HH:MM",
+      wakeTime: "HH:MM",
+      date: formattedDate, // Update the date in the state with the formatted date
+    });
+  };
+  
+  
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSleepTime((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }
+
   return (
     <div className=" h-[100vh] fixed w-full">
       <div className="w-full ">
@@ -98,7 +178,7 @@ const Mainpage = () => {
                 <p className="font-bold">Create you activity</p>
                 <p>Add your new activity here</p>
                 <button className="btn btn-sm btn-accent rounded-full w-[40%]">
-                  Create Activity
+                  <a href="/create_activity">Create Activity</a>
                 </button>
               </div>
             </div>
@@ -111,7 +191,7 @@ const Mainpage = () => {
                 <p className="font-bold">Dashboard checkout</p>
                 <p>Let`s see how much times you spent on your exercise</p>
                 <button className="btn btn-sm btn-accent rounded-full w-[40%]">
-                  Dashboard
+                  <a href="/dashboard">Dashboard</a>
                 </button>
               </div>
             </div>
@@ -134,6 +214,9 @@ const Mainpage = () => {
                     id="sleep"
                     type="time"
                     className="input input-bordered input-sm w-[40%] max-w-xs"
+                    name="sleepTime"
+                    onChange={handleChange}
+                    value={sleepTime.sleepTime}
                   />
                 </div>
                 <div className="flex flex-row">
@@ -144,9 +227,14 @@ const Mainpage = () => {
                     id="wakeup"
                     type="time"
                     className="input input-bordered input-sm w-[40%] max-w-xs"
+                    name="wakeTime"
+                    onChange={handleChange}
+                    value={sleepTime.wakeTime}
                   />
                 </div>
-                <button className="btn btn-sm btn-accent rounded-full w-[40%]">
+                <button 
+                className="btn btn-sm btn-accent rounded-full w-[40%]"
+                onClick={sleepTimeHandler}>
                   Save
                 </button>
               </div>
