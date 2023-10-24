@@ -101,7 +101,7 @@ const Profile = ({
   return (
     <div>
       <div className="flex flex-col items-center w-full gap-4 px-2 py-4">
-        <div className="w-48 h-48 overflow-hidden rounded-full">
+        <div className="w-[10rem] h-[10rem]  overflow-hidden rounded-full">
           <img
             src={imageFile ? imagePreview : userData.profile_url}
             alt="profile-picture"
@@ -109,9 +109,7 @@ const Profile = ({
           />
         </div>
 
-        <div className="text-3xl font-semibold text-center">
-          <h2>@{userData.username}</h2>
-        </div>
+
       </div>
       <div className="flex flex-col items-center justify-center w-full gap-4 mx-auto">
         <div className="flex flex-row justify-center gap-4">
@@ -188,6 +186,11 @@ const Profile = ({
           null}
         </div>
       </div>
+      
+        {/* <div className="text-3xl font-semibold text-center">
+          <h2>{userData.FirstName + " " + userData.LastName}  </h2>
+        </div> */}
+
     </div>
   );
 };
