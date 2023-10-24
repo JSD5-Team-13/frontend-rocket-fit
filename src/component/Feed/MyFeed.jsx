@@ -2,7 +2,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { userContext } from "../context/userContext";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import UserIcon from "../../assets/user-icon.svg";
@@ -21,6 +22,7 @@ const MyFeed = () => {
   const [reload, setReload] = useState(false);
   const [currentUserId, setCurrentUserId] = useState();
   const [currentUserData, setCurrentUserData] = useState();
+  const { userData, setUserData } = useContext(userContext);
   const [friendData, setFriendData] = useState();
 
   // Get posts for the user with their userId or friend userId
@@ -54,7 +56,6 @@ const MyFeed = () => {
 
               if (friendResponse.status === 200) {
                 setFriendData(friendResponse.data);
-                console.log(friendResponse.data);
               } else {
                 console.log("Failed to fetch friend data");
               }
@@ -131,6 +132,61 @@ const MyFeed = () => {
     }
   };
 
+  // Handle follwer
+  const handleFollow = async () => {
+    try {
+      const token = localStorage.getItem("rockettoken");
+
+      if (userData.following.includes(userId)) {
+        // If the user is already being followed, send an unfollow request
+        const response = await axios.post(
+          `http://127.0.0.1:8000/connection/unfollow/${userId}`,
+          { userid: userData.id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          // Update the UI or user data to show that the user is now unfollowed
+          setUserData({
+            ...userData,
+            following: userData.following.filter((id) => id !== userId),
+          });
+          setReload(!reload);
+        } else {
+          console.error("Failed to unfollow the user");
+        }
+      } else {
+        // If the user is not being followed, send a follow request
+        const response = await axios.post(
+          `http://127.0.0.1:8000/connection/follow/${userId}`,
+          { userid: userData.id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          // Update the UI or user data to show that the user is now being followed
+          setUserData({
+            ...userData,
+            following: [...userData.following, userId],
+          });
+          setReload(!reload);
+        } else {
+          console.error("Failed to follow the user");
+        }
+      }
+    } catch (error) {
+      console.error("Error while following/unfollowing the user", error);
+    }
+  };
+
   // Delete a post
   const deletePost = async (_id) => {
     try {
@@ -157,7 +213,11 @@ const MyFeed = () => {
           {userId === currentUserId ? (
             <UserProfile userData={currentUserData} updateUser={updateUser} />
           ) : (
-            <FriendProfile friendData={friendData} />
+            <FriendProfile
+              userData={currentUserData}
+              friendData={friendData}
+              handleFollow={handleFollow}
+            />
           )}
         </aside>
 
@@ -194,7 +254,7 @@ const UserProfile = ({ userData, updateUser }) => {
   useEffect(() => {
     if (userData) {
       setId(userData._id);
-      setAboutMe(userData.aboutMe);
+      setAboutMe(userData.aboutme);
     }
   }, [userData]);
 
@@ -226,7 +286,7 @@ const UserProfile = ({ userData, updateUser }) => {
             className="hidden lg:block lg:mt-2 lg:mb-5 btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]"
             onClick={handleEditAboutMe}
           >
-            Edit Profile
+            Edit Bio
           </button>
           <div className="flex">
             <p className="mr-3 font-semibold">
@@ -240,7 +300,7 @@ const UserProfile = ({ userData, updateUser }) => {
             className="lg:hidden btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]"
             onClick={handleEditAboutMe}
           >
-            Edit Profile
+            Edit Bio
           </button>
         </div>
       </section>
@@ -306,7 +366,9 @@ const UserPost = ({ userData, posts, updatePost, deletePost }) => {
 
               {/* Post Data */}
               <article>
-                <h3 className="font-bold text-lg">{userData.firstname} {userData.lastname}</h3>
+                <h3 className="font-bold text-lg">
+                  {userData.firstname} {userData.lastname}
+                </h3>
                 <div className="flex">
                   <p className="mr-3 uppercase">
                     {new Date(post.createdAt).toLocaleDateString("en-GB")}
@@ -355,7 +417,7 @@ const UserPost = ({ userData, posts, updatePost, deletePost }) => {
   );
 };
 
-const FriendProfile = ({ friendData }) => {
+const FriendProfile = ({ userData, friendData, handleFollow }) => {
   if (!friendData) {
     return <div>Loading friend profile...</div>;
   }
@@ -376,19 +438,31 @@ const FriendProfile = ({ friendData }) => {
           <h3 className="font-bold text-lg lg:text-center">
             {friendData.FirstName} {friendData.LastName}
           </h3>
-          <button className="hidden lg:block lg:mt-2 lg:mb-5 btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]">
-            Following
+          <button
+            className="hidden lg:block lg:mt-2 lg:mb-5 btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]"
+            onClick={handleFollow}
+          >
+            {userData.following.includes(friendData._id)
+              ? "Unfollow"
+              : "Follow"}
           </button>
           <div className="flex">
             <p className="mr-3 font-semibold">
-              <span className="mr-1">{friendData.following.length}</span>Following
+              <span className="mr-1">{friendData.following.length}</span>
+              Following
             </p>
             <p className="font-semibold">
-              <span className="mr-1">{friendData.followers.length}</span>Followers
+              <span className="mr-1">{friendData.followers.length}</span>
+              Followers
             </p>
           </div>
-          <button className="lg:hidden btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]">
-            Following
+          <button
+            className="lg:hidden btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]"
+            onClick={handleFollow}
+          >
+            {userData.following.includes(friendData._id)
+              ? "Unfollow"
+              : "Follow"}
           </button>
         </div>
       </section>
@@ -433,7 +507,9 @@ const FriendPost = ({ friendData, posts }) => {
 
               {/* Post Data */}
               <article>
-                <h3 className="font-bold text-lg">{friendData.FirstName} {friendData.LastName}</h3>
+                <h3 className="font-bold text-lg">
+                  {friendData.FirstName} {friendData.LastName}
+                </h3>
                 <div className="flex">
                   <p className="mr-3 uppercase">
                     {new Date(post.createdAt).toLocaleDateString("en-GB")}
