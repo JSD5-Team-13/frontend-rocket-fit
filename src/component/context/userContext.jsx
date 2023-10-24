@@ -16,8 +16,9 @@ export const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState({});
   const [userId, setUserId] = useState("");
   const [activity, setActivity] = useState([]); // [{}
-  
-  console.log(userData)
+  const [sleeptime, setSleeptime] = useState([]);
+
+  console.log(userData);
   //get user Data from "/users"
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
@@ -50,10 +51,10 @@ export const UserProvider = ({ children }) => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
       axios
-      .get(API_URL + `/activity?userId=${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        .get(API_URL + `/activity?userId=${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         })
         .then((response) => {
           if (response.status === 200) {
@@ -68,18 +69,52 @@ export const UserProvider = ({ children }) => {
     } else {
       setActivity([]);
     }
-  },[userId]);
+  }, [userId]);
+
+  //sleeptime
+  useEffect(() => {
+    const token = localStorage.getItem("rockettoken");
+    if (token) {
+      axios
+        .get(API_URL + `/sleeptime`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          //get ข้อมูลจาก body
+          body: {
+            userId: userId,
+            date: new Date(),
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(response.data);
+          }
+
+          console.log("Failed to fetch sleeptime data");
+        })
+        .catch((error) => {
+          console.log(`Error fetching sleeptime data from the database`, error);
+        });
+    } else {
+      // setSleeptime([]);
+    }
+  }, []);
 
   return (
     //ส่งค่า userData, setUserData ไปให้ {children}
-    <userContext.Provider value={{ 
-      userData, 
-      setUserData,
-      userId,
-      setUserId,
-      activity,
-      setActivity
-      }}>
+    <userContext.Provider
+      value={{
+        userData,
+        setUserData,
+        userId,
+        setUserId,
+        activity,
+        setActivity,
+        sleeptime,
+        setSleeptime,
+      }}
+    >
       {children}
     </userContext.Provider>
   );
