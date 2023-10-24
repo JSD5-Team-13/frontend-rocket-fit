@@ -9,7 +9,7 @@ const Profile = ({
   setShowAlert,
   setAlertMessage, // รับ setAlertMessage เป็นพารามิเตอร์
 }) => {
-  const serverUrl = "http://127.0.0.1:8000";
+  const serverUrl = "https://rocket-fit-api.onrender.com";
   const token = localStorage.getItem("rockettoken");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);

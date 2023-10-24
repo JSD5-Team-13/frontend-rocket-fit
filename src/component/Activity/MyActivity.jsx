@@ -17,7 +17,7 @@ const MyActivity = () => {
         const token = localStorage.getItem("rockettoken");
         if (token) {
           // Fetch user data
-          const userResponse = await axios.get("http://127.0.0.1:8000/users", {
+          const userResponse = await axios.get("https://rocket-fit-api.onrender.com/users", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -29,7 +29,7 @@ const MyActivity = () => {
 
             // Use the userId for the get activities
             const activitiesResponse = await axios.get(
-              `http://127.0.0.1:8000/activity?userId=${userId}`
+              `https://rocket-fit-api.onrender.com/activity?userId=${userId}`
             );
 
             if (activitiesResponse.status === 200) {
@@ -70,7 +70,7 @@ const MyActivity = () => {
         image: image,
       };
       const response = await axios.put(
-        `http://127.0.0.1:8000/activity/${_id}`,
+        `https://rocket-fit-api.onrender.com/activity/${_id}`,
         requestData
       );
 
@@ -87,7 +87,7 @@ const MyActivity = () => {
   const deleteData = async (_id) => {
     try {
       const response = await axios.delete(
-        `http://127.0.0.1:8000/activity/${_id}`
+        `https://rocket-fit-api.onrender.com/activity/${_id}`
       );
 
       if (response.status === 200) {

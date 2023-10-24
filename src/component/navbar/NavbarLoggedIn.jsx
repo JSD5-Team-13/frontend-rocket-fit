@@ -14,7 +14,7 @@ const NavbarLoggedIn = () => {
     useEffect(() => {
         const token = localStorage.getItem("rockettoken");
         if (token) {
-          axios.get("http://127.0.0.1:8000/users", {
+          axios.get("https://rocket-fit-api.onrender.com/users", {
               headers: {
                 Authorization: `Bearer ${token}`,
               },

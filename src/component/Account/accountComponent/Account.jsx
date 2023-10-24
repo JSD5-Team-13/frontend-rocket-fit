@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}) => {
-  const serverUrl = "http://127.0.0.1:8000"
+  const serverUrl = "https://rocket-fit-api.onrender.com"
   const token = localStorage.getItem("rockettoken");
 
   const handleInputChange = (event) => {

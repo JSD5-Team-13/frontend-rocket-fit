@@ -23,7 +23,7 @@ const Connection = () => {
       const fetchFollowersData = async () => {
         try {
           const followersPromises = userData.followers.map((userId) =>
-            axios.get(`http://127.0.0.1:8000/users/${userId}`, {
+            axios.get(`https://rocket-fit-api.onrender.com/users/${userId}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -58,7 +58,7 @@ const Connection = () => {
       const fetchFollowingData = async () => {
         try {
           const followingPromises = userData.following.map((userId) =>
-            axios.get(`http://127.0.0.1:8000/users/${userId}`, {
+            axios.get(`https://rocket-fit-api.onrender.com/users/${userId}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -96,7 +96,7 @@ const Connection = () => {
     if (query) {
       const token = localStorage.getItem("rockettoken");
       axios
-        .get(`http://127.0.0.1:8000/all?firstname=${query}`, {
+        .get(`https://rocket-fit-api.onrender.com/all?firstname=${query}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -125,7 +125,7 @@ const Connection = () => {
       // If the user is already being followed, send an unfollow request
       axios
         .post(
-          `http://127.0.0.1:8000/connection/unfollow/${userId}`,
+          `https://rocket-fit-api.onrender.com/connection/unfollow/${userId}`,
           { userid: userData.id },
           {
             headers: {
@@ -152,7 +152,7 @@ const Connection = () => {
       // If the user is not being followed, send a follow request
       axios
         .post(
-          `http://127.0.0.1:8000/connection/follow/${userId}`,
+          `https://rocket-fit-api.onrender.com/connection/follow/${userId}`,
           { userid: userData.id },
           {
             headers: {

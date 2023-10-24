@@ -33,7 +33,7 @@ const Mainpage = () => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
       axios
-        .get("http://127.0.0.1:8000/users", {
+        .get("https://rocket-fit-api.onrender.com/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -55,7 +55,7 @@ const Mainpage = () => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
       axios
-        .get(`http://127.0.0.1:8000/users/${userId}`, {
+        .get(`https://rocket-fit-api.onrender.com/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -80,7 +80,7 @@ const Mainpage = () => {
       const fetchFollowingData = async () => {
         try {
           const followingPromises = userData.following.map((userId) =>
-            axios.get(`http://127.0.0.1:8000/users/${userId}`, {
+            axios.get(`https://rocket-fit-api.onrender.com/users/${userId}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -111,7 +111,7 @@ const Mainpage = () => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
       axios
-        .post(`http://127.0.0.1:8000/sleeptime`, sleepTimeData)
+        .post(`https://rocket-fit-api.onrender.com/sleeptime`, sleepTimeData)
         .then((response) => {
           if (response.status === 200) {
             Swal.fire({

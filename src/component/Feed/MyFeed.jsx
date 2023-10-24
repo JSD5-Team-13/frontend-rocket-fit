@@ -32,7 +32,7 @@ const MyFeed = () => {
         const token = localStorage.getItem("rockettoken");
         if (token) {
           // Fetch user data
-          const userResponse = await axios.get("http://127.0.0.1:8000/users", {
+          const userResponse = await axios.get("https://rocket-fit-api.onrender.com/users", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -46,7 +46,7 @@ const MyFeed = () => {
             if (userId !== currentUserId) {
               const token = localStorage.getItem("rockettoken");
               const friendResponse = await axios.get(
-                `http://127.0.0.1:8000/users/${userId}`,
+                `https://rocket-fit-api.onrender.com/users/${userId}`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,
@@ -63,7 +63,7 @@ const MyFeed = () => {
 
             // Use the currentUserId and userId from the route to decide which posts to fetch
             const postsResponse = await axios.get(
-              `http://127.0.0.1:8000/post/${userId}`
+              `https://rocket-fit-api.onrender.com/post/${userId}`
             );
 
             if (postsResponse.status === 200) {
@@ -92,7 +92,7 @@ const MyFeed = () => {
         activity_describe,
       };
       const response = await axios.put(
-        `http://127.0.0.1:8000/post/${_id}`,
+        `https://rocket-fit-api.onrender.com/post/${_id}`,
         requestData
       );
 
@@ -114,7 +114,7 @@ const MyFeed = () => {
       };
       const token = localStorage.getItem("rockettoken");
       const response = await axios.put(
-        `http://127.0.0.1:8000/users/${userId}`,
+        `https://rocket-fit-api.onrender.com/users/${userId}`,
         requestData,
         {
           headers: {
@@ -140,7 +140,7 @@ const MyFeed = () => {
       if (userData.following.includes(userId)) {
         // If the user is already being followed, send an unfollow request
         const response = await axios.post(
-          `http://127.0.0.1:8000/connection/unfollow/${userId}`,
+          `https://rocket-fit-api.onrender.com/connection/unfollow/${userId}`,
           { userid: userData.id },
           {
             headers: {
@@ -162,7 +162,7 @@ const MyFeed = () => {
       } else {
         // If the user is not being followed, send a follow request
         const response = await axios.post(
-          `http://127.0.0.1:8000/connection/follow/${userId}`,
+          `https://rocket-fit-api.onrender.com/connection/follow/${userId}`,
           { userid: userData.id },
           {
             headers: {
@@ -190,7 +190,7 @@ const MyFeed = () => {
   // Delete a post
   const deletePost = async (_id) => {
     try {
-      const response = await axios.delete(`http://127.0.0.1:8000/post/${_id}`);
+      const response = await axios.delete(`https://rocket-fit-api.onrender.com/post/${_id}`);
 
       if (response.status === 200) {
         setReload(!reload);
@@ -206,7 +206,7 @@ const MyFeed = () => {
     try {
       const token = localStorage.getItem("rockettoken");
       const response = await axios.post(
-        "http://127.0.0.1:8000/comment/",
+        "https://rocket-fit-api.onrender.com/comment/",
         {
           content: commentContent,
           author: currentUserId,
@@ -844,7 +844,7 @@ const CommentContent = ({ postId }) => {
       try {
         const token = localStorage.getItem("rockettoken");
         const response = await axios.get(
-          `http://127.0.0.1:8000/comment/${postId}`,
+          `https://rocket-fit-api.onrender.com/comment/${postId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
