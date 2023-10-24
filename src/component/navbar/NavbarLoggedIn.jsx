@@ -50,9 +50,9 @@ const NavbarLoggedIn = () => {
                         </ul>
                     </div>
                     <div className="px-4 dropdown dropdown-hover dropdown-end">
-                        <label tabIndex={0} className="text-white">Training Tab</label>
+                        <label tabIndex={0} className="text-white">Planner</label>
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-300 rounded-box w-52">
-                            <li><a href="/calendar">Training Calendar</a></li>
+                            <li><a href="/calendar">Workout Planner</a></li>
                         </ul>
                     </div>
                     <div className="px-4 dropdown dropdown-hover dropdown-end">
@@ -93,8 +93,8 @@ const NavbarLoggedIn = () => {
                             <p className='underline'>Connection</p>
                             <li><a href='/connection'>Connection</a></li>
                             <li><a href='/feed'>My Feed</a></li>
-                            <p className='underline'>Training Tab</p>
-                            <li><a href='/calendar'>Training Calendar</a></li>
+                            <p className='underline'>Planner</p>
+                            <li><a href='/calendar'>Workout Planner</a></li>
                             <p className='underline'>My Activity</p>
                             <li><a href='/activity'>My Activity</a></li>
                             <li><a href='/dashboard'>Dashboard</a></li>
