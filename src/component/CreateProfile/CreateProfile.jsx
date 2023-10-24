@@ -119,12 +119,10 @@ const CreateProfile = () => {
           data.gender,
           data.DateOfBirth
         );
-        handleImageUpload();
       } else if (result.isDenied) {
         console.log("Changes are not saved");
       }
     });
-    console.log(handleImageUpload());
   };
 
   const handleImageClick = (e) => {
@@ -136,6 +134,10 @@ const CreateProfile = () => {
     console.log(file);
     setImage(file);
   };
+
+  useEffect(() => {
+    handleImageUpload();
+  }, [image]);
 
   const handleImageUpload = async () => {
     try {
@@ -161,7 +163,7 @@ const CreateProfile = () => {
             icon: "success",
             title: "Create Success",
           });
-          navigate("/main");
+          // navigate("/main");
         } else {
           console.log("error");
         }
