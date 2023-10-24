@@ -51,7 +51,7 @@ const AccountSetting = () => {
                     FirstName: user.FirstName,
                     LastName: user.LastName,
                     email: user.email,
-                    profile_url: user.profile_url,
+                    image: user.image,
                     userId: response.data.id,
                     DateOfBirth: user.DateOfBirth,
                     height: user.height,

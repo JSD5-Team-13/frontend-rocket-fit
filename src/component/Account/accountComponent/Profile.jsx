@@ -103,7 +103,7 @@ const Profile = ({
       <div className="flex flex-col items-center w-full gap-4 px-2 py-4">
         <div className="w-[10rem] h-[10rem]  overflow-hidden rounded-full">
           <img
-            src={imageFile ? imagePreview : userData.profile_url}
+            src={imageFile ? imagePreview : userData.image}
             alt="profile-picture"
             className="object-cover"
           />
