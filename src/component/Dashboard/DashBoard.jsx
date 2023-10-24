@@ -139,7 +139,7 @@ export const DashBoard = () => {
       <NavbarLoggedIn />
       <div
         id="dashboard"
-        className="max-w-screen-2xl mx-auto flex flex-row relative z-0"
+        className="relative z-0 flex flex-row mx-auto max-w-screen-2xl"
       >
         {/* SideInformation */}
         <div
@@ -161,7 +161,7 @@ export const DashBoard = () => {
             <strong>WEEKLY OVERVIEW</strong>
           </h3>
 
-          <div className=" lg:m-0 lg:p-0 m-5">
+          <div className="m-5 lg:m-0 lg:p-0">
             {/* card */}
             <div
               id="card_Sleep-BMI"
@@ -172,7 +172,7 @@ export const DashBoard = () => {
                   <div className="card-body">
                     <p className="text-[1.5rem]">4.25</p>
                     <h2 className="card-title text-[2rem]">Hours</h2>
-                    <div className="card-actions justify-end">
+                    <div className="justify-end card-actions">
                       <BiSolidMoon className="text-[50px]" />
                     </div>
                   </div>
@@ -189,8 +189,7 @@ export const DashBoard = () => {
                       {calBMI(userData.height, userData.weight).toFixed(2)}
                     </p>
                     <h2 className="card-title text-[2rem]">BMI</h2>
-                    <div className="flex items-center">
-                      <p className="text-[1.5rem]">{resultBMI()}</p>
+                    <div className="flex justify-end">
                       <svg
                         width="50px"
                         height="50px"
@@ -236,7 +235,7 @@ export const DashBoard = () => {
             {/* chart */}
             <div
               id="data-chart"
-              className=" flex lg:flex-row lg:px-3 lg:justify-between flex-col justify-around "
+              className="flex flex-col justify-around lg:flex-row lg:px-3 lg:justify-between"
             >
               {/* bar */}
               <div
