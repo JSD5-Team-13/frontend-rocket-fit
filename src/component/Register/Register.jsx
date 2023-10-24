@@ -20,7 +20,7 @@ export const Register = () => {
   const register = async (userData) => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/register",
+        "http://0.0.0.0:8000/register",
         userData
       );
       console.log(response.status);

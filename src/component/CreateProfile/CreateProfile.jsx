@@ -27,7 +27,7 @@ const CreateProfile = () => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
       axios
-        .get("http://127.0.0.1:8000/users", {
+        .get("http://0.0.0.0:8000/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -71,7 +71,7 @@ const CreateProfile = () => {
       };
       const token = localStorage.getItem("rockettoken");
       const Update = await axios.put(
-        `http://127.0.0.1:8000/users/${nameUser.id}`,
+        `http://0.0.0.0:8000/users/${nameUser.id}`,
         requestData,
         {
           headers: {
@@ -146,7 +146,7 @@ const CreateProfile = () => {
 
         // ส่งไฟล์รูปภาพไปยัง Node.js ในส่วนที่จะรับและอัปโหลดไป Cloudinary
         const response = await axios.put(
-          `http://127.0.0.1:8000/users/${nameUser.id}`,
+          `http://0.0.0.0:8000/users/${nameUser.id}`,
           formData,
           {
             headers: {

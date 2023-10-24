@@ -15,10 +15,7 @@ export const LogIn = () => {
 
   const login = async (userData) => {
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/login",
-        userData
-      );
+      const response = await axios.post("http://0.0.0.0:8000/login", userData);
       console.log(response.status);
 
       if (response.status === 200) {
@@ -28,7 +25,7 @@ export const LogIn = () => {
           title: "Login Success",
         });
         if (response.data.isCreatedProfile === true) {
-          navigate("/main")
+          navigate("/main");
           window.location.reload();
         } else {
           navigate("/create_profile");
