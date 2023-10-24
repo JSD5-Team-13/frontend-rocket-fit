@@ -20,7 +20,7 @@ const CardDisplay = ({ activities, deleteData, updateData }) => {
       image,
     };
     try {
-      const response = await axios.post("http://127.0.0.1:8000/post/", newPost);
+      const response = await axios.post("https://rocket-fit-api.onrender.com/post/", newPost);
       if (response.status === 200) {
         console.log("Post created successfully", response);
         Swal.fire({

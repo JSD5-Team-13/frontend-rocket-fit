@@ -40,7 +40,7 @@ const ActivityForm = () => {
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
-      axios.get("http://127.0.0.1:8000/users", {
+      axios.get("https://rocket-fit-api.onrender.com/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -174,7 +174,7 @@ const ActivityForm = () => {
       }
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/activity",
+        "https://rocket-fit-api.onrender.com/activity",
         {
           activity_type: selectedType,
           activity_name: createdTitle,

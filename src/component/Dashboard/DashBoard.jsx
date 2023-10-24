@@ -1,6 +1,6 @@
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
 import { Bar, Pie } from "react-chartjs-2";
-import { BiSolidMoon } from "react-icons/Bi";
+import { BiSolidMoon } from "react-icons/bi";
 import SideInformation from "../navbar/SideInformationBar.jsx";
 import { CategoryScale, Chart, registerables } from "chart.js";
 import { useContext, useEffect, useState } from "react";
@@ -51,7 +51,7 @@ const initialDashboardData = {
 export const DashBoard = () => {
   const [dashboardData, setDashboardData] = useState(initialDashboardData);
   //เรียกใช้ userData จาก userContext
-  const { userData } = useContext(userContext);
+  const { userData, sleeptime } = useContext(userContext);
 
   //get data
   useEffect(() => {
@@ -61,7 +61,7 @@ export const DashBoard = () => {
         .then((res) => setDashboardData(res.data));
     };
 
-    getDashboardData();
+    if (userData.id) getDashboardData();
   }, [userData]);
 
   //map item like initialDashboardData
@@ -129,7 +129,7 @@ export const DashBoard = () => {
   const resultBMI = () => {
     const yourBMi = calBMI(userData.height, userData.weight);
     if (yourBMi < 18.5) return "Underweight";
-    if (yourBMi >= 18.5 || yourBMi <= 24.9) return "Heathty";
+    if (yourBMi >= 18.5 || yourBMi <= 24.9) return "Healthy";
     if (yourBMi >= 25.0 || yourBMi <= 29.9) return "Overweight";
     if (yourBMi > 30.0) return "Obese";
     return "default data";
@@ -170,9 +170,9 @@ export const DashBoard = () => {
               <div id="card-sleep" className=" lg:w-[49%] items-center w-full ">
                 <div className="card bg-base-300">
                   <div className="card-body">
-                    <p className="text-[1.5rem]">4.25</p>
+                    <p className="text-[1.5rem]">{sleeptime}</p>
                     <h2 className="card-title text-[2rem]">Hours</h2>
-                    <div className="justify-end card-actions">
+                    <div className="card-actions flex justify-end">
                       <BiSolidMoon className="text-[50px]" />
                     </div>
                   </div>
@@ -188,8 +188,10 @@ export const DashBoard = () => {
                     <p className="text-[1.5rem]">
                       {calBMI(userData.height, userData.weight).toFixed(2)}
                     </p>
+
                     <h2 className="card-title text-[2rem]">BMI</h2>
-                    <div className="flex justify-end">
+                    <div className="flex ">
+                      <p className="text-[1.5rem]">{resultBMI()}</p>
                       <svg
                         width="50px"
                         height="50px"
