@@ -11,8 +11,10 @@ import Password from "./accountComponent/Password.jsx";
 import Privacy from "./accountComponent/Privacy.jsx";
 import Profile from "./accountComponent/Profile.jsx";
 
+const serverUrl = "https://rocket-fit-api.onrender.com"
+
 const AccountSetting = () => {
-  const serverUrl = "http://127.0.0.1:8000";
+  
   const [option, setOption] = useState("ACCOUNT");
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");

@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+  const serverUrl = "https://rocket-fit-api.onrender.com";
+
 const Profile = ({
   userId,
   userData,
@@ -10,7 +12,7 @@ const Profile = ({
   setShowAlert,
   setAlertMessage, // รับ setAlertMessage เป็นพารามิเตอร์
 }) => {
-  const serverUrl = "http://127.0.0.1:8000";
+
   const token = localStorage.getItem("rockettoken");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);

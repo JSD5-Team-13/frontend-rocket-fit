@@ -4,6 +4,7 @@ import Layout from "../Layout.jsx";
 // import SideInformation from "../navbar/SideInformationBar.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+const serverUrl = "https://rocket-fit-api.onrender.com"
 
 const ActivityForm = () => {
   const [selectedType, setSelectedType] = useState("");
@@ -40,7 +41,7 @@ const ActivityForm = () => {
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
-      axios.get("http://127.0.0.1:8000/users", {
+      axios.get(serverUrl + "/users/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -184,7 +185,7 @@ const ActivityForm = () => {
       formData.append("userId", userId);
   
       const response = await axios.post(
-        "http://127.0.0.1:8000/activity/create/",
+        serverUrl + "/activity/create/",
         formData, // ส่ง FormData แทน object
         {
           headers: {
@@ -198,7 +199,7 @@ const ActivityForm = () => {
       setShowAlert(true);
       } else {
         const response = await axios.post(
-          "http://127.0.0.1:8000/activity/create/",
+          serverUrl + "activity/create/",
           {
             activity_type: selectedType,
             activity_name: createdTitle,

@@ -1,6 +1,5 @@
-// import { MdPeopleAlt } from "react-icons/md";
-import Profile from "../../assets/blank-profile-picture-973460_960_720.jpg";
-import { useEffect, useState, useRef } from "react";
+import { MdPeopleAlt } from "react-icons/md";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -17,17 +16,12 @@ const CreateProfile = () => {
     gender: "",
     DateOfBirth: "",
   });
-  // const [uploadImg, setUploadImg] = useState("");
-  // console.log("toy", uploadImg);
-
-  const inputRef = useRef(null);
-  const [image, setImage] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
       axios
-        .get("http://127.0.0.1:8000/users", {
+        .get("https://rocket-fit-api.onrender.com/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -71,7 +65,7 @@ const CreateProfile = () => {
       };
       const token = localStorage.getItem("rockettoken");
       const Update = await axios.put(
-        `http://127.0.0.1:8000/users/${nameUser.id}`,
+        `https://rocket-fit-api.onrender.com/users/${nameUser.id}`,
         requestData,
         {
           headers: {
@@ -102,73 +96,30 @@ const CreateProfile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    Swal.fire({
-      title: "Do you want to save the changes?",
-      // showDenyButton: true,
-      showCancelButton: true,
-      confirmButtonText: "Save",
-      // denyButtonText: `Don't save`,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        updateUser(
-          params.id,
-          data.FirstName,
-          data.LastName,
-          data.height,
-          data.weight,
-          data.gender,
-          data.DateOfBirth
-        );
-        console.log();
-      } else if (result.isDenied) {
-        console.log("Changes are not saved");
-      }
-    });
+    updateUser(
+      params.id,
+      data.FirstName,
+      data.LastName,
+      data.height,
+      data.weight,
+      data.gender,
+      data.DateOfBirth
+    );
   };
-
-  const handleImageClick = (e) => {
-    inputRef.current.click();
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    console.log(file);
-    setImage(e.target.files[0]);
-  };
+  console.log(nameUser.id);
 
   return (
     <div>
-      <section className="flex justify-center items-center h-screen ">
+      <section className="lg:flex lg:justify-center lg:items-center h-screen">
         <div className="flex flex-col items-center lg:bg-[#D9D9D9] lg:w-[70%]  lg:pb-[3rem] lg:rounded-[1.5rem]">
           {/* profile picture */}
-          <div className="hover:cursor-pointer max-w-xs mt-[3rem] rounded-full relative">
-            <div onClick={handleImageClick}>
-              <div className="relative h-[160px] w-[160px] lg:h-[200px] lg:w-[200px] rounded-full overflow-hidden">
-                {image ? (
-                  <img
-                    className="w-full h-full object-cover"
-                    src={URL.createObjectURL(image)}
-                    alt=""
-                  />
-                ) : (
-                  <img
-                    className="w-full h-full object-cover"
-                    src={Profile}
-                    alt=""
-                  />
-                )}
-                <input
-                  type="file"
-                  ref={inputRef}
-                  className="hidden"
-                  onChange={handleImageChange}
-                />
-                <div className="absolute top-0 left-0 w-full h-full flex items-end pb-[20px] bg-black/[0.35] rounded-full justify-center opacity-0 hover:opacity-100 transition-opacity">
-                  <span className="text-white text-lg font-bold">
-                    Edit Profile
-                  </span>
-                </div>
-              </div>
+          <div className="lg:bg-white bg-[#D9D9D9] h-[12rem] w-[12rem] max-w-xs mt-[3rem] rounded-full flex flex-col justify-center items-center ">
+            <MdPeopleAlt className="text-[5rem] text-black" />
+            <div>
+              <input type="file" id="files" className="hidden" />
+              <label htmlFor="files" className="font-bold hover:text-red-500">
+                Upload Profile Picture
+              </label>
             </div>
           </div>
 
@@ -177,7 +128,7 @@ const CreateProfile = () => {
             {nameUser ? (
               <h2 className="font-bold text-[1.2rem]">{nameUser.username}</h2>
             ) : (
-              <p className="font-bold text-[1.2rem]">Loading...</p>
+              <p>Loading...</p>
             )}
           </div>
 

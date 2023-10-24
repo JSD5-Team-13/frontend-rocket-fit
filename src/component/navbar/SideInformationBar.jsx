@@ -16,36 +16,36 @@ const SideInformation = () => {
         </div>
       </div>
       <div className="mb-6">
-        <p>{userData.firstname}</p>
+        <p>{userData.firstname} {userData.lastname}</p>
       </div>
       <div className="flex flex-row w-[100%] justify-around mb-6">
         <div className="flex flex-col ">
           <label htmlFor="height" className="self-center">
             Height
           </label>
-          <p id="height" className="badge badge-accent ">
-            {userData.height || 0}
+          <p id="height" className="w-12 h-6 badge badge-accent">
+            {userData.height}
           </p>
         </div>
         <div className="flex flex-col ">
           <label htmlFor="weight" className="self-center">
             Weight
           </label>
-          <p id="weight" className="badge badge-accent">
-            {userData.weight || 0}
+          <p id="weight" className="w-12 h-6 badge badge-accent">
+            {userData.weight}
           </p>
         </div>
         <div className="flex flex-col">
           <label htmlFor="age" className="self-center">
             Age
           </label>
-          <p id="age" className="badge badge-accent">
-            {userData.age || 0}
+          <p id="age" className="w-10 h-6 badge badge-accent">
+            {userData.age}
           </p>
         </div>
       </div>
       <button className="btn btn-xs btn-accent rounded-full w-[40%] mb-6">
-        Edit your profile
+        <a href="/account">Edit your profile</a>
       </button>
       <h2 className="self-start mx-7">Lastest Activity</h2>
       {displayedData.map((activity, index) => (

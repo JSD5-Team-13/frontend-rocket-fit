@@ -2,7 +2,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { userContext } from "../context/userContext";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import UserIcon from "../../assets/user-icon.svg";
@@ -21,6 +22,7 @@ const MyFeed = () => {
   const [reload, setReload] = useState(false);
   const [currentUserId, setCurrentUserId] = useState();
   const [currentUserData, setCurrentUserData] = useState();
+  const { userData, setUserData } = useContext(userContext);
   const [friendData, setFriendData] = useState();
 
   // Get posts for the user with their userId or friend userId
@@ -30,7 +32,7 @@ const MyFeed = () => {
         const token = localStorage.getItem("rockettoken");
         if (token) {
           // Fetch user data
-          const userResponse = await axios.get("http://127.0.0.1:8000/users", {
+          const userResponse = await axios.get("https://rocket-fit-api.onrender.com/users", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -44,7 +46,7 @@ const MyFeed = () => {
             if (userId !== currentUserId) {
               const token = localStorage.getItem("rockettoken");
               const friendResponse = await axios.get(
-                `http://127.0.0.1:8000/users/${userId}`,
+                `https://rocket-fit-api.onrender.com/users/${userId}`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,
@@ -54,7 +56,6 @@ const MyFeed = () => {
 
               if (friendResponse.status === 200) {
                 setFriendData(friendResponse.data);
-                console.log(friendResponse.data);
               } else {
                 console.log("Failed to fetch friend data");
               }
@@ -62,7 +63,7 @@ const MyFeed = () => {
 
             // Use the currentUserId and userId from the route to decide which posts to fetch
             const postsResponse = await axios.get(
-              `http://127.0.0.1:8000/post/${userId}`
+              `https://rocket-fit-api.onrender.com/post/${userId}`
             );
 
             if (postsResponse.status === 200) {
@@ -91,7 +92,7 @@ const MyFeed = () => {
         activity_describe,
       };
       const response = await axios.put(
-        `http://127.0.0.1:8000/post/${_id}`,
+        `https://rocket-fit-api.onrender.com/post/${_id}`,
         requestData
       );
 
@@ -113,7 +114,7 @@ const MyFeed = () => {
       };
       const token = localStorage.getItem("rockettoken");
       const response = await axios.put(
-        `http://127.0.0.1:8000/users/${userId}`,
+        `https://rocket-fit-api.onrender.com/users/${userId}`,
         requestData,
         {
           headers: {
@@ -131,10 +132,65 @@ const MyFeed = () => {
     }
   };
 
+  // Handle follwer
+  const handleFollow = async () => {
+    try {
+      const token = localStorage.getItem("rockettoken");
+
+      if (userData.following.includes(userId)) {
+        // If the user is already being followed, send an unfollow request
+        const response = await axios.post(
+          `https://rocket-fit-api.onrender.com/connection/unfollow/${userId}`,
+          { userid: userData.id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          // Update the UI or user data to show that the user is now unfollowed
+          setUserData({
+            ...userData,
+            following: userData.following.filter((id) => id !== userId),
+          });
+          setReload(!reload);
+        } else {
+          console.error("Failed to unfollow the user");
+        }
+      } else {
+        // If the user is not being followed, send a follow request
+        const response = await axios.post(
+          `https://rocket-fit-api.onrender.com/connection/follow/${userId}`,
+          { userid: userData.id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          // Update the UI or user data to show that the user is now being followed
+          setUserData({
+            ...userData,
+            following: [...userData.following, userId],
+          });
+          setReload(!reload);
+        } else {
+          console.error("Failed to follow the user");
+        }
+      }
+    } catch (error) {
+      console.error("Error while following/unfollowing the user", error);
+    }
+  };
+
   // Delete a post
   const deletePost = async (_id) => {
     try {
-      const response = await axios.delete(`http://127.0.0.1:8000/post/${_id}`);
+      const response = await axios.delete(`https://rocket-fit-api.onrender.com/post/${_id}`);
 
       if (response.status === 200) {
         setReload(!reload);
@@ -142,6 +198,34 @@ const MyFeed = () => {
       }
     } catch (error) {
       console.error("Error deleting data:", error);
+    }
+  };
+
+  // Create a comment
+  const createComment = async (postId, commentContent) => {
+    try {
+      const token = localStorage.getItem("rockettoken");
+      const response = await axios.post(
+        "https://rocket-fit-api.onrender.com/comment/",
+        {
+          content: commentContent,
+          author: currentUserId,
+          post: postId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 201) {
+        setReload(!reload);
+        console.log("Comment created successfully!");
+      } else {
+        console.error("Failed to create the comment");
+      }
+    } catch (error) {
+      console.error("Error creating comment:", error);
     }
   };
 
@@ -157,7 +241,11 @@ const MyFeed = () => {
           {userId === currentUserId ? (
             <UserProfile userData={currentUserData} updateUser={updateUser} />
           ) : (
-            <FriendProfile friendData={friendData} />
+            <FriendProfile
+              userData={currentUserData}
+              friendData={friendData}
+              handleFollow={handleFollow}
+            />
           )}
         </aside>
 
@@ -175,9 +263,15 @@ const MyFeed = () => {
                 updatePost={updatePost}
                 deletePost={deletePost}
                 userData={currentUserData}
+                createComment={createComment}
               />
             ) : (
-              <FriendPost friendData={friendData} posts={posts} />
+              <FriendPost
+                userData={currentUserData}
+                friendData={friendData}
+                posts={posts}
+                createComment={createComment}
+              />
             )}
           </div>
         </section>
@@ -194,7 +288,7 @@ const UserProfile = ({ userData, updateUser }) => {
   useEffect(() => {
     if (userData) {
       setId(userData._id);
-      setAboutMe(userData.aboutMe);
+      setAboutMe(userData.aboutme);
     }
   }, [userData]);
 
@@ -226,7 +320,7 @@ const UserProfile = ({ userData, updateUser }) => {
             className="hidden lg:block lg:mt-2 lg:mb-5 btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]"
             onClick={handleEditAboutMe}
           >
-            Edit Profile
+            Edit Bio
           </button>
           <div className="flex">
             <p className="mr-3 font-semibold">
@@ -240,7 +334,7 @@ const UserProfile = ({ userData, updateUser }) => {
             className="lg:hidden btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]"
             onClick={handleEditAboutMe}
           >
-            Edit Profile
+            Edit Bio
           </button>
         </div>
       </section>
@@ -276,7 +370,15 @@ const UserProfile = ({ userData, updateUser }) => {
   );
 };
 
-const UserPost = ({ userData, posts, updatePost, deletePost }) => {
+const UserPost = ({
+  userData,
+  posts,
+  updatePost,
+  deletePost,
+  createComment,
+}) => {
+  const [selectedPostId, setSelectedPostId] = useState(null);
+
   const timeOptions = {
     hour: "numeric",
     minute: "2-digit",
@@ -306,7 +408,9 @@ const UserPost = ({ userData, posts, updatePost, deletePost }) => {
 
               {/* Post Data */}
               <article>
-                <h3 className="text-lg font-bold">{userData.firstname} {userData.lastname}</h3>
+                <h3 className="font-bold text-lg">
+                  {userData.firstname} {userData.lastname}
+                </h3>
                 <div className="flex">
                   <p className="mr-3 uppercase">
                     {new Date(post.createdAt).toLocaleDateString("en-GB")}
@@ -346,16 +450,30 @@ const UserPost = ({ userData, posts, updatePost, deletePost }) => {
             {/* Bottom Post */}
             <section className="flex justify-around p-3 lg:p-4 lg:order-3 lg:ml-[7.5rem] lg:mr-6 lg:border-t-2 lg:border-[#1CD6CE]">
               <HeartBtn />
-              <CommentBtn />
+              <CommentBtn
+                postId={post._id}
+                selectedPostId={selectedPostId}
+                toggleComment={setSelectedPostId}
+              />
             </section>
           </div>
+
+          {/* Comment Section */}
+          {selectedPostId === post._id && <CommentContent postId={post._id} />}
+          {selectedPostId === post._id && (
+            <CommentForm
+              userData={userData}
+              postId={post._id}
+              createComment={createComment}
+            />
+          )}
         </div>
       ))}
     </div>
   );
 };
 
-const FriendProfile = ({ friendData }) => {
+const FriendProfile = ({ userData, friendData, handleFollow }) => {
   if (!friendData) {
     return <div>Loading friend profile...</div>;
   }
@@ -376,19 +494,31 @@ const FriendProfile = ({ friendData }) => {
           <h3 className="text-lg font-bold lg:text-center">
             {friendData.FirstName} {friendData.LastName}
           </h3>
-          <button className="hidden lg:block lg:mt-2 lg:mb-5 btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]">
-            Following
+          <button
+            className="hidden lg:block lg:mt-2 lg:mb-5 btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]"
+            onClick={handleFollow}
+          >
+            {userData.following.includes(friendData._id)
+              ? "Unfollow"
+              : "Follow"}
           </button>
           <div className="flex">
             <p className="mr-3 font-semibold">
-              <span className="mr-1">{friendData.following.length}</span>Following
+              <span className="mr-1">{friendData.following.length}</span>
+              Following
             </p>
             <p className="font-semibold">
-              <span className="mr-1">{friendData.followers.length}</span>Followers
+              <span className="mr-1">{friendData.followers.length}</span>
+              Followers
             </p>
           </div>
-          <button className="lg:hidden btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]">
-            Following
+          <button
+            className="lg:hidden btn btn-sm mt-1 rounded-full bg-gray-300 border-none hover:bg-[#1CD6CE]"
+            onClick={handleFollow}
+          >
+            {userData.following.includes(friendData._id)
+              ? "Unfollow"
+              : "Follow"}
           </button>
         </div>
       </section>
@@ -406,10 +536,12 @@ const FriendProfile = ({ friendData }) => {
   );
 };
 
-const FriendPost = ({ friendData, posts }) => {
+const FriendPost = ({ userData, friendData, posts, createComment }) => {
   if (!friendData) {
     return <div>Loading friend profile...</div>;
   }
+
+  const [selectedPostId, setSelectedPostId] = useState(null);
 
   const timeOptions = {
     hour: "numeric",
@@ -433,7 +565,9 @@ const FriendPost = ({ friendData, posts }) => {
 
               {/* Post Data */}
               <article>
-                <h3 className="text-lg font-bold">{friendData.FirstName} {friendData.LastName}</h3>
+                <h3 className="font-bold text-lg">
+                  {friendData.FirstName} {friendData.LastName}
+                </h3>
                 <div className="flex">
                   <p className="mr-3 uppercase">
                     {new Date(post.createdAt).toLocaleDateString("en-GB")}
@@ -473,9 +607,23 @@ const FriendPost = ({ friendData, posts }) => {
             {/* Bottom Post */}
             <section className="flex justify-around p-3 lg:p-4 lg:order-3 lg:ml-[7.5rem] lg:mr-6 lg:border-t-2 lg:border-[#1CD6CE]">
               <HeartBtn />
-              <CommentBtn />
+              <CommentBtn
+                postId={post._id}
+                selectedPostId={selectedPostId}
+                toggleComment={setSelectedPostId}
+              />
             </section>
           </div>
+
+          {/* Comment Section */}
+          {selectedPostId === post._id && <CommentContent postId={post._id} />}
+          {selectedPostId === post._id && (
+            <CommentForm
+              userData={userData}
+              postId={post._id}
+              createComment={createComment}
+            />
+          )}
         </div>
       ))}
     </div>
@@ -665,15 +813,15 @@ const HeartBtn = () => {
   );
 };
 
-const CommentBtn = () => {
-  const [isComment, setIsComment] = useState(false);
-  const toggleComment = () => {
-    setIsComment(!isComment);
+const CommentBtn = ({ postId, selectedPostId, toggleComment }) => {
+  const handleToggleComment = () => {
+    // Toggle the comment form for the selected post
+    toggleComment(selectedPostId === postId ? null : postId);
   };
   return (
     <div>
-      <button onClick={toggleComment}>
-        {isComment ? (
+      <button onClick={handleToggleComment}>
+        {selectedPostId === postId ? (
           <FaCommentDots size={22} color="#1CD6CE" />
         ) : (
           <FaRegCommentDots size={22} />
@@ -683,63 +831,113 @@ const CommentBtn = () => {
   );
 };
 
-const CommentDisplay = () => {
+const CommentContent = ({ postId }) => {
   const [isHeart, setIsHeart] = useState(false);
+  const [comments, setComments] = useState([]); // State to store comments
 
   const toggleHeart = () => {
     setIsHeart(!isHeart);
   };
 
-  return (
-    <div className="bg-[#8DE2DF] p-2 lg:rounded-xl lg:shadow-xl border-b-2">
-      <section className="flex items-center">
-        {/* Avatar */}
-        <figure className="m-3 avatar">
-          <div className="w-12 bg-gray-100 rounded-full">
-            <img src={UserIcon} alt="Image Profile" />
-          </div>
-        </figure>
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const token = localStorage.getItem("rockettoken");
+        const response = await axios.get(
+          `https://rocket-fit-api.onrender.com/comment/${postId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const commentsData = response.data;
+        setComments(commentsData); // Update the comments state
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
 
-        {/* Comment */}
-        <div className="w-full">
-          <p className="mb-1 font-semibold">Username</p>
-          <div className="flex">
-            <p className="w-full mr-2">This is comment~</p>
-            <button className="mr-7" onClick={toggleHeart}>
-              {isHeart ? (
-                <FaHeart size={22} color="red" />
-              ) : (
-                <FaRegHeart size={22} />
-              )}
-            </button>
-          </div>
+    fetchComments();
+  }, [postId]);
+
+  return (
+    <div>
+      {comments.map((comment) => (
+        <div
+          key={comment._id}
+          className="bg-[#8DE2DF] p-2 lg:rounded-xl lg:shadow-xl border-b-2"
+        >
+          <section className="flex items-center">
+            {/* Avatar */}
+            <figure className="avatar m-3">
+              <div className="w-12 rounded-full bg-gray-100">
+                <img src={comment.author.image} alt="Image Profile" />
+              </div>
+            </figure>
+
+            {/* Comment */}
+            <div className="w-full">
+              <p className="font-semibold mb-1">
+                {comment.author.FirstName} {comment.author.LastName}
+              </p>
+              <div className="flex">
+                <p className="w-full mr-2">{comment.content}</p>
+                <button className="mr-7" onClick={toggleHeart}>
+                  {isHeart ? (
+                    <FaHeart size={22} color="red" />
+                  ) : (
+                    <FaRegHeart size={22} />
+                  )}
+                </button>
+              </div>
+            </div>
+          </section>
         </div>
-      </section>
+      ))}
     </div>
   );
 };
 
-const CommentForm = () => {
+const CommentForm = ({ userData, postId, createComment }) => {
+  const [commentContent, setCommentContent] = useState("");
+
+  const handleCommentSubmit = async () => {
+    try {
+      createComment(postId, commentContent);
+      setCommentContent("");
+    } catch (error) {
+      console.error("Error creating comment:", error);
+    }
+  };
+
   return (
     <div className="bg-[#8DE2DF] p-2 lg:rounded-xl lg:mb-3 lg:shadow-xl">
       <section className="flex items-center">
         {/* Avatar */}
-        <figure className="m-3 avatar">
-          <div className="w-12 bg-gray-100 rounded-full">
-            <img src={UserIcon} alt="Image Profile" />
+        <figure className="avatar m-3">
+          <div className="w-12 rounded-full bg-gray-100">
+            <img src={userData.image} alt="Image Profile" />
           </div>
         </figure>
 
         {/* Form*/}
         <div className="w-full">
-          <p className="mb-1 font-semibold">Username</p>
+          <p className="font-semibold mb-1">
+            {userData.firstname} {userData.lastname}
+          </p>
           <div className="flex">
             <input
               type="text"
               placeholder="write comment"
-              className="w-full mr-2 input input-sm input-bordered focus:outline-none"
+              className="input input-sm input-bordered w-full mr-2 focus:outline-none"
+              value={commentContent}
+              onChange={(e) => setCommentContent(e.target.value)}
             />
-            <button className="btn btn-sm mr-2 border-none bg-[#132640] text-white hover:bg-[#132640] hover:text-yellow-300">
+            <button
+              className="btn btn-sm mr-2 border-none bg-[#132640] text-white hover:bg-[#132640] hover:text-yellow-300"
+              onClick={handleCommentSubmit}
+            >
               POST
             </button>
           </div>
