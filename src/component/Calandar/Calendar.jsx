@@ -216,7 +216,7 @@ const CalendarMain = () => {
       <div className="app-container">
         <header className="flex lg:justify-start justify-center mt-[100px] mb-4 lg:mb-[2rem] gap-4">
           <h1 className="text-[2rem] lg:text-4xl  uppercase font-bold">
-            Calendar
+            Workout Planner
           </h1>
         </header>
         <main className="app-main">
