@@ -24,21 +24,21 @@ const Mainpage = () => {
   const [userId, setUserId] = useState("");
   const [userData, setUserData] = useState({});
   const [sleepTime, setSleepTime] = useState({
-    sleepTime : "HH:MM",
-    wakeTime : "HH:MM",
-    date : "",
+    sleepTime: "HH:MM",
+    wakeTime: "HH:MM",
+    date: "",
   });
 
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
-      axios.get("http://127.0.0.1:8000/users", {
+      axios
+        .get("http://127.0.0.1:8000/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then((response) => {
-          
           if (response.status === 200) {
             setUserId(response.data.id);
           } else {
@@ -54,7 +54,8 @@ const Mainpage = () => {
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
-      axios.get(`http://127.0.0.1:8000/users/${userId}`, {
+      axios
+        .get(`http://127.0.0.1:8000/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -75,68 +76,57 @@ const Mainpage = () => {
   const sleepTimeCreate = (sleepTimeData) => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
-      axios.post(`http://127.0.0.1:8000/sleeptime`,
-      sleepTimeData
-    )
-    .then((response) => {
-      if (response.status === 200) {
-        Swal.fire({
-          icon: "success",
-          title: "Sleep Time Added",
+      axios
+        .post(`http://127.0.0.1:8000/sleeptime`, sleepTimeData)
+        .then((response) => {
+          if (response.status === 200) {
+            Swal.fire({
+              icon: "success",
+              title: "Sleep Time Added",
+            });
+          } else {
+            console.log("error");
+          }
+        })
+        .catch((error) => {
+          console.log(`Error fetching user data from the database`, error);
+          Swal.fire({
+            icon: "error",
+            title: "You already add your sleep time today",
+          });
         });
-      } else {
-        console.log("error");
-      }
-    })
-    .catch((error) => {
-      console.log(`Error fetching user data from the database`, error);
-      Swal.fire({
-        icon: "error",
-        title: "You already add your sleep time today",
-      });
-    });
     }
-  }
-    
+  };
+
   const sleepTimeHandler = () => {
     // Parse the sleepTime and wakeTime into Date objects
-    const sleepTimeDate = new Date(`2023-10-24T${sleepTime.sleepTime}`);
-    const wakeTimeDate = new Date(`2023-10-24T${sleepTime.wakeTime}`);
-  
+    const midnight = new Date(`2000-10-13T00:00:00`);
+    const sleepTimeDate = new Date(`2000-10-13T${sleepTime.sleepTime}`);
+    const wakeTimeDate = new Date(`2000-10-13T${sleepTime.wakeTime}`);
+
     // Calculate the time difference in milliseconds
     const timeDifference = wakeTimeDate - sleepTimeDate;
-  
     // Convert the time difference to hours and minutes
     const totalHours = Math.floor(timeDifference / (1000 * 60 * 60));
 
-    if (totalHours < 0) {
-      Swal.fire({
-        icon: "error",
-        title: "Invalid time",
-      });
-      return;
-    }
-  
     // Format the date to match ISO 8601 format (YYYY-MM-DD)
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().slice(0, 10);
-  
+
     const sleepTimeData = {
       date: formattedDate, // Use the formatted date
-      sleeptime: totalHours,
+      sleeptime: Math.abs(totalHours),
       userId: userData._id,
     };
-  
+
     sleepTimeCreate(sleepTimeData, userId);
-  
+
     setSleepTime({
       sleepTime: "HH:MM",
       wakeTime: "HH:MM",
       date: formattedDate, // Update the date in the state with the formatted date
     });
   };
-  
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -144,7 +134,7 @@ const Mainpage = () => {
       ...prevState,
       [name]: value,
     }));
-  }
+  };
 
   return (
     <div className=" h-[100vh] fixed w-full">
@@ -159,7 +149,9 @@ const Mainpage = () => {
 
           <div className="flex flex-col items-center overflow-scroll flex-hidden h-[100vh] pb-40 bg-gray-100 lg:w-2/4 mt-[79px]">
             <div className="self-start m-6">
-              <h1 className="text-3xl font-semibold">Welcome, {userData.FirstName}</h1>
+              <h1 className="text-3xl font-semibold">
+                Welcome, {userData.FirstName}
+              </h1>
               <p className="">{currentDate}</p>
             </div>
             <img
@@ -232,9 +224,10 @@ const Mainpage = () => {
                     value={sleepTime.wakeTime}
                   />
                 </div>
-                <button 
-                className="btn btn-sm btn-accent rounded-full w-[40%]"
-                onClick={sleepTimeHandler}>
+                <button
+                  className="btn btn-sm btn-accent rounded-full w-[40%]"
+                  onClick={sleepTimeHandler}
+                >
                   Save
                 </button>
               </div>

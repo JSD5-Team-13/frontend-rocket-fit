@@ -15,10 +15,9 @@ export const UserProvider = ({ children }) => {
   //และสร้างAction Fucntionต่างๆที่เราจะอนุญาตให้ Component ปลายทางสามารถทำได้
   const [userData, setUserData] = useState({});
   const [userId, setUserId] = useState("");
-  const [activity, setActivity] = useState([]); // [{}
+  const [activity, setActivity] = useState([]);
   const [sleeptime, setSleeptime] = useState([]);
 
-  console.log(userData);
   //get user Data from "/users"
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
@@ -49,7 +48,7 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
-    if (token) {
+    if (token && userId) {
       axios
         .get(API_URL + `/activity?userId=${userId}`, {
           headers: {
@@ -71,35 +70,26 @@ export const UserProvider = ({ children }) => {
     }
   }, [userId]);
 
-  //sleeptime
+  //get sleeptime
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
-    if (token) {
+    if (token && userId) {
       axios
-        .get(API_URL + `/sleeptime`, {
+        .get(API_URL + `/sleeptime/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
-          },
-          //get ข้อมูลจาก body
-          body: {
-            userId: userId,
-            date: new Date(),
           },
         })
         .then((response) => {
           if (response.status === 200) {
-            console.log(response.data);
-          }
-
-          console.log("Failed to fetch sleeptime data");
+            setSleeptime(response.data[0].sleeptime);
+          } else console.log("Failed to fetch sleeptime data");
         })
         .catch((error) => {
           console.log(`Error fetching sleeptime data from the database`, error);
         });
-    } else {
-      // setSleeptime([]);
     }
-  }, []);
+  }, [userId]);
 
   return (
     //ส่งค่า userData, setUserData ไปให้ {children}
