@@ -214,8 +214,8 @@ const Home = () => {
             alt=""
           />
         </article>
-        <FooterHome />
       </section>
+      <FooterHome />
     </>
   );
 };

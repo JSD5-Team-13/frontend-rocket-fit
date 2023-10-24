@@ -27,6 +27,9 @@ const Mainpage = () => {
     sleepTime: "HH:MM",
     wakeTime: "HH:MM",
     date: "",
+    sleepTime: "HH:MM",
+    wakeTime: "HH:MM",
+    date: "",
   });
 
   useEffect(() => {
@@ -130,16 +133,16 @@ const Mainpage = () => {
           });
         });
     }
-  };
-
+  }
+    
   const sleepTimeHandler = () => {
     // Parse the sleepTime and wakeTime into Date objects
-    const sleepTimeDate = new Date(`2023-10-24T${sleepTime.sleepTime}`);
-    const wakeTimeDate = new Date(`2023-10-24T${sleepTime.wakeTime}`);
+    const midnight = new Date(`2000-10-13T00:00:00`);
+    const sleepTimeDate = new Date(`2000-10-13T${sleepTime.sleepTime}`);
+    const wakeTimeDate = new Date(`2000-10-13T${sleepTime.wakeTime}`);
 
     // Calculate the time difference in milliseconds
-    const timeDifference = sleepTimeDate - wakeTimeDate;
-
+    const timeDifference = wakeTimeDate - sleepTimeDate;
     // Convert the time difference to hours and minutes
     const totalHours = Math.floor(timeDifference / (1000 * 60 * 60));
     const positiveTotalHours = Math.abs(totalHours);
@@ -157,7 +160,7 @@ const Mainpage = () => {
 
     const sleepTimeData = {
       date: formattedDate, // Use the formatted date
-      sleeptime: positiveTotalHours,
+      sleeptime: Math.abs(totalHours),
       userId: userData._id,
     };
 

@@ -12,7 +12,7 @@ const SideInformation = () => {
     <div className="w-full laptop:w-full h-[100vh] border-solid border-2 flex-col items-center hidden laptop:flex lg:flex">
       <div className="avatar">
         <div className="w-32 h-32 my-6 rounded-full">
-          <img src={MockupProfile} />
+          <img src={userData.image? userData.image : MockupProfile} />
         </div>
       </div>
       <div className="mb-6">

@@ -79,7 +79,7 @@ const NavbarLoggedIn = () => {
                     </div>
                 </div>
                 {/* Mobile Navigation Bar */}
-                <div className="drawer-end lg:hidden z-10">
+                <div className="z-10 drawer-end lg:hidden">
                     <input id="my-drawer" type="checkbox" className="drawer-toggle" />
                     <div className="drawer-content">
                         {/* Page content here */}
