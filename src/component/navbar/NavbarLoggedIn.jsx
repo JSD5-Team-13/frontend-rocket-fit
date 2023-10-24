@@ -73,7 +73,8 @@ const NavbarLoggedIn = () => {
                                     icon: 'success',
                                     title: 'Logout Success'
                                   }).then(
-                                navigate("/login")))}>Log Out</button></li>
+                                navigate("/login")))}>Log Out</button>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -100,7 +101,15 @@ const NavbarLoggedIn = () => {
                             <li><a href='/dashboard'>Dashboard</a></li>
                             <p className='underline'>Profile</p>
                             <li><a href='/account'>Setting</a></li>
-                            <li><a>Log Out</a></li>
+                            <li><button
+                            onClick={() => (
+                                localStorage.clear(), 
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Logout Success'
+                                  }).then(
+                                navigate("/login")))}>Log Out</button>
+                            </li>
                         </ul>
                     </div>
                 </div>

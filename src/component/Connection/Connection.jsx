@@ -15,6 +15,7 @@ const Connection = () => {
   const [followingData, setFollowingData] = useState([]);
   const [followersData, setFollowersData] = useState([]);
 
+  //get followers data
   useEffect(() => {
     // Check if userData.followers is available
     if (userData.followers && userData.followers.length > 0) {
@@ -49,6 +50,7 @@ const Connection = () => {
     }
   }, [userData.followers]); // Use userId as a dependency
 
+  //following data
   useEffect(() => {
     // Check if userData.following is available
     if (userData.following && userData.following.length > 0) {
@@ -206,14 +208,14 @@ const Connection = () => {
                   {searchResults.map((user, index) => (
                     <div
                       key={index}
-                      className="card w-[95%] bg-base-100 shadow-xl my-4"
+                      className="card w-[425px] bg-base-100 shadow-xl my-4"
                     >
                       <div className="card-body">
                         <div className="flex flex-row items-center">
                           <img
                             src={user.image}
                             alt="profile"
-                            className="rounded-full w-24 h-24 mr-4"
+                            className="rounded-full w-[72px] h-[72px] mr-4"
                           />
                           <div className="flex flex-col">
                             <h1 className="font-bold text-lg my-2">
@@ -271,14 +273,14 @@ const Connection = () => {
                   {followingData.map((user, index) => (
                     <div
                       key={index}
-                      className="card w-[95%] bg-base-100 shadow-xl my-4"
+                      className="card w-[425px] bg-base-100 shadow-xl my-4"
                     >
                       <div className="card-body">
                         <div className="flex flex-row items-center">
                           <img
                             src={user.image}
                             alt="profile"
-                            className="rounded-full w-24 h-24 mr-4"
+                            className="rounded-full w-[72px] h-[72px] mr-4"
                           />
                           <div className="flex flex-col">
                             <h1 className="font-bold text-lg my-2">
@@ -314,14 +316,14 @@ const Connection = () => {
                   {followersData.map((user, index) => (
                     <div
                       key={index}
-                      className="card w-[95%] bg-base-100 shadow-xl my-4"
+                      className="card w-[425px] bg-base-100 shadow-xl my-4"
                     >
                       <div className="card-body">
                         <div className="flex flex-row items-center">
                           <img
                             src={user.image}
                             alt="profile"
-                            className="rounded-full w-24 h-24 mr-4"
+                            className="rounded-full w-[72px] h-[72px] mr-4"
                           />
                           <div className="flex flex-col">
                             <h1 className="font-bold text-lg my-2">

@@ -16,14 +16,14 @@ const SideInformation = () => {
         </div>
       </div>
       <div className="mb-6">
-        <p>{userData.firstname}</p>
+        <p>{userData.firstname} {userData.lastname}</p>
       </div>
       <div className="flex flex-row w-[100%] justify-around mb-6">
         <div className="flex flex-col ">
           <label htmlFor="height" className="self-center">
             Height
           </label>
-          <p id="height" className="badge badge-accent ">
+          <p id="height" className="badge badge-accent w-12 h-6">
             {userData.height}
           </p>
         </div>
@@ -31,7 +31,7 @@ const SideInformation = () => {
           <label htmlFor="weight" className="self-center">
             Weight
           </label>
-          <p id="weight" className="badge badge-accent">
+          <p id="weight" className="badge badge-accent w-12 h-6">
             {userData.weight}
           </p>
         </div>
@@ -39,13 +39,13 @@ const SideInformation = () => {
           <label htmlFor="age" className="self-center">
             Age
           </label>
-          <p id="age" className="badge badge-accent">
+          <p id="age" className="badge badge-accent w-10 h-6">
             {userData.age}
           </p>
         </div>
       </div>
       <button className="btn btn-xs btn-accent rounded-full w-[40%] mb-6">
-        Edit your profile
+        <a href="/create_profile">Edit your profile</a>
       </button>
       <h2 className="self-start mx-7">Lastest Activity</h2>
       {displayedData.map((activity, index) => (

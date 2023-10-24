@@ -16,7 +16,7 @@ import AccountSetting from "./component/Account/AccountSetting.jsx";
 import { ResetPassword } from "./component/Login/ResetPassword";
 import CreateProfile from "./component/CreateProfile/CreateProfile";
 import Connection from "./component/Connection/Connection.jsx";
-import { UserProvider } from "./component/context/UserContext";
+import { UserProvider } from "./component/context/userContext";
 
 const router = createBrowserRouter([
   {
