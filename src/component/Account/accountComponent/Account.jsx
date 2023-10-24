@@ -164,8 +164,9 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
               name="gender"
               value={userData.gender}
               onChange={handleInputChange}
-              className="w-2/3 text-center rounded-md input input-bordered input-sm"
+              className="w-2/3 text-center lowercase rounded-md input input-bordered input-sm"
             >
+              <option value="notSpecified">Not specified</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="other">Other</option>

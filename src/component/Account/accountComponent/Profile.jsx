@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 const Profile = ({
   userId,
   userData,
@@ -15,6 +16,7 @@ const Profile = ({
   const [imagePreview, setImagePreview] = useState(null);
   const [upload, setUpload] = useState(false);
   const [reload, setReload] = useState(false);
+  
   useEffect(() => {
     if (imagePreview) {
       console.log("test use effect");
@@ -71,16 +73,38 @@ const Profile = ({
       if (response.status === 200) {
         // Image uploaded successfully
         console.log("Image uploaded successfully");
-
-        // setAlertMessage({ text: "Image uploaded successfully", status: 'success' });
-        // setShowAlert(true);
+        
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Image uploaded successfully",
+          showConfirmButton: true,
+      });
+      
+      // รอ 2 วินาที (2000 มิลลิวินาที) ก่อนปิดตัวอัลเอิร์ต
+      setTimeout(() => {
+          Swal.close();
+  
+      }, 2000);
+      
         setReload(!reload);
-        window.location.reload();
+        setTimeout(() => {window.location.reload();}, 3000)
       }
     } catch (error) {
       console.error("Error uploading image:", error);
-      // setAlertMessage({ text: "Error uploading image: " + error, status: "error" });
-      // setShowAlert(true);
+
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error uploading image",
+        showConfirmButton: true,
+    });
+    
+    // รอ 2 วินาที (2000 มิลลิวินาที) ก่อนปิดตัวอัลเอิร์ต
+    setTimeout(() => {
+        Swal.close();
+
+    }, 2000);
     }
   };
 
@@ -103,7 +127,7 @@ const Profile = ({
       <div className="flex flex-col items-center w-full gap-4 px-2 py-4">
         <div className="w-[10rem] h-[10rem]  overflow-hidden rounded-full">
           <img
-            src={imageFile ? imagePreview : userData.profile_url}
+            src={imageFile ? imagePreview : userData.image}
             alt="profile-picture"
             className="object-cover"
           />

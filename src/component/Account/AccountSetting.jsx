@@ -11,19 +11,18 @@ import Password from "./accountComponent/Password.jsx";
 import Privacy from "./accountComponent/Privacy.jsx";
 import Profile from "./accountComponent/Profile.jsx";
 
-
 const AccountSetting = () => {
-  const serverUrl = "http://127.0.0.1:8000"
+  const serverUrl = "http://127.0.0.1:8000";
   const [option, setOption] = useState("ACCOUNT");
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [userData, setUserData] = useState({});
-  const [userId , setUserId] = useState("");
+  const [userId, setUserId] = useState("");
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
-  
+
     if (token) {
       axios
         .get(serverUrl + "/users/", {
@@ -35,7 +34,7 @@ const AccountSetting = () => {
           if (response.status === 200) {
             setUserId(response.data.id);
             console.log(response.data.id); // ตรวจสอบว่าได้รับค่า id ให้ถูกต้อง
-  
+
             axios
               .get(serverUrl + "/users/setting/" + response.data.id, {
                 headers: {
@@ -45,28 +44,30 @@ const AccountSetting = () => {
               .then((userResponse) => {
                 if (userResponse.status === 200) {
                   const user = userResponse.data;
-  
+
                   const listDataByUser = {
                     username: user.username,
                     FirstName: user.FirstName,
                     LastName: user.LastName,
                     email: user.email,
-                    profile_url: user.profile_url,
+                    image: user.image,
                     userId: response.data.id,
                     DateOfBirth: user.DateOfBirth,
                     height: user.height,
                     weight: user.weight,
-                    gender: user.gender
+                    gender: user.gender,
                   };
                   console.log(response.data.id);
                   setUserData(listDataByUser);
                 } else {
                   console.log("Failed to fetch user data");
-                  
                 }
               })
               .catch((error) => {
-                console.log("Error fetching user data from the database", error);
+                console.log(
+                  "Error fetching user data from the database",
+                  error
+                );
               });
           } else {
             console.log("Failed to fetch user data");
@@ -77,46 +78,49 @@ const AccountSetting = () => {
         });
     }
   }, [reload]);
-  
-  
 
   const showOption = (option) => {
     switch (option) {
       case "ACCOUNT":
-        return <Account 
-                  userId={userId}
-                  userData={userData}
-                  setUserData={setUserData}
-                  setShowAlert={setShowAlert} 
-                  setAlertMessage={setAlertMessage}
-                  reload={reload} 
-                  setReload={setReload} 
-                  />;
+        return (
+          <Account
+            userId={userId}
+            userData={userData}
+            setUserData={setUserData}
+            setShowAlert={setShowAlert}
+            setAlertMessage={setAlertMessage}
+            reload={reload}
+            setReload={setReload}
+          />
+        );
 
       case "PASSWORD":
-        return <Password 
-                  userId={userId}
-                  userData={userData}
-                  setUserData={setUserData}
-                  setShowAlert={setShowAlert} 
-                  setAlertMessage={setAlertMessage}
-                  reload={reload} 
-                  setReload={setReload} 
-                  />;
+        return (
+          <Password
+            userId={userId}
+            userData={userData}
+            setUserData={setUserData}
+            setShowAlert={setShowAlert}
+            setAlertMessage={setAlertMessage}
+            reload={reload}
+            setReload={setReload}
+          />
+        );
 
       case "DELETE ACCOUNT":
-        return <Privacy 
-                  userId={userId}
-                  setShowAlert={setShowAlert} 
-                  setAlertMessage={setAlertMessage}
-                  reload={reload} 
-                  setReload={setReload} 
-                  />;
+        return (
+          <Privacy
+            userId={userId}
+            setShowAlert={setShowAlert}
+            setAlertMessage={setAlertMessage}
+            reload={reload}
+            setReload={setReload}
+          />
+        );
       default:
         return null;
     }
   };
-
 
   const Alert = ({ message }) => {
     const { text, status } = message;
@@ -139,7 +143,7 @@ const AccountSetting = () => {
         }).then(closeAlert());
         break;
 
-        case "error":
+      case "error":
         Swal.fire({
           position: "center",
           icon: "error",
@@ -148,23 +152,19 @@ const AccountSetting = () => {
         }).then(closeAlert());
         break;
 
-
       default:
         break;
     }
   };
-
 
   const closeAlert = () => {
     setShowAlert(false); // ปิดหน้าต่างแจ้งเตือน
     setAlertMessage(""); // ล้างข้อความแจ้งเตือน
   };
 
-
   return (
     <Layout className="max-w-[1440px] flex items-center">
-
-    {showAlert && <Alert message={alertMessage}/>}
+      {showAlert && <Alert message={alertMessage} />}
 
       {/* mobile mode  */}
       <div className="flex flex-col justify-between flex-grow w-auto h-[95vh]  lg:hidden">
@@ -179,19 +179,15 @@ const AccountSetting = () => {
           <div>
             {/* profile  */}
             <div className="flex flex-col items-center justify-center w-full mx-auto">
-
-              <Profile    
-              
-              userId={userId}
-              userData={userData}
-              setUserData={setUserData}
-              setShowAlert={setShowAlert}
-              setAlertMessage={setAlertMessage} // ส่ง setAlertMessage ไปยังคอมโพเนนต์ Profile
-              reload={reload}
-              setReload={setReload}
-              
+              <Profile
+                userId={userId}
+                userData={userData}
+                setUserData={setUserData}
+                setShowAlert={setShowAlert}
+                setAlertMessage={setAlertMessage} // ส่ง setAlertMessage ไปยังคอมโพเนนต์ Profile
+                reload={reload}
+                setReload={setReload}
               />
-
             </div>
 
             <div
@@ -210,7 +206,7 @@ const AccountSetting = () => {
                   </div>
                 </div>
 
-                {option === "ACCOUNT" ? showOption(option): null}
+                {option === "ACCOUNT" ? showOption(option) : null}
               </div>
 
               {/* password */}
@@ -225,7 +221,7 @@ const AccountSetting = () => {
                   </div>
                 </div>
 
-                {option ==="PASSWORD" ? showOption(option): null}
+                {option === "PASSWORD" ? showOption(option) : null}
               </div>
 
               {/* Privacy */}
@@ -240,7 +236,7 @@ const AccountSetting = () => {
                   </div>
                 </div>
 
-                {option ==="DELETE ACCOUNT" ? showOption(option): null}
+                {option === "DELETE ACCOUNT" ? showOption(option) : null}
               </div>
             </div>
           </div>
@@ -254,66 +250,74 @@ const AccountSetting = () => {
 
       {/* desktop mode */}
       <div className="hidden lg:block">
-      <div className="flex-col p-[2rem] flex justify-center mx-auto items-center w-full max-w-[1440px]">
-        <div className="w-full text-[2rem] font-bold text-left uppercase">
-          <h2>Account Setting</h2>
-        </div>
+        <div className="flex-col p-[2rem] flex justify-center mx-auto items-center w-full max-w-[1440px]">
+          <div className="w-full text-[2rem] font-bold text-left uppercase">
+            <h2>Account Setting</h2>
+          </div>
 
-
-        <div className="flex flex-row justify-between items-center max-w-[1440px] min-h-[75vh] rounded-2xl w-5/6 m-[2rem] border-4">
-
-          {/* left area */}
-          <div className="w-2/5 max-w-[1440px] border-r-2 h-full">
-            <Profile userData={userData} />
-            <div className="flex flex-col justify-start">
-              <div
-                className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold"
-                onClick={() => setOption("ACCOUNT")} // เมื่อคลิกเลือก "Account"
-              >
-                <h3>Account</h3>
+          <div className="flex flex-row justify-between items-center max-w-[1440px] min-h-[75vh] rounded-2xl w-5/6 m-[2rem] border-4">
+            {/* left area */}
+            <div className="w-2/5 max-w-[1440px] border-r-2 h-full">
+              <Profile userData={userData} />
+              <div className="flex flex-col justify-start">
+                <div
+                  className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold"
+                  onClick={() => setOption("ACCOUNT")} // เมื่อคลิกเลือก "Account"
+                >
+                  <h3>Account</h3>
+                </div>
+                <div
+                  className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold"
+                  onClick={() => setOption("PASSWORD")} // เมื่อคลิกเลือก "Password"
+                >
+                  <h3>Password</h3>
+                </div>
+                <div
+                  className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold"
+                  onClick={() => setOption("DELETE ACCOUNT")} // เมื่อคลิกเลือก "Security & Privacy"
+                >
+                  <h3>Delete Account</h3>
+                </div>
               </div>
-              <div
-                className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold"
-                onClick={() => setOption("PASSWORD")} // เมื่อคลิกเลือก "Password"
-              >
-                <h3>Password</h3>
-              </div>
-              <div
-                className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold"
-                onClick={() => setOption("DELETE ACCOUNT")} // เมื่อคลิกเลือก "Security & Privacy"
-              >
-                <h3>Delete Account</h3>
+              <div className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold">
+                <button
+                  onClick={() => {
+                    Swal.fire({
+                      icon: "warning",
+                      title: "Confirm to logout",
+                      showCancelButton: true,
+                      confirmButtonText: "Confirm",
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        localStorage.clear();
+                        setTimeout(() => {
+                          window.location.href = "/login";
+                        }, 3000);
+                      }
+                    });
+                  }}
+                >
+                  Log out
+                </button>
               </div>
             </div>
-            <div className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold">
-              <h3>Log out</h3>
+
+            {/* right area */}
+            <div className="flex flex-col items-center justify-center w-3/5 h-full text-center">
+              <div className="w-full h-[60vh]">
+                <h4 className="text-5xl font-medium lowercase h-1/3">
+                  {option}
+                </h4>
+
+                <div className="h-1/3">{showOption(option)}</div>
+              </div>
             </div>
           </div>
-
-
-          {/* right area */}
-          <div className="flex flex-col items-center justify-center w-3/5 h-full text-center">
-          <div className="w-full h-[60vh]">
-          <h4 className="text-5xl font-medium lowercase h-1/3">
-            {option}
-          </h4>
-          
-          <div className="h-1/3">
-            {showOption(option)}             
-          </div>
-           
-          </div>
-
-          </div>
         </div>
-      </div>        
       </div>
-
     </Layout>
   );
 };
-
-
 
 const Logout = () => {
   return (
@@ -324,7 +328,5 @@ const Logout = () => {
     </div>
   );
 };
-
-
 
 export default AccountSetting;
