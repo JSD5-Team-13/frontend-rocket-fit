@@ -195,7 +195,7 @@ const AccountSetting = () => {
     {showAlert && <Alert message={alertMessage}/>}
 
       {/* mobile mode  */}
-      <div className="flex flex-col justify-between flex-grow w-full h-[95vh]  lg:hidden">
+      <div className="flex flex-col justify-between flex-grow w-auto h-[95vh]  lg:hidden">
         <div>
           {/* title head */}
           <div className="flex flex-col items-center justify-center w-5/6 p-4 mx-auto md:w-5/6 lg:max-w-5/6 gap-[1.5rem]">
