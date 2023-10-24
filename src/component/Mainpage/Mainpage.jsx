@@ -134,7 +134,7 @@ const Mainpage = () => {
     
   const sleepTimeHandler = () => {
     // Parse the sleepTime and wakeTime into Date objects
-    const midnight = new Date(`2000-10-13T00:00:00`);
+    // const midnight = new Date(`2000-10-13T00:00:00`);
     const sleepTimeDate = new Date(`2000-10-13T${sleepTime.sleepTime}`);
     const wakeTimeDate = new Date(`2000-10-13T${sleepTime.wakeTime}`);
 
