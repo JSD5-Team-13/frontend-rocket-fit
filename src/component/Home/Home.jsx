@@ -1,4 +1,4 @@
-import Logofull from "../../assets/Logo-full.png";
+import Logofull from "../../assets/logo-full.png";
 import Yoga from "../../assets/homeImage/Yoga.jpg";
 import Boxing from "../../assets/homeImage/Boxing.png";
 import Running from "../../assets/homeImage/Running.jpeg";

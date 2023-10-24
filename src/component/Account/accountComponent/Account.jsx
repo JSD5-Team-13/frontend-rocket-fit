@@ -3,41 +3,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}) => {
-  const serverUrl = "http://127.0.0.1:8000"
+  const serverUrl = "https://rocket-fit-api.onrender.com"
   const token = localStorage.getItem("rockettoken");
-
-  // useEffect(() => {
-  //   if (token) {
-  //     const fetchUserData = async () => {
-  //       try {
-  //         const response = await axios.get(serverUrl + "/users/setting/" + userId, {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         });
-  
-  //         const user = response.data;
-  
-  //         // Create a new object with properties in the desired order
-  //         const orderedUserData = {
-  //           username: user.username,
-  //           FirstName: user.FirstName,
-  //           LastName: user.LastName,
-  //           email: user.email,
-  //           // phone: user.phone,
-  //           // location: user.location,
-  //         };
-  
-  //         setUserData(orderedUserData);
-  //       } catch (error) {
-  //         console.error("Error fetching user data", error);
-  //       }
-  //     };
-  //     fetchUserData();
-  //   }
-  // }, []);
-  
-
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -52,7 +19,6 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
     try {
       const response = await axios.put(serverUrl + "/users/setting/account/" + userData.userId, userData, {
         headers: {
-          // 'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       });
@@ -84,7 +50,6 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
           const userDataFromAPI = response.data;
           setUserData(userDataFromAPI);
           console.log("reset form")
-          console.log(userData)
         })
         .catch((error) => {
           console.error("Error fetching user data", error);
@@ -96,9 +61,8 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
     <div className={`w-full`}>
       <div className="justify-between w-auto px-2 mx-2 my-2 border rounded-2xl border-base-300 bg-base-200 lg:flex lg:flex-col lg:items-center lg: lg:py-2 lg:border-none lg:bg-transparent ">
         <form className="flex flex-col items-start w-full gap-2 py-4 text-left justify-stretch items-between">
-          
           {/* username */}
-          <div className="flex flex-row items-center justify-between w-full gap-2">
+          {/* <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="username" className="w-1/3">
               Username
             </label>
@@ -110,7 +74,8 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
               className="w-2/3 text-center rounded-md input input-bordered input-sm"
               disabled
             />
-          </div>
+          </div> */}
+
           {/* first name */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="FirstName" className="w-1/3">
@@ -125,7 +90,7 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
             />
           </div>
 
-            {/* last name  */}
+          {/* last name  */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="LastName" className="w-1/3">
               Last name
@@ -138,7 +103,8 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
               className="w-2/3 text-center rounded-md input input-bordered input-sm"
             />
           </div>
-          {/* mock input */}
+
+          {/* email */}
           <div className="flex flex-row items-center justify-between w-full gap-2">
             <label htmlFor="email" className="w-1/3">
               Email
@@ -149,35 +115,61 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
               value={userData.email || ""}
               onChange={handleInputChange}
               className="w-2/3 text-center rounded-md input input-bordered input-sm"
+              disabled
             />
           </div>
-          {/* mock input */}
-          {/* <div className="flex flex-row items-center justify-between w-full gap-2">
-            <label htmlFor="phone" className="w-1/3">
-              Phone
+          {/* w h input */}
+          <div className="flex flex-row items-center justify-between w-full gap-2">
+            <label htmlFor="bmi" className="w-1/3">
+              Weight & Height
             </label>
-            <input
-              type="text"
-              name="phone"
-              value={userData.phone}
-              onChange={handleInputChange}
-              placeholder="xxx-xxx-xxxx"
-              className="w-2/3 text-center rounded-md input input-bordered input-sm"
-            />
-          </div> */}
-          {/* mock input */}
-          {/* <div className="flex flex-row items-center justify-between w-full gap-2">
-            <label htmlFor="location" className="w-1/3">
-              Location
+            <div className="flex flex-row w-2/3 text-center rounded-md justify-evenly">
+              <div className="w-1/2 gap-4">
+                <label htmlFor="weight" className="w-1/3 pr-2">
+                  W:
+                </label>
+                <input
+                  type="number"
+                  name="weight"
+                  value={userData.weight}
+                  onChange={handleInputChange}
+                  className="w-2/3 text-center rounded-md input input-bordered input-sm"
+                  // placeholder={userData.DateOfBirth}
+                />
+              </div>
+
+              <div className="w-1/2 gap-4">
+                <label htmlFor="height" className="w-1/3 pr-2">
+                  H:
+                </label>
+                <input
+                  type="number"
+                  name="height"
+                  value={userData.height}
+                  onChange={handleInputChange}
+                  className="w-2/3 text-center rounded-md input input-bordered input-sm"
+                  // placeholder={userData.DateOfBirth}
+                />
+              </div>
+            </div>
+          </div>
+          {/* gender input */}
+          <div className="flex flex-row items-center justify-between w-full gap-2">
+            <label htmlFor="gender" className="w-1/3">
+              Gender
             </label>
-            <input
-              type="text"
-              name="location"
-              value={userData.location}
+            <select
+              name="gender"
+              value={userData.gender}
               onChange={handleInputChange}
-              className="w-2/3 text-center rounded-md input input-bordered input-sm"
-            />
-          </div> */}
+              className="w-2/3 text-center lowercase rounded-md input input-bordered input-sm"
+            >
+              <option value="notSpecified">Not specified</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
         </form>
 
         <div className="flex flex-row items-center w-full mt-4 mb-4 justify-evenly">

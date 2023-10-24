@@ -27,7 +27,7 @@ const CreateProfile = () => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
       axios
-        .get("http://0.0.0.0:8000/users", {
+        .get("https://rocket-fit-api.onrender.com/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -71,7 +71,7 @@ const CreateProfile = () => {
       };
       const token = localStorage.getItem("rockettoken");
       const Update = await axios.put(
-        `http://0.0.0.0:8000/users/${nameUser.id}`,
+        `https://rocket-fit-api.onrender.com/users/${nameUser.id}`,
         requestData,
         {
           headers: {
@@ -119,15 +119,13 @@ const CreateProfile = () => {
           data.gender,
           data.DateOfBirth
         );
-        handleImageUpload();
       } else if (result.isDenied) {
         console.log("Changes are not saved");
       }
     });
-    console.log(handleImageUpload());
   };
 
-  const handleImageClick = (e) => {
+  const handleImageClick = () => {
     inputRef.current.click();
   };
 
@@ -136,6 +134,10 @@ const CreateProfile = () => {
     console.log(file);
     setImage(file);
   };
+
+  useEffect(() => {
+    handleImageUpload();
+  }, [image]);
 
   const handleImageUpload = async () => {
     try {
@@ -146,7 +148,7 @@ const CreateProfile = () => {
 
         // ส่งไฟล์รูปภาพไปยัง Node.js ในส่วนที่จะรับและอัปโหลดไป Cloudinary
         const response = await axios.put(
-          `http://0.0.0.0:8000/users/${nameUser.id}`,
+          `http://127.0.0.1:8000/users/${nameUser.id}`,
           formData,
           {
             headers: {
@@ -161,7 +163,7 @@ const CreateProfile = () => {
             icon: "success",
             title: "Create Success",
           });
-          navigate("/main");
+          // navigate("/main");
         } else {
           console.log("error");
         }

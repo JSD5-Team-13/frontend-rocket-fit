@@ -4,7 +4,7 @@ import axios from "axios";
 
 
 const Privacy = ({ userId, setShowAlert, setAlertMessage }) => {
-  const serverUrl = "http://127.0.0.1:8000"
+  const serverUrl = "https://rocket-fit-api.onrender.com"
   const token = localStorage.getItem("rockettoken");
 
   const [deactivate, setDeactivate] = useState();

@@ -9,14 +9,13 @@ import Mainpage from "./component/Mainpage/Mainpage.jsx";
 import ActivityForm from "./component/Activity/CreateActivity.jsx";
 import MyActivity from "./component/Activity/MyActivity.jsx";
 import MyFeed from "./component/Feed/MyFeed.jsx";
-import FriendFeed from "./component/Feed/FriendFeed.jsx";
 import { DashBoard } from "./component/Dashboard/DashBoard.jsx";
 import CalendarMain from "./component/Calandar/Calendar.jsx";
 import AccountSetting from "./component/Account/AccountSetting.jsx";
 import { ResetPassword } from "./component/Login/ResetPassword";
 import CreateProfile from "./component/CreateProfile/CreateProfile";
 import Connection from "./component/Connection/Connection.jsx";
-import { UserProvider } from "./component/context/UserContext";
+import { UserProvider } from "./component/context/userContext";
 
 const router = createBrowserRouter([
   {
@@ -54,10 +53,6 @@ const router = createBrowserRouter([
   {
     path: "/myfeed/:userId",
     element: <MyFeed />,
-  },
-  {
-    path: "/friendfeed",
-    element: <FriendFeed />,
   },
   {
     path: "/dashboard",

@@ -4,6 +4,7 @@ import Layout from "../Layout.jsx";
 // import SideInformation from "../navbar/SideInformationBar.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+const serverUrl = "https://rocket-fit-api.onrender.com"
 
 const ActivityForm = () => {
   const [selectedType, setSelectedType] = useState("");
@@ -15,7 +16,7 @@ const ActivityForm = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [userId , setUserId] = useState("");
-
+  const [imageFile, setImageFile] = useState(null)
   const [reload, setReload] = useState(true);
   const navigate = useNavigate()
 
@@ -40,7 +41,7 @@ const ActivityForm = () => {
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
-      axios.get("http://127.0.0.1:8000/users", {
+      axios.get(serverUrl + "/users/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -149,47 +150,72 @@ const ActivityForm = () => {
   ) => {
     try {
       const errors = [];
-
+  
       if (!selectedType) {
         errors.push("Invalid activity type");
       }
-
+  
       if (!createdTitle) {
         errors.push("Invalid title");
       }
-
+  
       if (!durationTime && typeof durationTime !== "number") {
         errors.push("Invalid duration-time");
       }
-
+  
       if (!selectDate) {
         errors.push("Invalid date");
       }
-
+  
       if (errors.length > 0) {
         const errorText = errors.join(" , ");
         setAlertMessage(errorText);
         setShowAlert(true); // แสดงหน้าต่างแจ้งเตือน
         return;
       }
-
+      
+      if (imageFile !== null) {
+         const formData = new FormData();
+      formData.append("imageActivity", imageFile); // ใช้ชื่อ "imageActivity" ตรงกับที่ระบุใน "upload.single"
+      formData.append("activity_type", selectedType);
+      formData.append("activity_name", createdTitle);
+      formData.append("activity_describe", createdDesc);
+      formData.append("duration", durationTime);
+      formData.append("date", selectDate);
+      formData.append("userId", userId);
+  
       const response = await axios.post(
-        "http://127.0.0.1:8000/activity",
+        serverUrl + "/activity/create/",
+        formData, // ส่ง FormData แทน object
         {
-          activity_type: selectedType,
-          activity_name: createdTitle,
-          activity_describe: createdDesc,
-          duration: durationTime,
-          date: selectDate,
-          image: selectedImage,
-          userId: userId
+          headers: {
+            "Content-Type": "multipart/form-data", // ต้องกำหนด headers ให้ถูกต้อง
+          },
         }
       );
-      
+  
       console.log("Created completed", response.data);
       setAlertMessage("Created completed");
       setShowAlert(true);
-      
+      } else {
+        const response = await axios.post(
+          serverUrl + "activity/create/",
+          {
+            activity_type: selectedType,
+            activity_name: createdTitle,
+            activity_describe: createdDesc,
+            duration: durationTime,
+            date: selectDate,
+            image: selectedImage,
+            userId: userId
+          }
+        );
+        
+        console.log("Created completed", response.data);
+        setAlertMessage("Created completed");
+        setShowAlert(true);
+      }
+     
     } catch (error) {
       console.error("Create failed ", error);
       setAlertMessage("Created failed");
@@ -249,6 +275,7 @@ const ActivityForm = () => {
                   <ActivityImage
                     selectedImage={selectedImage}
                     setSelectedImage={setSelectedImage}
+                    setImageFile={setImageFile}
                   />
                 </div>
               </div>
@@ -428,19 +455,22 @@ export const ActivityDate = ({ selectDate, setSelectDate }) => {
 };
 
 // eslint-disable-next-line react/prop-types
-export const ActivityImage = ({ selectedImage, setSelectedImage }) => {
+export const ActivityImage = ({ selectedImage, setSelectedImage, setImageFile }) => {
   const [imageOption, setImageOption] = useState("");
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
 
     if (file) {
+      setImageFile(file)
+
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onloadend = (e) => {
         setSelectedImage(e.target.result);
       };
       reader.readAsDataURL(file);
     } else {
+      setImageFile(null)
       setSelectedImage(null);
     }
   };
@@ -529,7 +559,7 @@ export const ActivityImage = ({ selectedImage, setSelectedImage }) => {
                 <span>Upload a file</span>
                 <input
                   id="file-upload"
-                  name="file-upload"
+                  name="imageActivity"
                   type="file"
                   className="sr-only"
                   accept="image/*"

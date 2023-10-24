@@ -20,7 +20,7 @@ export const Register = () => {
   const register = async (userData) => {
     try {
       const response = await axios.post(
-        "http://0.0.0.0:8000/register",
+        "https://rocket-fit-api.onrender.com/register",
         userData
       );
       console.log(response.status);
