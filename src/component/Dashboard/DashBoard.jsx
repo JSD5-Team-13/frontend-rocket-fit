@@ -1,6 +1,6 @@
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn.jsx";
 import { Bar, Pie } from "react-chartjs-2";
-import { BiSolidMoon } from "react-icons/Bi";
+import { BiSolidMoon } from "react-icons/bi";
 import SideInformation from "../navbar/SideInformationBar.jsx";
 import { CategoryScale, Chart, registerables } from "chart.js";
 import { useContext, useEffect, useState } from "react";

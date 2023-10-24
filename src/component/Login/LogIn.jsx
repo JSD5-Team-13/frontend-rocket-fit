@@ -1,7 +1,7 @@
 import Navbar from "../navbar/NavbarNoneLoggedIn";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser } from "react-icons/Fa";
+import { FaUser } from "react-icons/fa";
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
