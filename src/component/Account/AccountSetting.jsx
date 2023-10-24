@@ -52,12 +52,17 @@ const AccountSetting = () => {
                     LastName: user.LastName,
                     email: user.email,
                     profile_url: user.profile_url,
-                    userId: response.data.id, // ใช้ค่า id ที่ได้จาก response แรก
+                    userId: response.data.id,
+                    DateOfBirth: user.DateOfBirth,
+                    height: user.height,
+                    weight: user.weight,
+                    gender: user.gender
                   };
                   console.log(response.data.id);
                   setUserData(listDataByUser);
                 } else {
                   console.log("Failed to fetch user data");
+                  
                 }
               })
               .catch((error) => {
@@ -74,39 +79,6 @@ const AccountSetting = () => {
   }, [reload]);
   
   
-  
-  
-  // const fetchUserDataById = async() => {
-  //   try {
-  //     const token = localStorage.getItem("rockettoken");
-  //     const response = await axios.get(serverUrl + "/users/" + userId, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       }
-  //     });
-  //     if (response.status === 200) {
-  
-  //       const user = response.data;
-
-  //       // Create a new object with properties in the desired order
-  //       const listDataByUser = {
-  //         username: user.username,
-  //         FirstName: user.FirstName,
-  //         LastName: user.LastName,
-  //         email: user.email,
-  //         phone: user.phone,
-  //         location: user.location,
-  //         // userId: userId
-  //       };
-
-  //       setUserData(listDataByUser);
-  //     }
-  //   } catch (error) {
-  //     console.log(`Error fetching user data from the database`, error);
-  //   }
-  // }
-
-  // fetchUserDataById()
 
   const showOption = (option) => {
     switch (option) {
