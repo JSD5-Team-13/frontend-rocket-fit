@@ -201,6 +201,34 @@ const MyFeed = () => {
     }
   };
 
+  // Create a comment
+  const createComment = async (postId, commentContent) => {
+    try {
+      const token = localStorage.getItem("rockettoken");
+      const response = await axios.post(
+        "http://127.0.0.1:8000/comment/",
+        {
+          content: commentContent,
+          author: currentUserId,
+          post: postId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 201) {
+        setReload(!reload);
+        console.log("Comment created successfully!");
+      } else {
+        console.error("Failed to create the comment");
+      }
+    } catch (error) {
+      console.error("Error creating comment:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen">
       <nav className="fixed top-0 z-[100] w-full">
@@ -235,12 +263,14 @@ const MyFeed = () => {
                 updatePost={updatePost}
                 deletePost={deletePost}
                 userData={currentUserData}
+                createComment={createComment}
               />
             ) : (
               <FriendPost
                 userData={currentUserData}
                 friendData={friendData}
                 posts={posts}
+                createComment={createComment}
               />
             )}
           </div>
@@ -340,7 +370,13 @@ const UserProfile = ({ userData, updateUser }) => {
   );
 };
 
-const UserPost = ({ userData, posts, updatePost, deletePost }) => {
+const UserPost = ({
+  userData,
+  posts,
+  updatePost,
+  deletePost,
+  createComment,
+}) => {
   const [selectedPostId, setSelectedPostId] = useState(null);
 
   const timeOptions = {
@@ -423,7 +459,14 @@ const UserPost = ({ userData, posts, updatePost, deletePost }) => {
           </div>
 
           {/* Comment Section */}
-          {selectedPostId === post._id && <CommentForm userData={userData} />}
+          {selectedPostId === post._id && <CommentContent postId={post._id} />}
+          {selectedPostId === post._id && (
+            <CommentForm
+              userData={userData}
+              postId={post._id}
+              createComment={createComment}
+            />
+          )}
         </div>
       ))}
     </div>
@@ -493,7 +536,7 @@ const FriendProfile = ({ userData, friendData, handleFollow }) => {
   );
 };
 
-const FriendPost = ({ userData, friendData, posts }) => {
+const FriendPost = ({ userData, friendData, posts, createComment }) => {
   if (!friendData) {
     return <div>Loading friend profile...</div>;
   }
@@ -573,7 +616,14 @@ const FriendPost = ({ userData, friendData, posts }) => {
           </div>
 
           {/* Comment Section */}
-          {selectedPostId === post._id && <CommentForm userData={userData} />}
+          {selectedPostId === post._id && <CommentContent postId={post._id} />}
+          {selectedPostId === post._id && (
+            <CommentForm
+              userData={userData}
+              postId={post._id}
+              createComment={createComment}
+            />
+          )}
         </div>
       ))}
     </div>
@@ -781,43 +831,86 @@ const CommentBtn = ({ postId, selectedPostId, toggleComment }) => {
   );
 };
 
-const CommentDisplay = () => {
+const CommentContent = ({ postId }) => {
   const [isHeart, setIsHeart] = useState(false);
+  const [comments, setComments] = useState([]); // State to store comments
 
   const toggleHeart = () => {
     setIsHeart(!isHeart);
   };
 
-  return (
-    <div className="bg-[#8DE2DF] p-2 lg:rounded-xl lg:shadow-xl border-b-2">
-      <section className="flex items-center">
-        {/* Avatar */}
-        <figure className="avatar m-3">
-          <div className="w-12 rounded-full bg-gray-100">
-            <img src={UserIcon} alt="Image Profile" />
-          </div>
-        </figure>
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const token = localStorage.getItem("rockettoken");
+        const response = await axios.get(
+          `http://127.0.0.1:8000/comment/${postId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const commentsData = response.data;
+        setComments(commentsData); // Update the comments state
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
 
-        {/* Comment */}
-        <div className="w-full">
-          <p className="font-semibold mb-1">Username</p>
-          <div className="flex">
-            <p className="w-full mr-2">This is comment~</p>
-            <button className="mr-7" onClick={toggleHeart}>
-              {isHeart ? (
-                <FaHeart size={22} color="red" />
-              ) : (
-                <FaRegHeart size={22} />
-              )}
-            </button>
-          </div>
+    fetchComments();
+  }, [postId]);
+
+  return (
+    <div>
+      {comments.map((comment) => (
+        <div
+          key={comment._id}
+          className="bg-[#8DE2DF] p-2 lg:rounded-xl lg:shadow-xl border-b-2"
+        >
+          <section className="flex items-center">
+            {/* Avatar */}
+            <figure className="avatar m-3">
+              <div className="w-12 rounded-full bg-gray-100">
+                <img src={comment.author.image} alt="Image Profile" />
+              </div>
+            </figure>
+
+            {/* Comment */}
+            <div className="w-full">
+              <p className="font-semibold mb-1">
+                {comment.author.FirstName} {comment.author.LastName}
+              </p>
+              <div className="flex">
+                <p className="w-full mr-2">{comment.content}</p>
+                <button className="mr-7" onClick={toggleHeart}>
+                  {isHeart ? (
+                    <FaHeart size={22} color="red" />
+                  ) : (
+                    <FaRegHeart size={22} />
+                  )}
+                </button>
+              </div>
+            </div>
+          </section>
         </div>
-      </section>
+      ))}
     </div>
   );
 };
 
-const CommentForm = ({ userData }) => {
+const CommentForm = ({ userData, postId, createComment }) => {
+  const [commentContent, setCommentContent] = useState("");
+
+  const handleCommentSubmit = async () => {
+    try {
+      createComment(postId, commentContent);
+      setCommentContent("");
+    } catch (error) {
+      console.error("Error creating comment:", error);
+    }
+  };
+
   return (
     <div className="bg-[#8DE2DF] p-2 lg:rounded-xl lg:mb-3 lg:shadow-xl">
       <section className="flex items-center">
@@ -838,8 +931,13 @@ const CommentForm = ({ userData }) => {
               type="text"
               placeholder="write comment"
               className="input input-sm input-bordered w-full mr-2 focus:outline-none"
+              value={commentContent}
+              onChange={(e) => setCommentContent(e.target.value)}
             />
-            <button className="btn btn-sm mr-2 border-none bg-[#132640] text-white hover:bg-[#132640] hover:text-yellow-300">
+            <button
+              className="btn btn-sm mr-2 border-none bg-[#132640] text-white hover:bg-[#132640] hover:text-yellow-300"
+              onClick={handleCommentSubmit}
+            >
               POST
             </button>
           </div>
