@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-// eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from "react";
 import Layout from "../Layout.jsx";
 import Swal from "sweetalert2";
@@ -283,7 +282,7 @@ const AccountSetting = () => {
                   <h3>Delete Account</h3>
                 </div>
               </div>
-              {/* <div className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold">
+              <div className="w-full flex items-center h-[4rem] pl-10 text-2xl hover:bg-slate-100 font-bold">
                 <button
                   onClick={() => {
                     Swal.fire({
@@ -303,7 +302,7 @@ const AccountSetting = () => {
                 >
                   Log out
                 </button>
-              </div> */}
+              </div>
             </div>
 
             {/* right area */}
@@ -328,7 +327,22 @@ const AccountSetting = () => {
 const Logout = () => {
   return (
     <div className="flex flex-col items-center justify-center w-full px-4 mb-4">
-      <button className="w-full py-4 text-lg font-bold rounded-lg btn-ghost">
+      <button className="w-full py-4 text-lg font-bold rounded-lg btn-ghost"
+      onClick={() => {
+        Swal.fire({
+          icon: "warning",
+          title: "Confirm to logout",
+          showCancelButton: true,
+          confirmButtonText: "Confirm",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            localStorage.clear();
+            setTimeout(() => {
+              window.location.href = "/login";
+            }, 3000);
+          }
+        });
+      }}>
         Log out
       </button>
     </div>
