@@ -51,7 +51,7 @@ const initialDashboardData = {
 export const DashBoard = () => {
   const [dashboardData, setDashboardData] = useState(initialDashboardData);
   //เรียกใช้ userData จาก userContext
-  const { userData } = useContext(userContext);
+  const { userData, sleeptime } = useContext(userContext);
 
   //get data
   useEffect(() => {
@@ -170,10 +170,9 @@ export const DashBoard = () => {
               <div id="card-sleep" className=" lg:w-[49%] items-center w-full ">
                 <div className="card bg-base-300">
                   <div className="card-body">
-                    <p className="text-[1.5rem]">4.25</p>
+                    <p className="text-[1.5rem]">{sleeptime}</p>
                     <h2 className="card-title text-[2rem]">Hours</h2>
-                    <div className="card-actions flex items-center">
-                      <p className="text-[1.5rem]">20:00 - 05:00</p>
+                    <div className="card-actions flex justify-end">
                       <BiSolidMoon className="text-[50px]" />
                     </div>
                   </div>
