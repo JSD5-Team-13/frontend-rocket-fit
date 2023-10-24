@@ -237,7 +237,11 @@ const MyFeed = () => {
                 userData={currentUserData}
               />
             ) : (
-              <FriendPost friendData={friendData} posts={posts} />
+              <FriendPost
+                userData={currentUserData}
+                friendData={friendData}
+                posts={posts}
+              />
             )}
           </div>
         </section>
@@ -337,6 +341,8 @@ const UserProfile = ({ userData, updateUser }) => {
 };
 
 const UserPost = ({ userData, posts, updatePost, deletePost }) => {
+  const [selectedPostId, setSelectedPostId] = useState(null);
+
   const timeOptions = {
     hour: "numeric",
     minute: "2-digit",
@@ -408,9 +414,16 @@ const UserPost = ({ userData, posts, updatePost, deletePost }) => {
             {/* Bottom Post */}
             <section className="flex justify-around p-3 lg:p-4 lg:order-3 lg:ml-[7.5rem] lg:mr-6 lg:border-t-2 lg:border-[#1CD6CE]">
               <HeartBtn />
-              <CommentBtn />
+              <CommentBtn
+                postId={post._id}
+                selectedPostId={selectedPostId}
+                toggleComment={setSelectedPostId}
+              />
             </section>
           </div>
+
+          {/* Comment Section */}
+          {selectedPostId === post._id && <CommentForm userData={userData} />}
         </div>
       ))}
     </div>
@@ -480,10 +493,12 @@ const FriendProfile = ({ userData, friendData, handleFollow }) => {
   );
 };
 
-const FriendPost = ({ friendData, posts }) => {
+const FriendPost = ({ userData, friendData, posts }) => {
   if (!friendData) {
     return <div>Loading friend profile...</div>;
   }
+
+  const [selectedPostId, setSelectedPostId] = useState(null);
 
   const timeOptions = {
     hour: "numeric",
@@ -549,9 +564,16 @@ const FriendPost = ({ friendData, posts }) => {
             {/* Bottom Post */}
             <section className="flex justify-around p-3 lg:p-4 lg:order-3 lg:ml-[7.5rem] lg:mr-6 lg:border-t-2 lg:border-[#1CD6CE]">
               <HeartBtn />
-              <CommentBtn />
+              <CommentBtn
+                postId={post._id}
+                selectedPostId={selectedPostId}
+                toggleComment={setSelectedPostId}
+              />
             </section>
           </div>
+
+          {/* Comment Section */}
+          {selectedPostId === post._id && <CommentForm userData={userData} />}
         </div>
       ))}
     </div>
@@ -741,15 +763,15 @@ const HeartBtn = () => {
   );
 };
 
-const CommentBtn = () => {
-  const [isComment, setIsComment] = useState(false);
-  const toggleComment = () => {
-    setIsComment(!isComment);
+const CommentBtn = ({ postId, selectedPostId, toggleComment }) => {
+  const handleToggleComment = () => {
+    // Toggle the comment form for the selected post
+    toggleComment(selectedPostId === postId ? null : postId);
   };
   return (
     <div>
-      <button onClick={toggleComment}>
-        {isComment ? (
+      <button onClick={handleToggleComment}>
+        {selectedPostId === postId ? (
           <FaCommentDots size={22} color="#1CD6CE" />
         ) : (
           <FaRegCommentDots size={22} />
@@ -795,20 +817,22 @@ const CommentDisplay = () => {
   );
 };
 
-const CommentForm = () => {
+const CommentForm = ({ userData }) => {
   return (
     <div className="bg-[#8DE2DF] p-2 lg:rounded-xl lg:mb-3 lg:shadow-xl">
       <section className="flex items-center">
         {/* Avatar */}
         <figure className="avatar m-3">
           <div className="w-12 rounded-full bg-gray-100">
-            <img src={UserIcon} alt="Image Profile" />
+            <img src={userData.image} alt="Image Profile" />
           </div>
         </figure>
 
         {/* Form*/}
         <div className="w-full">
-          <p className="font-semibold mb-1">Username</p>
+          <p className="font-semibold mb-1">
+            {userData.firstname} {userData.lastname}
+          </p>
           <div className="flex">
             <input
               type="text"
