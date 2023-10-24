@@ -61,7 +61,7 @@ export const DashBoard = () => {
         .then((res) => setDashboardData(res.data));
     };
 
-    getDashboardData();
+    if (userData.id) getDashboardData();
   }, [userData]);
 
   //map item like initialDashboardData
@@ -129,7 +129,7 @@ export const DashBoard = () => {
   const resultBMI = () => {
     const yourBMi = calBMI(userData.height, userData.weight);
     if (yourBMi < 18.5) return "Underweight";
-    if (yourBMi >= 18.5 || yourBMi <= 24.9) return "Heathty";
+    if (yourBMi >= 18.5 || yourBMi <= 24.9) return "Healthy";
     if (yourBMi >= 25.0 || yourBMi <= 29.9) return "Overweight";
     if (yourBMi > 30.0) return "Obese";
     return "default data";
@@ -172,7 +172,8 @@ export const DashBoard = () => {
                   <div className="card-body">
                     <p className="text-[1.5rem]">4.25</p>
                     <h2 className="card-title text-[2rem]">Hours</h2>
-                    <div className="justify-end card-actions">
+                    <div className="card-actions flex items-center">
+                      <p className="text-[1.5rem]">20:00 - 05:00</p>
                       <BiSolidMoon className="text-[50px]" />
                     </div>
                   </div>
