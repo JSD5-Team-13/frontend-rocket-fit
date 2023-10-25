@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { BsImages } from "react-icons/bs";
 import { AiOutlineDelete } from "react-icons/ai";
+import axios from "axios";
 
 const UpdateForm = ({ activity, updateData, onClose }) => {
   const [_id, setId] = useState("");
@@ -11,6 +12,8 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
   const [activity_name, setActivity_name] = useState("");
   const [activity_describe, setActivity_describe] = useState("");
   const [image, setImage] = useState("");
+  const [uploadImage, setUploadImage] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   // show date with correct form YYYY-MM-DD
   const apiDate = new Date(activity.date);
@@ -28,17 +31,45 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
     }
   }, [activity]);
 
+  useEffect(() => {
+    const uploadImageActivity = async () => {
+      if (uploadImage) {
+        setIsUploading(true);
+
+        const formData = new FormData();
+        formData.append("file", uploadImage);
+        formData.append("upload_preset", "update_activities");
+        try {
+          const response = await axios.post(
+            "https://api.cloudinary.com/v1_1/dok87yplt/image/upload",
+            formData
+          );
+          const imageUrl = response.data.url;
+          setImage(imageUrl);
+          setIsUploading(false);
+        } catch (error) {
+          console.error("Error uploading image", error);
+          setIsUploading(false);
+        }
+      }
+    };
+  
+    uploadImageActivity();
+  }, [uploadImage]);
+
   const updateSubmit = () => {
-    updateData(
-      _id,
-      date,
-      duration,
-      activity_type,
-      activity_name,
-      activity_describe,
-      image
-    );
-    onClose();
+    if (!isUploading) {
+      updateData(
+        _id,
+        date,
+        duration,
+        activity_type,
+        activity_name,
+        activity_describe,
+        image
+      );
+      onClose();
+    }
   };
 
   return (
@@ -162,6 +193,8 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
                 onChange={(e) => {
                   const file = e.target.files[0];
                   if (file) {
+                    setUploadImage(file);
+
                     const imageUrl = URL.createObjectURL(file);
                     setImage(imageUrl);
                   }
@@ -198,8 +231,9 @@ const UpdateForm = ({ activity, updateData, onClose }) => {
           <button
             className="btn w-1/2 bg-[#1CD6CE] hover:bg-[#1CD6CE] hover:text-white border-none"
             onClick={updateSubmit}
+            disabled={isUploading}
           >
-            Save
+            {isUploading ? "Uploading..." : "Save"}
           </button>
         </footer>
       </div>
