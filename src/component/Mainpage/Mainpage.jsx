@@ -185,11 +185,11 @@ const Mainpage = () => {
       </div>
       <div className="w-full ">
         <div className="flex flex-row justify-center mx-auto my-0 max-w-screen-2xl md:mx-auto">
-          <aside className="top-0 hidden shadow-lg lg:w-1/4 lg:block mt-[79px]">
+          <aside className="top-0 hidden shadow-lg lg:w-1/4 lg:block lg:mt-[79px]">
             <SideInformation />
           </aside>
 
-          <div className="flex flex-col items-center overflow-scroll flex-hidden h-[100vh] pb-40 bg-gray-100 lg:w-2/4 mt-[79px]">
+          <div className="flex flex-col items-center overflow-scroll flex-hidden h-[100vh] pb-40 bg-gray-100 lg:w-2/4 mt-[63px] lg:mt-[79px]">
             <div className="self-start m-6">
               <h1 className="text-3xl font-semibold">
                 Welcome, {userData.FirstName}
@@ -219,7 +219,7 @@ const Mainpage = () => {
             {/* Dashboard Area */}
             <div className="card card-side card-compact bg-base-300 shadow-xl w-[80%] my-4">
               <figure className="w-[20%] avatar">
-                <HiOutlinePresentationChartLine className="w-[55%] h-[60%] rounded-full" />
+                <HiOutlinePresentationChartLine className="w-[70%] h-[60%] rounded-full" />
               </figure>
               <div className="card-body">
                 <p className="font-bold">Dashboard checkout</p>
@@ -285,11 +285,13 @@ const Mainpage = () => {
                 {followingData.slice(0, 9).map((user, index) => (
                   <div key={index}>
                     <div className="">
+                      <a href={`/myfeed/${user._id}`}>
                       <img
                         src={user.image}
                         alt="profile"
                         className="rounded-full w-20 h-20"
                       />
+                      </a>
                     </div>
                   </div>
                 ))}

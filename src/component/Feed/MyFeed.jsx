@@ -889,9 +889,11 @@ const CommentContent = ({ postId }) => {
 
             {/* Comment */}
             <div className="w-full">
+              <a href={`/myfeed/${comment.author._id}`}>
               <p className="font-semibold mb-1">
                 {comment.author.FirstName} {comment.author.LastName}
               </p>
+              </a>
               <div className="flex">
                 <p className="w-full mr-2">{comment.content}</p>
                 {/* <button className="mr-7" onClick={toggleHeart}>

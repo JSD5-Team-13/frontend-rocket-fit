@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import { BsImages } from "react-icons/bs";
 import { AiOutlineDelete } from "react-icons/ai";

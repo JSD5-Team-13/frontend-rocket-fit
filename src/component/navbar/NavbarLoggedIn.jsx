@@ -33,7 +33,7 @@ const NavbarLoggedIn = () => {
         }
     }, [userId]);
     return (
-        <div className="navbar bg-neutral h-[5rem] fixed z-10">
+        <div className="navbar bg-neutral h-[4rem] lg:h-[5rem] fixed z-10">
             {/* Navigation Bar Start */}
             <div className="navbar-start">
                 <a href="/main"><img src={LogoFull} alt='logo' className='hidden w-auto h-10 mx-4 lg:block' /></a>
