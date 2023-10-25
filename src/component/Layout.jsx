@@ -4,7 +4,7 @@ import NavbarLoggedIn from "./navbar/NavbarLoggedIn.jsx"
 const Layout = ({children}) => {
 
     return (
-        <div className="flex-col justify-center">
+        <div className="">
             <div className="fixed top-0">
               <NavbarLoggedIn />   
             </div>

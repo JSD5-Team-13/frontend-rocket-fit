@@ -5,7 +5,7 @@ import axios from "axios";
 
 const Password = ({ userId, userData, setUserData, setShowAlert, setAlertMessage }) => {
   
-  const serverUrl = "http://127.0.0.1:8000"
+  const serverUrl = "https://rocket-fit-api.onrender.com"
   const token = localStorage.getItem("rockettoken");
   
   const [password, setPassword] = useState({

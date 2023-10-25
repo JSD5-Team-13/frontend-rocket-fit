@@ -18,7 +18,7 @@ const CalendarMain = () => {
   
     if (token) {
       // Fetch user data
-      axios.get("http://127.0.0.1:8000/users", {
+      axios.get("https://rocket-fit-api.onrender.com/users", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -26,7 +26,7 @@ const CalendarMain = () => {
       .then((response) => {
         if (response.status === 200) {
           setUserId(response.data.id);
-          axios.get(`http://127.0.0.1:8000/calendar?userId=${userId}`)
+          axios.get(`https://rocket-fit-api.onrender.com/calendar?userId=${userId}`)
           .then((memoResponse) => {
             if (memoResponse.status === 200) {
               setMemos(memoResponse.data);
@@ -49,7 +49,7 @@ const CalendarMain = () => {
 
   const createMemo = async (memoData) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/calendar", {
+      const response = await axios.post("https://rocket-fit-api.onrender.com/calendar", {
         ...memoData
       });
       if (response.status === 200) {
@@ -76,7 +76,7 @@ const CalendarMain = () => {
 
   const updateMemo = async (updatedMemo , memoId) => {
     try {
-      const response = await axios.put(`http://127.0.0.1:8000/calendar/${memoId}`, updatedMemo);
+      const response = await axios.put(`https://rocket-fit-api.onrender.com/calendar/${memoId}`, updatedMemo);
       if (response.status === 200) {
         Swal.fire({
           icon: 'success',
@@ -101,7 +101,7 @@ const CalendarMain = () => {
 
   const deleteMemo = async (_id) => {
     try {
-      const response = await axios.delete(`http://127.0.0.1:8000/calendar/${_id}`);
+      const response = await axios.delete(`https://rocket-fit-api.onrender.com/calendar/${_id}`);
       if (response.status === 200) {
         Swal.fire({
           icon: 'success',

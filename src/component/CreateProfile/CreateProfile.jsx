@@ -1,4 +1,3 @@
-// import { MdPeopleAlt } from "react-icons/md";
 import Profile from "../../assets/blank-profile-picture-973460_960_720.jpg";
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -16,9 +15,8 @@ const CreateProfile = () => {
     weight: "",
     gender: "",
     DateOfBirth: "",
+    image: "",
   });
-  // const [uploadImg, setUploadImg] = useState("");
-  // console.log("toy", uploadImg);
 
   const inputRef = useRef(null);
   const [image, setImage] = useState(null);
@@ -27,7 +25,7 @@ const CreateProfile = () => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
       axios
-        .get("http://127.0.0.1:8000/users", {
+        .get("https://rocket-fit-api.onrender.com/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -57,7 +55,8 @@ const CreateProfile = () => {
     height,
     weight,
     gender,
-    DateOfBirth
+    DateOfBirth,
+    image
   ) => {
     try {
       const requestData = {
@@ -68,10 +67,12 @@ const CreateProfile = () => {
         weight: weight,
         gender: gender,
         DateOfBirth: DateOfBirth,
+        image: image,
       };
+
       const token = localStorage.getItem("rockettoken");
       const Update = await axios.put(
-        `http://127.0.0.1:8000/users/${nameUser.id}`,
+        `https://rocket-fit-api.onrender.com/users/${nameUser.id}`,
         requestData,
         {
           headers: {
@@ -85,9 +86,9 @@ const CreateProfile = () => {
           icon: "success",
           title: "Create Success",
         });
+
         navigate("/main");
       } else if (Update.status === 400) {
-        // Use "else if" here
         Swal.fire({
           icon: "error",
           title: "Create Not Success",
@@ -104,10 +105,9 @@ const CreateProfile = () => {
     e.preventDefault();
     Swal.fire({
       title: "Do you want to save the changes?",
-      // showDenyButton: true,
+
       showCancelButton: true,
       confirmButtonText: "Save",
-      // denyButtonText: `Don't save`,
     }).then((result) => {
       if (result.isConfirmed) {
         updateUser(
@@ -117,7 +117,8 @@ const CreateProfile = () => {
           data.height,
           data.weight,
           data.gender,
-          data.DateOfBirth
+          data.DateOfBirth,
+          data.image
         );
       } else if (result.isDenied) {
         console.log("Changes are not saved");
@@ -125,53 +126,28 @@ const CreateProfile = () => {
     });
   };
 
-  const handleImageClick = (e) => {
+  const handleImageClick = () => {
     inputRef.current.click();
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    console.log(file);
-    setImage(file);
-  };
-
   useEffect(() => {
-    handleImageUpload();
+    const uploadImage = async () => {
+      console.log(image);
+      const formData = new FormData();
+      formData.append("file", image);
+      formData.append("upload_preset", "ofo3yslc");
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dok87yplt/image/upload",
+        formData
+      );
+      console.log(response.data.url);
+      const images = response.data.url;
+
+      setData({ ...data, image: images });
+      console.log(data);
+    };
+    uploadImage();
   }, [image]);
-
-  const handleImageUpload = async () => {
-    try {
-      if (image) {
-        const token = localStorage.getItem("rockettoken");
-        const formData = new FormData();
-        formData.append("image", image);
-
-        // ส่งไฟล์รูปภาพไปยัง Node.js ในส่วนที่จะรับและอัปโหลดไป Cloudinary
-        const response = await axios.put(
-          `http://127.0.0.1:8000/users/${nameUser.id}`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-
-        if (response.status === 200) {
-          Swal.fire({
-            icon: "success",
-            title: "Create Success",
-          });
-          // navigate("/main");
-        } else {
-          console.log("error");
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return (
     <div>
@@ -198,7 +174,8 @@ const CreateProfile = () => {
                   type="file"
                   ref={inputRef}
                   className="hidden"
-                  onChange={handleImageChange}
+                  // onChange={handleImageChange}
+                  onChange={(e) => setImage(e.target.files[0])}
                 />
                 <div className="absolute top-0 left-0 w-full h-full flex items-end pb-[20px] bg-black/[0.35] rounded-full justify-center opacity-0 hover:opacity-100 transition-opacity">
                   <span className="text-white text-lg font-bold">
