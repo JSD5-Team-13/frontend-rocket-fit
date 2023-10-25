@@ -32,11 +32,14 @@ const MyFeed = () => {
         const token = localStorage.getItem("rockettoken");
         if (token) {
           // Fetch user data
-          const userResponse = await axios.get("https://rocket-fit-api.onrender.com/users", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const userResponse = await axios.get(
+            "https://rocket-fit-api.onrender.com/users",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
           if (userResponse.status === 200) {
             setCurrentUserId(userResponse.data.id);
@@ -190,7 +193,9 @@ const MyFeed = () => {
   // Delete a post
   const deletePost = async (_id) => {
     try {
-      const response = await axios.delete(`https://rocket-fit-api.onrender.com/post/${_id}`);
+      const response = await axios.delete(
+        `https://rocket-fit-api.onrender.com/post/${_id}`
+      );
 
       if (response.status === 200) {
         setReload(!reload);
@@ -324,10 +329,16 @@ const UserProfile = ({ userData, updateUser }) => {
           </button>
           <div className="flex">
             <p className="mr-3 font-semibold">
-            <span className="mr-1">{userData.following ? userData.following.length : 0}</span>Following
+              <span className="mr-1">
+                {userData.following ? userData.following.length : 0}
+              </span>
+              Following
             </p>
             <p className="font-semibold">
-            <span className="mr-1">{userData.followers ? userData.followers.length : 0}</span>Followers
+              <span className="mr-1">
+                {userData.followers ? userData.followers.length : 0}
+              </span>
+              Followers
             </p>
           </div>
           <button
@@ -832,12 +843,12 @@ const CommentBtn = ({ postId, selectedPostId, toggleComment }) => {
 };
 
 const CommentContent = ({ postId }) => {
-  const [isHeart, setIsHeart] = useState(false);
+  // const [isHeart, setIsHeart] = useState(false);
   const [comments, setComments] = useState([]); // State to store comments
 
-  const toggleHeart = () => {
-    setIsHeart(!isHeart);
-  };
+  // const toggleHeart = () => {
+  //   setIsHeart(!isHeart);
+  // };
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -859,7 +870,7 @@ const CommentContent = ({ postId }) => {
     };
 
     fetchComments();
-  }, [postId]);
+  }, [postId, comments]);
 
   return (
     <div>
@@ -883,13 +894,13 @@ const CommentContent = ({ postId }) => {
               </p>
               <div className="flex">
                 <p className="w-full mr-2">{comment.content}</p>
-                <button className="mr-7" onClick={toggleHeart}>
+                {/* <button className="mr-7" onClick={toggleHeart}>
                   {isHeart ? (
                     <FaHeart size={22} color="red" />
                   ) : (
                     <FaRegHeart size={22} />
                   )}
-                </button>
+                </button> */}
               </div>
             </div>
           </section>
