@@ -314,7 +314,7 @@ export const ActivityType = ({ selectedType, setSelectedType }) => {
     if (selectedOption !== "") {
       setSelectedType(selectedOption);
     }
-    return console.log("type: " + selectedType);
+    return
   };
 
   return (
@@ -356,7 +356,7 @@ export const ActivityName = ({ createdTitle, setCreatedTitle }) => {
   const HandleTitleChange = (event) => {
     setCreatedTitle(event.target.value);
 
-    return console.log("title: " + createdTitle);
+    return
   };
 
   return (
@@ -384,7 +384,7 @@ export const ActivityDesc = ({ createdDesc, setCreatedDesc }) => {
   const HandleDescChange = (event) => {
     setCreatedDesc(event.target.value);
 
-    return console.log("description: " + createdDesc);
+    return
   };
 
   return (
@@ -411,7 +411,7 @@ export const ActivityDuration = ({ durationTime, setDurationTime }) => {
   const HandleDurationChange = (event) => {
     setDurationTime(event.target.value);
 
-    return console.log("duration: " + durationTime);
+    return
   };
   return (
     <div className="w-full xs:w-2/4 md:w-full lg:w-2/4">
@@ -438,7 +438,7 @@ export const ActivityDate = ({ selectDate, setSelectDate }) => {
   const HandleDateChange = (event) => {
     setSelectDate(event.target.value);
 
-    return console.log("date: " + selectDate);
+    return
   };
   return (
     <div className="w-full xs:w-2/4 md:w-full lg:w-2/4">
