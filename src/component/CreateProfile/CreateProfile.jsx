@@ -20,7 +20,7 @@ const CreateProfile = () => {
 
   const inputRef = useRef(null);
   const [image, setImage] = useState(null);
-
+  const [userId, setUserId] = useState("");
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
@@ -33,7 +33,7 @@ const CreateProfile = () => {
         .then((res) => {
           if (res.status === 200) {
             setNameUser(res.data);
-            console.log(nameUser);
+            setUserId(res.data.id);
           } else {
             console.log("Failed to fetch user data");
           }
@@ -43,51 +43,33 @@ const CreateProfile = () => {
         });
     }
   }, []);
-
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const updateUser = async (
-    id,
-    FirstName,
-    LastName,
-    height,
-    weight,
-    gender,
-    DateOfBirth,
-    image
-  ) => {
+  const updateUser = async () => {
     try {
-      const requestData = {
-        id: id,
-        FirstName: FirstName,
-        LastName: LastName,
-        height: height,
-        weight: weight,
-        gender: gender,
-        DateOfBirth: DateOfBirth,
-        image: image,
-      };
-
       const token = localStorage.getItem("rockettoken");
       const Update = await axios.put(
-        `https://rocket-fit-api.onrender.com/users/${nameUser.id}`,
-        requestData,
+        `https://rocket-fit-api.onrender.com/users/${userId}`,
+        // `http://127.0.0.1:8000/users/${userId}`,
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
+      console.log(data);
       if (Update.status === 200) {
         Swal.fire({
           icon: "success",
           title: "Create Success",
         });
-
-        navigate("/main");
+        setTimeout(() => {
+          navigate("/main");
+          window.location.reload();
+        }, 2000);
       } else if (Update.status === 400) {
         Swal.fire({
           icon: "error",
@@ -105,7 +87,6 @@ const CreateProfile = () => {
     e.preventDefault();
     Swal.fire({
       title: "Do you want to save the changes?",
-
       showCancelButton: true,
       confirmButtonText: "Save",
     }).then((result) => {
@@ -142,7 +123,6 @@ const CreateProfile = () => {
       );
       console.log(response.data.url);
       const images = response.data.url;
-
       setData({ ...data, image: images });
       console.log(data);
     };
