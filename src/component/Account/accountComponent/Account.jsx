@@ -1,9 +1,16 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}) => {
-  const serverUrl = "https://rocket-fit-api.onrender.com"
+const Account = ({
+  userId,
+  userData,
+  setUserData,
+  setShowAlert,
+  setAlertMessage,
+}) => {
+  const serverUrl = "https://rocket-fit-api.onrender.com";
   const token = localStorage.getItem("rockettoken");
 
   const handleInputChange = (event) => {
@@ -15,41 +22,44 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
   };
 
   const updateAccount = async () => {
-
     try {
-      const response = await axios.put(serverUrl + "/users/setting/account/" + userData.userId, userData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
+      const response = await axios.put(
+        serverUrl + "/users/setting/account/" + userData.userId,
+        userData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       if (response.status === 200) {
         console.log(`Account ID : ${userId} is updated information`);
-        setAlertMessage({ text: response.data.message, status: 'success' });
+        setAlertMessage({ text: response.data.message, status: "success" });
         setShowAlert(true);
       } else {
         console.log(response.data.error);
-        setAlertMessage({ text: response.data.error, status: 'error' });
+        setAlertMessage({ text: response.data.error, status: "error" });
         setShowAlert(true);
       }
     } catch (error) {
-      setAlertMessage({ text: error.response.data.message, status: 'error' });
+      setAlertMessage({ text: error.response.data.message, status: "error" });
       setShowAlert(true);
       console.error("Error updating account: ", error);
     }
   };
   const resetForm = () => {
-    
     if (token) {
-      axios.get(serverUrl + "/users/setting/" + userData.userId, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      axios
+        .get(serverUrl + "/users/setting/" + userData.userId, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         })
         .then((response) => {
           const userDataFromAPI = response.data;
           setUserData(userDataFromAPI);
-          console.log("reset form")
+          console.log("reset form");
         })
         .catch((error) => {
           console.error("Error fetching user data", error);
@@ -134,7 +144,6 @@ const Account = ({ userId, userData, setUserData, setShowAlert, setAlertMessage}
                   value={userData.weight}
                   onChange={handleInputChange}
                   className="w-2/3 text-center rounded-md input input-bordered input-sm"
-                  // placeholder={userData.DateOfBirth}
                 />
               </div>
 

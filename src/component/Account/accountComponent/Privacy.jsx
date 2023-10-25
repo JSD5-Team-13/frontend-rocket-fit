@@ -1,61 +1,61 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import axios from "axios";
 
-
 const Privacy = ({ userId, setShowAlert, setAlertMessage }) => {
-  const serverUrl = "https://rocket-fit-api.onrender.com"
+  const serverUrl = "https://rocket-fit-api.onrender.com";
   const token = localStorage.getItem("rockettoken");
 
   const [deactivate, setDeactivate] = useState();
 
   const handleInputChange = (event) => {
-    const inputDelete = event.target.value
+    const inputDelete = event.target.value;
     setDeactivate(inputDelete);
   };
 
   const logoutAndRedirectToLogin = async () => {
     setTimeout(() => {
-        localStorage.removeItem('rockettoken');
-        window.location.href='/login';
-
+      localStorage.removeItem("rockettoken");
+      window.location.href = "/login";
     }, 1500);
-
   };
 
   const deactivated = async () => {
     try {
       if (!deactivate) {
-        setAlertMessage({ text: 'Delete account error.', status: 'warning' });
+        setAlertMessage({ text: "Delete account error.", status: "warning" });
         setShowAlert(true);
         return;
       }
-  
+
       if (deactivate !== "delete account") {
-        setAlertMessage({ text: 'Type does not match.', status: 'warning' });
+        setAlertMessage({ text: "Type does not match.", status: "warning" });
         setShowAlert(true);
         return;
       }
       const response = await axios.put(
-        serverUrl + "/users/setting/deactivate/" + userId, {
-          confirmToDeactivated: deactivate},
+        serverUrl + "/users/setting/deactivate/" + userId,
+        {
+          confirmToDeactivated: deactivate,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-  
-      setAlertMessage({ text: response.data.message, status: 'success' });
+
+      setAlertMessage({ text: response.data.message, status: "success" });
       setShowAlert(true);
       logoutAndRedirectToLogin();
     } catch (error) {
-      setAlertMessage({ text: error.response.data.message, status: 'error' });
+      setAlertMessage({ text: error.response.data.message, status: "error" });
       setShowAlert(true);
-      console.error('Error updating password: ', error);
+      console.error("Error updating password: ", error);
     }
   };
-
 
   return (
     <div className="w-full">
@@ -75,13 +75,10 @@ const Privacy = ({ userId, setShowAlert, setAlertMessage }) => {
             />
           </div>
           <div className="flex flex-row items-center w-full mt-4 mb-4 justify-evenly">
-          <button
-            className="btn btn-warning btn-sm"
-            onClick={deactivated}
-          >
-            delete this account
-          </button>
-        </div>
+            <button className="btn btn-warning btn-sm" onClick={deactivated}>
+              delete this account
+            </button>
+          </div>
         </div>
       </div>
     </div>
