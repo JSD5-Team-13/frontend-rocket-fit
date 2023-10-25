@@ -832,12 +832,12 @@ const CommentBtn = ({ postId, selectedPostId, toggleComment }) => {
 };
 
 const CommentContent = ({ postId }) => {
-  const [isHeart, setIsHeart] = useState(false);
+  // const [isHeart, setIsHeart] = useState(false);
   const [comments, setComments] = useState([]); // State to store comments
 
-  const toggleHeart = () => {
-    setIsHeart(!isHeart);
-  };
+  // const toggleHeart = () => {
+  //   setIsHeart(!isHeart);
+  // };
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -859,7 +859,7 @@ const CommentContent = ({ postId }) => {
     };
 
     fetchComments();
-  }, [postId]);
+  }, [postId, comments]);
 
   return (
     <div>
@@ -883,13 +883,13 @@ const CommentContent = ({ postId }) => {
               </p>
               <div className="flex">
                 <p className="w-full mr-2">{comment.content}</p>
-                <button className="mr-7" onClick={toggleHeart}>
+                {/* <button className="mr-7" onClick={toggleHeart}>
                   {isHeart ? (
                     <FaHeart size={22} color="red" />
                   ) : (
                     <FaRegHeart size={22} />
                   )}
-                </button>
+                </button> */}
               </div>
             </div>
           </section>
