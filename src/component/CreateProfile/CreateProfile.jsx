@@ -1,4 +1,3 @@
-// import { MdPeopleAlt } from "react-icons/md";
 import Profile from "../../assets/blank-profile-picture-973460_960_720.jpg";
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -18,12 +17,9 @@ const CreateProfile = () => {
     DateOfBirth: "",
     image: "",
   });
-  // const [uploadImg, setUploadImg] = useState("");
-  // console.log("toy", uploadImg);
 
   const inputRef = useRef(null);
   const [image, setImage] = useState(null);
-  // const [upload, setUpload] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
@@ -73,11 +69,10 @@ const CreateProfile = () => {
         DateOfBirth: DateOfBirth,
         image: image,
       };
-      console.log(requestData);
+
       const token = localStorage.getItem("rockettoken");
       const Update = await axios.put(
-        // `https://rocket-fit-api.onrender.com/users/${nameUser.id}`,
-        `http://127.0.0.1:8000/users/${nameUser.id}`,
+        `https://rocket-fit-api.onrender.com/users/${nameUser.id}`,
         requestData,
         {
           headers: {
@@ -94,7 +89,6 @@ const CreateProfile = () => {
 
         navigate("/main");
       } else if (Update.status === 400) {
-        // Use "else if" here
         Swal.fire({
           icon: "error",
           title: "Create Not Success",
@@ -111,10 +105,9 @@ const CreateProfile = () => {
     e.preventDefault();
     Swal.fire({
       title: "Do you want to save the changes?",
-      // showDenyButton: true,
+
       showCancelButton: true,
       confirmButtonText: "Save",
-      // denyButtonText: `Don't save`,
     }).then((result) => {
       if (result.isConfirmed) {
         updateUser(
@@ -127,7 +120,6 @@ const CreateProfile = () => {
           data.DateOfBirth,
           data.image
         );
-        // handleImageUpload();
       } else if (result.isDenied) {
         console.log("Changes are not saved");
       }
@@ -138,12 +130,6 @@ const CreateProfile = () => {
     inputRef.current.click();
   };
 
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   console.log(file);
-  //   setImage(file);
-  // };
-  // console.log(image);
   useEffect(() => {
     const uploadImage = async () => {
       console.log(image);
@@ -156,47 +142,12 @@ const CreateProfile = () => {
       );
       console.log(response.data.url);
       const images = response.data.url;
-      // setData({ ...data, image: images });
+
       setData({ ...data, image: images });
       console.log(data);
-      // setUpload(response.data.url);
     };
     uploadImage();
   }, [image]);
-
-  // const handleImageUpload = async () => {
-  //   try {
-  //     if (image) {
-  //       const token = localStorage.getItem("rockettoken");
-  //       const formData = new FormData();
-  //       formData.append("image", image);
-
-  //       // ส่งไฟล์รูปภาพไปยัง Node.js ในส่วนที่จะรับและอัปโหลดไป Cloudinary
-  //       const response = await axios.put(
-  //         `http://127.0.0.1:8000/users/${nameUser.id}`,
-  //         formData,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //             "Content-Type": "multipart/form-data",
-  //           },
-  //         }
-  //       );
-
-  //       if (response.status === 200) {
-  //         Swal.fire({
-  //           icon: "success",
-  //           title: "Create Success",
-  //         });
-  //         // navigate("/main");
-  //       } else {
-  //         console.log("error");
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   return (
     <div>
