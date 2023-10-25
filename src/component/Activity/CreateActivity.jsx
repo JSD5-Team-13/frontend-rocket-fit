@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from "react";
 import Layout from "../Layout.jsx";
-// import SideInformation from "../navbar/SideInformationBar.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+const serverUrl = "https://rocket-fit-api.onrender.com";
 
 const ActivityForm = () => {
   const [selectedType, setSelectedType] = useState("");
@@ -14,10 +15,10 @@ const ActivityForm = () => {
   const [selectedImage, setSelectedImage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const [userId , setUserId] = useState("");
-
+  const [userId, setUserId] = useState("");
+  const [imageFile, setImageFile] = useState(null);
   const [reload, setReload] = useState(true);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const ResetHandler = () => {
     setSelectedType("");
@@ -25,7 +26,7 @@ const ActivityForm = () => {
     setCreatedDesc("");
     setDurationTime("");
     setSelectedImage("");
-    navigate("/activity")
+    navigate("/activity");
   };
 
   useEffect(() => {
@@ -40,7 +41,8 @@ const ActivityForm = () => {
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
-      axios.get("http://127.0.0.1:8000/users", {
+      axios
+        .get(serverUrl + "/users/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -48,7 +50,6 @@ const ActivityForm = () => {
         .then((response) => {
           if (response.status === 200) {
             setUserId(response.data.id);
-            console.log(userId)
           } else {
             console.log("Failed to fetch user data");
           }
@@ -135,8 +136,8 @@ const ActivityForm = () => {
   };
 
   const closeAlert = () => {
-    setShowAlert(false); // ปิดหน้าต่างแจ้งเตือน
-    setAlertMessage(""); // ล้างข้อความแจ้งเตือน
+    setShowAlert(false);
+    setAlertMessage("");
   };
 
   const CreatedHandler = async (
@@ -169,27 +170,48 @@ const ActivityForm = () => {
       if (errors.length > 0) {
         const errorText = errors.join(" , ");
         setAlertMessage(errorText);
-        setShowAlert(true); // แสดงหน้าต่างแจ้งเตือน
+        setShowAlert(true);
         return;
       }
 
-      const response = await axios.post(
-        "http://127.0.0.1:8000/activity",
-        {
+      if (imageFile !== null) {
+        const formData = new FormData();
+        formData.append("imageActivity", imageFile);
+        formData.append("activity_type", selectedType);
+        formData.append("activity_name", createdTitle);
+        formData.append("activity_describe", createdDesc);
+        formData.append("duration", durationTime);
+        formData.append("date", selectDate);
+        formData.append("userId", userId);
+
+        const response = await axios.post(
+          serverUrl + "/activity/create/",
+          formData, // ส่ง FormData แทน object
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        console.log("Created completed", response.data);
+        setAlertMessage("Created completed");
+        setShowAlert(true);
+      } else {
+        const response = await axios.post(serverUrl + "/activity/create/", {
           activity_type: selectedType,
           activity_name: createdTitle,
           activity_describe: createdDesc,
           duration: durationTime,
           date: selectDate,
           image: selectedImage,
-          userId: userId
-        }
-      );
-      
-      console.log("Created completed", response.data);
-      setAlertMessage("Created completed");
-      setShowAlert(true);
-      
+          userId: userId,
+        });
+
+        console.log("Created completed", response.data);
+        setAlertMessage("Created completed");
+        setShowAlert(true);
+      }
     } catch (error) {
       console.error("Create failed ", error);
       setAlertMessage("Created failed");
@@ -249,6 +271,7 @@ const ActivityForm = () => {
                   <ActivityImage
                     selectedImage={selectedImage}
                     setSelectedImage={setSelectedImage}
+                    setImageFile={setImageFile}
                   />
                 </div>
               </div>
@@ -291,12 +314,15 @@ export const ActivityType = ({ selectedType, setSelectedType }) => {
     if (selectedOption !== "") {
       setSelectedType(selectedOption);
     }
-    return console.log("type: " + selectedType);
+    return
   };
 
   return (
     <div className="w-full lg:w-2/4">
-      <label htmlFor="activityType" className="mb-2 font-medium uppercase text-md">
+      <label
+        htmlFor="activityType"
+        className="mb-2 font-medium uppercase text-md"
+      >
         Activity Type
       </label>
       <select
@@ -330,12 +356,15 @@ export const ActivityName = ({ createdTitle, setCreatedTitle }) => {
   const HandleTitleChange = (event) => {
     setCreatedTitle(event.target.value);
 
-    return console.log("title: " + createdTitle);
+    return
   };
 
   return (
     <div>
-      <label htmlFor="activityTitle" className="mb-2 font-medium uppercase text-md">
+      <label
+        htmlFor="activityTitle"
+        className="mb-2 font-medium uppercase text-md"
+      >
         Title
       </label>
       <input
@@ -355,12 +384,15 @@ export const ActivityDesc = ({ createdDesc, setCreatedDesc }) => {
   const HandleDescChange = (event) => {
     setCreatedDesc(event.target.value);
 
-    return console.log("description: " + createdDesc);
+    return
   };
 
   return (
     <div className="h-auto resize-y lg:h-full">
-      <label htmlFor="activityDesc" className="mb-2 font-medium uppercase text-md">
+      <label
+        htmlFor="activityDesc"
+        className="mb-2 font-medium uppercase text-md"
+      >
         Description
       </label>
       <textarea
@@ -379,7 +411,7 @@ export const ActivityDuration = ({ durationTime, setDurationTime }) => {
   const HandleDurationChange = (event) => {
     setDurationTime(event.target.value);
 
-    return console.log("duration: " + durationTime);
+    return
   };
   return (
     <div className="w-full xs:w-2/4 md:w-full lg:w-2/4">
@@ -403,21 +435,21 @@ export const ActivityDuration = ({ durationTime, setDurationTime }) => {
 
 // eslint-disable-next-line react/prop-types
 export const ActivityDate = ({ selectDate, setSelectDate }) => {
-  // const currentDate = new Date().toISOString().slice(0, 10);
-
   const HandleDateChange = (event) => {
     setSelectDate(event.target.value);
 
-    return console.log("date: " + selectDate);
+    return
   };
   return (
     <div className="w-full xs:w-2/4 md:w-full lg:w-2/4">
-      <label htmlFor="activityDate" className="mb-2 font-medium uppercase text-md">
+      <label
+        htmlFor="activityDate"
+        className="mb-2 font-medium uppercase text-md"
+      >
         Date
       </label>
       <input
         type="datetime-local"
-        // defaultValue={currentDate}
         value={selectDate}
         className="w-full p-2 px-4 mt-1 mb-4 text-center rounded-md input input-bordered"
         required
@@ -428,19 +460,26 @@ export const ActivityDate = ({ selectDate, setSelectDate }) => {
 };
 
 // eslint-disable-next-line react/prop-types
-export const ActivityImage = ({ selectedImage, setSelectedImage }) => {
+export const ActivityImage = ({
+  selectedImage,
+  setSelectedImage,
+  setImageFile,
+}) => {
   const [imageOption, setImageOption] = useState("");
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
 
     if (file) {
+      setImageFile(file);
+
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onloadend = (e) => {
         setSelectedImage(e.target.result);
       };
       reader.readAsDataURL(file);
     } else {
+      setImageFile(null);
       setSelectedImage(null);
     }
   };
@@ -529,7 +568,7 @@ export const ActivityImage = ({ selectedImage, setSelectedImage }) => {
                 <span>Upload a file</span>
                 <input
                   id="file-upload"
-                  name="file-upload"
+                  name="imageActivity"
                   type="file"
                   className="sr-only"
                   accept="image/*"

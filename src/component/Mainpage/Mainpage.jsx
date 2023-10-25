@@ -6,7 +6,6 @@ import {
   HiOutlinePresentationChartLine,
   HiOutlineMoon,
 } from "react-icons/hi";
-import MockupProfile from "../../assets/blank-profile-picture-973460_960_720.jpg";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -23,22 +22,23 @@ const Mainpage = () => {
   const [currentDate, setCurrentDate] = useState(getDate());
   const [userId, setUserId] = useState("");
   const [userData, setUserData] = useState({});
+  const [followingData, setFollowingData] = useState([]);
   const [sleepTime, setSleepTime] = useState({
-    sleepTime : "HH:MM",
-    wakeTime : "HH:MM",
-    date : "",
+    sleepTime: "HH:MM",
+    wakeTime: "HH:MM",
+    date: "",
   });
 
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
-      axios.get("http://127.0.0.1:8000/users", {
+      axios
+        .get("https://rocket-fit-api.onrender.com/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then((response) => {
-          
           if (response.status === 200) {
             setUserId(response.data.id);
           } else {
@@ -54,7 +54,8 @@ const Mainpage = () => {
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
-      axios.get(`http://127.0.0.1:8000/users/${userId}`, {
+      axios
+        .get(`https://rocket-fit-api.onrender.com/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -72,71 +73,102 @@ const Mainpage = () => {
     }
   }, [userId]);
 
+  useEffect(() => {
+    // Check if userData.following is available
+    if (userData.following && userData.following.length > 0) {
+      const token = localStorage.getItem("rockettoken");
+      const fetchFollowingData = async () => {
+        try {
+          const followingPromises = userData.following.map((userId) =>
+            axios.get(`https://rocket-fit-api.onrender.com/users/${userId}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+          );
+
+          const followingResponses = await Promise.all(followingPromises);
+
+          const followingData = followingResponses.map((response) => {
+            if (response.status === 200) {
+              return response.data;
+            } else {
+              console.error("Error fetching following data");
+              return null; // Handle the error case here
+            }
+          });
+
+          setFollowingData(followingData.filter((user) => user));
+        } catch (error) {
+          console.error("Error fetching following data", error);
+        }
+      };
+      fetchFollowingData();
+    }
+  }, [userData.following]);
+
   const sleepTimeCreate = (sleepTimeData) => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
-      axios.post(`http://127.0.0.1:8000/sleeptime`,
-      sleepTimeData
-    )
-    .then((response) => {
-      if (response.status === 200) {
-        Swal.fire({
-          icon: "success",
-          title: "Sleep Time Added",
+      axios
+        .post(`https://rocket-fit-api.onrender.com/sleeptime`, sleepTimeData)
+        .then((response) => {
+          if (response.status === 200) {
+            Swal.fire({
+              icon: "success",
+              title: "Sleep Time Added",
+            });
+          } else {
+            console.log("error");
+          }
+        })
+        .catch((error) => {
+          console.log(`Error fetching user data from the database`, error);
+          Swal.fire({
+            icon: "error",
+            title: "You already add your sleep time today",
+          });
         });
-      } else {
-        console.log("error");
-      }
-    })
-    .catch((error) => {
-      console.log(`Error fetching user data from the database`, error);
-      Swal.fire({
-        icon: "error",
-        title: "You already add your sleep time today",
-      });
-    });
     }
   }
     
   const sleepTimeHandler = () => {
     // Parse the sleepTime and wakeTime into Date objects
-    const sleepTimeDate = new Date(`2023-10-24T${sleepTime.sleepTime}`);
-    const wakeTimeDate = new Date(`2023-10-24T${sleepTime.wakeTime}`);
-  
+    // const midnight = new Date(`2000-10-13T00:00:00`);
+    const sleepTimeDate = new Date(`2000-10-13T${sleepTime.sleepTime}`);
+    const wakeTimeDate = new Date(`2000-10-13T${sleepTime.wakeTime}`);
+
     // Calculate the time difference in milliseconds
     const timeDifference = wakeTimeDate - sleepTimeDate;
-  
     // Convert the time difference to hours and minutes
     const totalHours = Math.floor(timeDifference / (1000 * 60 * 60));
-
-    if (totalHours < 0) {
+    const positiveTotalHours = Math.abs(totalHours);
+    if (positiveTotalHours < 0) {
       Swal.fire({
         icon: "error",
         title: "Invalid time",
       });
       return;
     }
-  
+
     // Format the date to match ISO 8601 format (YYYY-MM-DD)
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().slice(0, 10);
-  
+
     const sleepTimeData = {
       date: formattedDate, // Use the formatted date
-      sleeptime: totalHours,
+      sleeptime: Math.abs(totalHours),
       userId: userData._id,
     };
-  
+
     sleepTimeCreate(sleepTimeData, userId);
-  
+
     setSleepTime({
       sleepTime: "HH:MM",
       wakeTime: "HH:MM",
       date: formattedDate, // Update the date in the state with the formatted date
     });
   };
-  
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -144,7 +176,7 @@ const Mainpage = () => {
       ...prevState,
       [name]: value,
     }));
-  }
+  };
 
   return (
     <div className=" h-[100vh] fixed w-full">
@@ -153,13 +185,15 @@ const Mainpage = () => {
       </div>
       <div className="w-full ">
         <div className="flex flex-row justify-center mx-auto my-0 max-w-screen-2xl md:mx-auto">
-          <aside className="top-0 hidden shadow-lg lg:w-1/4 lg:block mt-[79px]">
+          <aside className="top-0 hidden shadow-lg lg:w-1/4 lg:block lg:mt-[79px]">
             <SideInformation />
           </aside>
 
-          <div className="flex flex-col items-center overflow-scroll flex-hidden h-[100vh] pb-40 bg-gray-100 lg:w-2/4 mt-[79px]">
+          <div className="flex flex-col items-center overflow-scroll flex-hidden h-[100vh] pb-40 bg-gray-100 lg:w-2/4 mt-[63px] lg:mt-[79px]">
             <div className="self-start m-6">
-              <h1 className="text-3xl font-semibold">Welcome, {userData.FirstName}</h1>
+              <h1 className="text-3xl font-semibold">
+                Welcome, {userData.FirstName}
+              </h1>
               <p className="">{currentDate}</p>
             </div>
             <img
@@ -185,7 +219,7 @@ const Mainpage = () => {
             {/* Dashboard Area */}
             <div className="card card-side card-compact bg-base-300 shadow-xl w-[80%] my-4">
               <figure className="w-[20%] avatar">
-                <HiOutlinePresentationChartLine className="w-[55%] h-[60%] rounded-full" />
+                <HiOutlinePresentationChartLine className="w-[70%] h-[60%] rounded-full" />
               </figure>
               <div className="card-body">
                 <p className="font-bold">Dashboard checkout</p>
@@ -232,54 +266,38 @@ const Mainpage = () => {
                     value={sleepTime.wakeTime}
                   />
                 </div>
-                <button 
-                className="btn btn-sm btn-accent rounded-full w-[40%]"
-                onClick={sleepTimeHandler}>
+                <button
+                  className="btn btn-sm btn-accent rounded-full w-[40%]"
+                  onClick={sleepTimeHandler}
+                >
                   Save
                 </button>
               </div>
             </div>
-            {/* Edit Sleep Time Area */}
-            <div className="card card-side card-compact bg-base-300 shadow-xl w-[80%] mt-4 mb-6">
-              <figure className="w-[20%] avatar">
-                <HiOutlineMoon className="w-[55%] h-[60%] rounded-full" />
-              </figure>
-              <div className="card-body">
-                <p className="font-bold">Sleep Time</p>
-                <div className="flex flex-row">
-                  <label htmlFor="sleep" className="self-center mr-2">
-                    Edit:
-                  </label>
-                  <input
-                    id="sleep"
-                    type="time"
-                    className="input input-bordered input-sm w-[40%] max-w-xs"
-                  />
-                  <button className="btn btn-sm btn-accent rounded-full w-[30%] mx-4">
-                    Save
-                  </button>
-                </div>
-              </div>
-            </div>
-            {/* End Form Area */}
           </div>
 
           <div className="top-0 flex-col hidden shadow-md lg:flex lg:w-1/4 mt-[79px]">
             <div className="self-start m-6">
               <h1 className="text-3xl font-semibold">Connection</h1>
             </div>
-            <div className="grid grid-flow-col grid-rows-3 gap-10 mx-6 my-4 ">
-              <img src={MockupProfile} className="w-[72px] rounded-full" />
-              <img src={MockupProfile} className="w-[72px] rounded-full" />
-              <img src={MockupProfile} className="w-[72px] rounded-full" />
-              <img src={MockupProfile} className="w-[72px] rounded-full" />
-              <img src={MockupProfile} className="w-[72px] rounded-full" />
-              <img src={MockupProfile} className="w-[72px] rounded-full" />
-              <img src={MockupProfile} className="w-[72px] rounded-full" />
-              <img src={MockupProfile} className="w-[72px] rounded-full" />
-              <img src={MockupProfile} className="w-[72px] rounded-full" />
+            <div>
+              <div className="grid grid-cols-3 gap-4 ml-4">
+                {followingData.slice(0, 9).map((user, index) => (
+                  <div key={index}>
+                    <div className="">
+                      <a href={`/myfeed/${user._id}`}>
+                      <img
+                        src={user.image}
+                        alt="profile"
+                        className="rounded-full w-20 h-20"
+                      />
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <a className="self-end mx-4">More</a>
+            <a href="/connection" className="self-end mx-4">More</a>
           </div>
         </div>
       </div>

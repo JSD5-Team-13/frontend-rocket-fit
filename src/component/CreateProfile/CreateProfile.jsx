@@ -1,4 +1,3 @@
-// import { MdPeopleAlt } from "react-icons/md";
 import Profile from "../../assets/blank-profile-picture-973460_960_720.jpg";
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -16,18 +15,17 @@ const CreateProfile = () => {
     weight: "",
     gender: "",
     DateOfBirth: "",
+    image: "",
   });
-  // const [uploadImg, setUploadImg] = useState("");
-  // console.log("toy", uploadImg);
 
   const inputRef = useRef(null);
-  const [image, setImage] = useState("");
-
+  const [image, setImage] = useState(null);
+  const [userId, setUserId] = useState("");
   useEffect(() => {
     const token = localStorage.getItem("rockettoken");
     if (token) {
       axios
-        .get("http://127.0.0.1:8000/users", {
+        .get("https://rocket-fit-api.onrender.com/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -35,7 +33,7 @@ const CreateProfile = () => {
         .then((res) => {
           if (res.status === 200) {
             setNameUser(res.data);
-            console.log(nameUser);
+            setUserId(res.data.id);
           } else {
             console.log("Failed to fetch user data");
           }
@@ -45,47 +43,34 @@ const CreateProfile = () => {
         });
     }
   }, []);
-
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const updateUser = async (
-    id,
-    FirstName,
-    height,
-    weight,
-    gender,
-    DateOfBirth
-  ) => {
+  const updateUser = async () => {
     try {
-      const requestData = {
-        id: id,
-        FirstName: FirstName,
-        height: height,
-        weight: weight,
-        gender: gender,
-        DateOfBirth: DateOfBirth,
-      };
       const token = localStorage.getItem("rockettoken");
       const Update = await axios.put(
-        `http://127.0.0.1:8000/users/${nameUser.id}`,
-        requestData,
+        `https://rocket-fit-api.onrender.com/users/${userId}`,
+        // `http://127.0.0.1:8000/users/${userId}`,
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
+      console.log(data);
       if (Update.status === 200) {
         Swal.fire({
           icon: "success",
           title: "Create Success",
         });
-        navigate("/main");
+        setTimeout(() => {
+          navigate("/main");
+          window.location.reload();
+        }, 2000);
       } else if (Update.status === 400) {
-        // Use "else if" here
         Swal.fire({
           icon: "error",
           title: "Create Not Success",
@@ -102,36 +87,47 @@ const CreateProfile = () => {
     e.preventDefault();
     Swal.fire({
       title: "Do you want to save the changes?",
-      // showDenyButton: true,
       showCancelButton: true,
       confirmButtonText: "Save",
-      // denyButtonText: `Don't save`,
     }).then((result) => {
       if (result.isConfirmed) {
         updateUser(
           params.id,
           data.FirstName,
+          data.LastName,
           data.height,
           data.weight,
           data.gender,
-          data.DateOfBirth
+          data.DateOfBirth,
+          data.image
         );
-        console.log();
       } else if (result.isDenied) {
         console.log("Changes are not saved");
       }
     });
   };
 
-  const handleImageClick = (e) => {
+  const handleImageClick = () => {
     inputRef.current.click();
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    console.log(file);
-    setImage(e.target.files[0]);
-  };
+  useEffect(() => {
+    const uploadImage = async () => {
+      console.log(image);
+      const formData = new FormData();
+      formData.append("file", image);
+      formData.append("upload_preset", "ofo3yslc");
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dok87yplt/image/upload",
+        formData
+      );
+      console.log(response.data.url);
+      const images = response.data.url;
+      setData({ ...data, image: images });
+      console.log(data);
+    };
+    uploadImage();
+  }, [image]);
 
   return (
     <div>
@@ -158,7 +154,8 @@ const CreateProfile = () => {
                   type="file"
                   ref={inputRef}
                   className="hidden"
-                  onChange={handleImageChange}
+                  // onChange={handleImageChange}
+                  onChange={(e) => setImage(e.target.files[0])}
                 />
                 <div className="absolute top-0 left-0 w-full h-full flex items-end pb-[20px] bg-black/[0.35] rounded-full justify-center opacity-0 hover:opacity-100 transition-opacity">
                   <span className="text-white text-lg font-bold">

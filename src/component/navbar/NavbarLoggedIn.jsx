@@ -14,7 +14,7 @@ const NavbarLoggedIn = () => {
     useEffect(() => {
         const token = localStorage.getItem("rockettoken");
         if (token) {
-          axios.get("http://127.0.0.1:8000/users", {
+          axios.get("https://rocket-fit-api.onrender.com/users", {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -33,7 +33,7 @@ const NavbarLoggedIn = () => {
         }
     }, [userId]);
     return (
-        <div className="navbar bg-neutral h-[5rem] fixed z-10">
+        <div className="navbar bg-neutral h-[4rem] lg:h-[5rem] fixed z-10">
             {/* Navigation Bar Start */}
             <div className="navbar-start">
                 <a href="/main"><img src={LogoFull} alt='logo' className='hidden w-auto h-10 mx-4 lg:block' /></a>
@@ -73,12 +73,13 @@ const NavbarLoggedIn = () => {
                                     icon: 'success',
                                     title: 'Logout Success'
                                   }).then(
-                                navigate("/login")))}>Log Out</button></li>
+                                navigate("/login")))}>Log Out</button>
+                            </li>
                         </ul>
                     </div>
                 </div>
                 {/* Mobile Navigation Bar */}
-                <div className="drawer-end lg:hidden z-10">
+                <div className="z-10 drawer-end lg:hidden">
                     <input id="my-drawer" type="checkbox" className="drawer-toggle" />
                     <div className="drawer-content">
                         {/* Page content here */}
@@ -100,7 +101,15 @@ const NavbarLoggedIn = () => {
                             <li><a href='/dashboard'>Dashboard</a></li>
                             <p className='underline'>Profile</p>
                             <li><a href='/account'>Setting</a></li>
-                            <li><a>Log Out</a></li>
+                            <li><button
+                            onClick={() => (
+                                localStorage.clear(), 
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Logout Success'
+                                  }).then(
+                                navigate("/login")))}>Log Out</button>
+                            </li>
                         </ul>
                     </div>
                 </div>

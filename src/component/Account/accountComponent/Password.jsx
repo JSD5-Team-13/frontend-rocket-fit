@@ -1,17 +1,23 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-undef */
 import React, { useState } from "react";
 import axios from "axios";
 
-const Password = ({ userId, userData, setUserData, setShowAlert, setAlertMessage }) => {
-  
-  const serverUrl = "http://127.0.0.1:8000"
+const Password = ({
+  userId,
+  userData,
+  setUserData,
+  setShowAlert,
+  setAlertMessage,
+}) => {
+  const serverUrl = "https://rocket-fit-api.onrender.com";
   const token = localStorage.getItem("rockettoken");
-  
+
   const [password, setPassword] = useState({
-    currentPassword: '',
-    newPassword: '',
-    renewPassword: '',
+    currentPassword: "",
+    newPassword: "",
+    renewPassword: "",
   });
 
   const handleInputChange = (event) => {
@@ -24,32 +30,36 @@ const Password = ({ userId, userData, setUserData, setShowAlert, setAlertMessage
 
   const handleReset = () => {
     setPassword({
-      currentPassword: '',
-      newPassword: '',
-      renewPassword: '',
-    })
-  }
+      currentPassword: "",
+      newPassword: "",
+      renewPassword: "",
+    });
+  };
 
   const logoutAndRedirectToLogin = async () => {
     setTimeout(() => {
-        localStorage.removeItem('token');
-        window.location.href='/login';
-
+      localStorage.removeItem("token");
+      window.location.href = "/login";
     }, 1500);
-
   };
 
   const updatePassword = () => {
     const { currentPassword, newPassword, renewPassword } = password;
 
     if (!currentPassword || !newPassword || !renewPassword) {
-      setAlertMessage({ text: 'Please fill in all password fields.', status: 'warning' });
+      setAlertMessage({
+        text: "Please fill in all password fields.",
+        status: "warning",
+      });
       setShowAlert(true);
       return;
     }
 
     if (newPassword !== renewPassword) {
-      setAlertMessage({ text: 'New passwords do not match.', status: 'warning' });
+      setAlertMessage({
+        text: "New passwords do not match.",
+        status: "warning",
+      });
       setShowAlert(true);
       return;
     }
@@ -65,18 +75,16 @@ const Password = ({ userId, userData, setUserData, setShowAlert, setAlertMessage
         }
       )
       .then((response) => {
-        setAlertMessage({ text: response.data.message, status: 'success' });
+        setAlertMessage({ text: response.data.message, status: "success" });
         setShowAlert(true);
         logoutAndRedirectToLogin();
-    
       })
       .catch((error) => {
-        setAlertMessage({ text: error.response.data.message, status: 'error' });
+        setAlertMessage({ text: error.response.data.message, status: "error" });
         setShowAlert(true);
-        console.error('Error updating password: ', error);
+        console.error("Error updating password: ", error);
       });
   };
-  
 
   return (
     <div className="w-full">
@@ -123,16 +131,10 @@ const Password = ({ userId, userData, setUserData, setShowAlert, setAlertMessage
         </form>
 
         <div className="flex flex-row items-center w-full mt-4 mb-4 justify-evenly">
-          <button
-            className="btn btn-sm btn-active"
-            onClick={handleReset}
-          >
+          <button className="btn btn-sm btn-active" onClick={handleReset}>
             Cancel
           </button>
-          <button
-            className="btn btn-success btn-sm"
-            onClick={updatePassword}
-          >
+          <button className="btn btn-success btn-sm" onClick={updatePassword}>
             Update
           </button>
         </div>

@@ -15,6 +15,7 @@ const Connection = () => {
   const [followingData, setFollowingData] = useState([]);
   const [followersData, setFollowersData] = useState([]);
 
+  //get followers data
   useEffect(() => {
     // Check if userData.followers is available
     if (userData.followers && userData.followers.length > 0) {
@@ -22,7 +23,7 @@ const Connection = () => {
       const fetchFollowersData = async () => {
         try {
           const followersPromises = userData.followers.map((userId) =>
-            axios.get(`http://127.0.0.1:8000/users/${userId}`, {
+            axios.get(`https://rocket-fit-api.onrender.com/users/${userId}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -49,6 +50,7 @@ const Connection = () => {
     }
   }, [userData.followers]); // Use userId as a dependency
 
+  //following data
   useEffect(() => {
     // Check if userData.following is available
     if (userData.following && userData.following.length > 0) {
@@ -56,7 +58,7 @@ const Connection = () => {
       const fetchFollowingData = async () => {
         try {
           const followingPromises = userData.following.map((userId) =>
-            axios.get(`http://127.0.0.1:8000/users/${userId}`, {
+            axios.get(`https://rocket-fit-api.onrender.com/users/${userId}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -94,7 +96,7 @@ const Connection = () => {
     if (query) {
       const token = localStorage.getItem("rockettoken");
       axios
-        .get(`http://127.0.0.1:8000/all?firstname=${query}`, {
+        .get(`https://rocket-fit-api.onrender.com/all?firstname=${query}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -123,7 +125,7 @@ const Connection = () => {
       // If the user is already being followed, send an unfollow request
       axios
         .post(
-          `http://127.0.0.1:8000/connection/unfollow/${userId}`,
+          `https://rocket-fit-api.onrender.com/connection/unfollow/${userId}`,
           { userid: userData.id },
           {
             headers: {
@@ -150,7 +152,7 @@ const Connection = () => {
       // If the user is not being followed, send a follow request
       axios
         .post(
-          `http://127.0.0.1:8000/connection/follow/${userId}`,
+          `https://rocket-fit-api.onrender.com/connection/follow/${userId}`,
           { userid: userData.id },
           {
             headers: {
@@ -206,14 +208,14 @@ const Connection = () => {
                   {searchResults.map((user, index) => (
                     <div
                       key={index}
-                      className="card w-[95%] bg-base-100 shadow-xl my-4"
+                      className="card w-[425px] bg-base-100 shadow-xl my-4"
                     >
                       <div className="card-body">
                         <div className="flex flex-row items-center">
                           <img
                             src={user.image}
                             alt="profile"
-                            className="rounded-full w-24 h-24 mr-4"
+                            className="rounded-full w-[72px] h-[72px] mr-4"
                           />
                           <div className="flex flex-col">
                             <h1 className="font-bold text-lg my-2">
@@ -271,14 +273,14 @@ const Connection = () => {
                   {followingData.map((user, index) => (
                     <div
                       key={index}
-                      className="card w-[95%] bg-base-100 shadow-xl my-4"
+                      className="card w-[425px] bg-base-100 shadow-xl my-4"
                     >
                       <div className="card-body">
                         <div className="flex flex-row items-center">
                           <img
                             src={user.image}
                             alt="profile"
-                            className="rounded-full w-24 h-24 mr-4"
+                            className="rounded-full w-[72px] h-[72px] mr-4"
                           />
                           <div className="flex flex-col">
                             <h1 className="font-bold text-lg my-2">
@@ -314,14 +316,14 @@ const Connection = () => {
                   {followersData.map((user, index) => (
                     <div
                       key={index}
-                      className="card w-[95%] bg-base-100 shadow-xl my-4"
+                      className="card w-[425px] bg-base-100 shadow-xl my-4"
                     >
                       <div className="card-body">
                         <div className="flex flex-row items-center">
                           <img
                             src={user.image}
                             alt="profile"
-                            className="rounded-full w-24 h-24 mr-4"
+                            className="rounded-full w-[72px] h-[72px] mr-4"
                           />
                           <div className="flex flex-col">
                             <h1 className="font-bold text-lg my-2">

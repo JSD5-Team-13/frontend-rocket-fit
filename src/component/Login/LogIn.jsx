@@ -1,7 +1,7 @@
 import Navbar from "../navbar/NavbarNoneLoggedIn";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser } from "react-icons/Fa";
+import { FaUser } from "react-icons/fa";
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -16,7 +16,7 @@ export const LogIn = () => {
   const login = async (userData) => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/login",
+        "https://rocket-fit-api.onrender.com/login",
         userData
       );
       console.log(response.status);
@@ -28,7 +28,7 @@ export const LogIn = () => {
           title: "Login Success",
         });
         if (response.data.isCreatedProfile === true) {
-          navigate("/main")
+          navigate("/main");
           window.location.reload();
         } else {
           navigate("/create_profile");
