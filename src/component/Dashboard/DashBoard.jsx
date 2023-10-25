@@ -47,7 +47,6 @@ const initialDashboardData = {
   ],
   activityPerWeek: [],
 };
-
 export const DashBoard = () => {
   const [dashboardData, setDashboardData] = useState(initialDashboardData);
   //เรียกใช้ userData จาก userContext
@@ -94,12 +93,13 @@ export const DashBoard = () => {
     ],
   };
 
-  const PieChartData = {
+   const PieChartData = {
     labels: dashboardData.activityPerWeek.map((item) => item.activityType),
     datasets: [
       {
         label: "# of Votes",
-        data: dashboardData.activityPerWeek.map((item) => item.value),
+        data: dashboardData.activityPerWeek
+          .map((item) => item.value),
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",

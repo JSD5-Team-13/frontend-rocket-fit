@@ -3,9 +3,11 @@ import SideInformation from "../navbar/SideInformationBar.jsx";
 import { useEffect, useState } from "react";
 import {
   HiOutlinePlusSm,
-  HiOutlinePresentationChartLine,
   HiOutlineMoon,
 } from "react-icons/hi";
+import {
+  FaChartPie
+} from "react-icons/fa"
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -205,34 +207,34 @@ const Mainpage = () => {
             {/* Form Area */}
             {/* Crete Activity Area */}
             <div className="card card-side card-compact bg-base-300 shadow-xl w-[80%] my-4">
-              <figure className="w-[20%] avatar">
-                <HiOutlinePlusSm className="w-[70%] h-[60%] rounded-full" />
+              <figure className="w-[25%] lg:w-[20%] avatar">
+                <HiOutlinePlusSm className="lg:w-[70%] lg:h-[60%] rounded-full" />
               </figure>
               <div className="card-body">
                 <p className="font-bold">Create you activity</p>
                 <p>Add your new activity here</p>
-                <button className="btn btn-sm btn-accent rounded-full w-[40%]">
+                <button className="btn btn-sm btn-accent rounded-full w-[70%] lg:w-[40%]">
                   <a href="/create_activity">Create Activity</a>
                 </button>
               </div>
             </div>
             {/* Dashboard Area */}
             <div className="card card-side card-compact bg-base-300 shadow-xl w-[80%] my-4">
-              <figure className="w-[20%] avatar">
-                <HiOutlinePresentationChartLine className="w-[70%] h-[60%] rounded-full" />
+              <figure className="w-[35.5%] md:w-[27%] lg:w-[20%] avatar">
+                <FaChartPie className="w-[70%] h-[60%]  rounded-full" />
               </figure>
               <div className="card-body">
                 <p className="font-bold">Dashboard checkout</p>
                 <p>Let`s see how much times you spent on your exercise</p>
-                <button className="btn btn-sm btn-accent rounded-full w-[40%]">
+                <button className="btn btn-sm btn-accent rounded-full w-[60%] lg:w-[40%]">
                   <a href="/dashboard">Dashboard</a>
                 </button>
               </div>
             </div>
             {/* Sleep Time Area */}
             <div className="card card-side card-compact bg-base-300 shadow-xl w-[80%] my-4">
-              <figure className="w-[20%] avatar">
-                <HiOutlineMoon className="w-[55%] h-[60%] rounded-full" />
+              <figure className="w-[25%] lg:w-[20%] avatar">
+                <HiOutlineMoon className="w-[70%] h-[60%] rounded-full" />
               </figure>
               <div className="card-body w-[80%]">
                 <p className="font-bold">Sleep Time</p>
@@ -267,7 +269,7 @@ const Mainpage = () => {
                   />
                 </div>
                 <button
-                  className="btn btn-sm btn-accent rounded-full w-[40%]"
+                  className="btn btn-sm btn-accent rounded-full w-[60%] lg:w-[40%]"
                   onClick={sleepTimeHandler}
                 >
                   Save

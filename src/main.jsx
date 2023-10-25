@@ -16,6 +16,7 @@ import { ResetPassword } from "./component/Login/ResetPassword";
 import CreateProfile from "./component/CreateProfile/CreateProfile";
 import Connection from "./component/Connection/Connection.jsx";
 import { UserProvider } from "./component/context/userContext";
+import ProtectRoute from "./component/ProtectRoute.jsx"
 
 const router = createBrowserRouter([
   {
@@ -36,39 +37,66 @@ const router = createBrowserRouter([
   },
   {
     path: "/create_profile",
-    element: <CreateProfile />,
+    element: 
+    <ProtectRoute>
+    <CreateProfile />
+    </ProtectRoute>
   },
   {
     path: "/main",
-    element: <Mainpage />,
+    element: 
+    <ProtectRoute>
+    <Mainpage />
+    </ProtectRoute>
   },
   {
     path: "/create_activity",
-    element: <ActivityForm />,
+    element: 
+    <ProtectRoute>
+    <ActivityForm />
+    </ProtectRoute>,
   },
   {
     path: "/activity",
-    element: <MyActivity />,
+    element: 
+    <ProtectRoute>
+    <MyActivity />
+    </ProtectRoute>,
   },
   {
     path: "/myfeed/:userId",
-    element: <MyFeed />,
+    element: 
+    <ProtectRoute>
+    <MyFeed />
+    </ProtectRoute>,
   },
   {
     path: "/dashboard",
-    element: <DashBoard />,
+    element: 
+    <ProtectRoute>
+    <DashBoard />
+    </ProtectRoute>,
   },
   {
     path: "/calendar",
-    element: <CalendarMain />,
+    element: 
+    <ProtectRoute>
+    <CalendarMain />
+    </ProtectRoute>,
   },
   {
     path: "/account",
-    element: <AccountSetting />,
+    element: 
+    <ProtectRoute>
+    <AccountSetting />
+    </ProtectRoute>,
   },
   {
     path: "/connection",
-    element: <Connection />,
+    element: 
+    <ProtectRoute>
+    <Connection />
+    </ProtectRoute>,
   },
 ]);
 

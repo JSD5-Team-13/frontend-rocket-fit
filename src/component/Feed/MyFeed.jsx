@@ -242,7 +242,7 @@ const MyFeed = () => {
 
       <main className="flex max-w-screen-2xl mx-auto mt-[5rem]">
         {/* Side Profile */}
-        <aside className="fixed mt-[5rem] top-0 z-50 w-full flex flex-col pb-3 lg:h-screen lg:max-w-[25%] lg:block bg-white 2xl:max-w-[400px] lg:border-l-2">
+        <aside className="fixed mt-[4rem] lg:mt-[5rem] top-0 z-50 w-full flex flex-col pb-3 lg:h-screen lg:max-w-[25%] lg:block bg-white 2xl:max-w-[400px] lg:border-l-2">
           {userId === currentUserId ? (
             <UserProfile userData={currentUserData} updateUser={updateUser} />
           ) : (
