@@ -291,7 +291,7 @@ const Mainpage = () => {
                       <img
                         src={user.image}
                         alt="profile"
-                        className="rounded-full w-20 h-20"
+                        className="rounded-full w-20 h-20 object-cover"
                       />
                       </a>
                     </div>
