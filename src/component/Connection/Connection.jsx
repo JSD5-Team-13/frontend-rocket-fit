@@ -208,7 +208,7 @@ const Connection = () => {
                   {searchResults.map((user, index) => (
                     <div
                       key={index}
-                      className="card w-[425px] bg-base-100 shadow-xl my-4"
+                      className="card w-[80%] lg:w-[100%] max-w-[425px] bg-base-100 shadow-xl my-4"
                     >
                       <div className="card-body">
                         <div className="flex flex-row items-center">
@@ -280,7 +280,7 @@ const Connection = () => {
                           <img
                             src={user.image}
                             alt="profile"
-                            className="rounded-full w-[72px] h-[72px] mr-4"
+                            className="rounded-full w-[72px] h-[72px] mr-4 object-cover"
                           />
                           <div className="flex flex-col">
                             <h1 className="font-bold text-lg my-2">

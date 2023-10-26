@@ -262,7 +262,7 @@ const CalendarMain = () => {
               </button>
             </div>
             <dialog id="my_modal_2" className="modal">
-              <div className="modal-box w-full max-w-sm">
+              <div className="modal-box w-[90%] lg:w-full max-w-sm">
                 <div className="modal-header">
                   <h2 className="text-xl font-bold">Create Memo</h2>
                 </div>
@@ -418,7 +418,7 @@ const CalendarMain = () => {
                         </button>
 
                         <dialog id="my_modal_3" className="modal ">
-                          <div className="modal-box w-full max-w-sm">
+                          <div className="modal-box w-[90%] lg:w-full max-w-sm">
                             <p className="font-bold">Edit Memo</p>
                             <form className="flex flex-col text-base gap-2 my-4">
                               <label className="font-bold">Title:</label>
