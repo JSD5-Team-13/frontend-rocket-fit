@@ -215,7 +215,7 @@ const Connection = () => {
                           <img
                             src={user.image}
                             alt="profile"
-                            className="rounded-full w-[72px] h-[72px] mr-4"
+                            className="rounded-full w-[72px] h-[72px] mr-4 object-cover"
                           />
                           <div className="flex flex-col">
                             <h1 className="font-bold text-lg my-2">
@@ -323,7 +323,7 @@ const Connection = () => {
                           <img
                             src={user.image}
                             alt="profile"
-                            className="rounded-full w-[72px] h-[72px] mr-4"
+                            className="rounded-full w-[72px] h-[72px] mr-4 object-cover"
                           />
                           <div className="flex flex-col">
                             <h1 className="font-bold text-lg my-2">
